@@ -119,5 +119,8 @@ struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
         WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
+
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent()))
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

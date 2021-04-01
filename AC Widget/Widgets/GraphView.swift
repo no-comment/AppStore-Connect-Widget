@@ -14,13 +14,13 @@ struct GraphView: View {
     init(_ data: [(Float, Date)]) {
         let copy = data.map { $0.0 }
         let max: Float = copy.max() ?? 1
-        self.data = copy.map { CGFloat($0 / max) }
+        self.data = copy.map { CGFloat($0 / max) }.reversed()
     }
     
     init(_ data: [(Int, Date)]) {
         let copy = data.map { Float($0.0) }
         let max: Float = copy.max() ?? 1
-        self.data = copy.map { CGFloat($0 / max) }
+        self.data = copy.map { CGFloat($0 / max) }.reversed()
     }
     
     var body: some View {
