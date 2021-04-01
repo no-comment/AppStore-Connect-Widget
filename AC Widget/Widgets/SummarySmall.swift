@@ -12,42 +12,19 @@ struct SummarySmall: View {
     let data: ACData
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             Text(data.latestReportingDate())
                 .font(.subheadline)
                 .foregroundColor(.gray)
-            
+                        
             UnitText(data.getDownloads(), metricSymbol: "square.and.arrow.down")
-            
             UnitText(data.getProceeds(), metric: data.currency)
             
             Spacer()
+                .frame(minHeight: 0)
             
-            HStack {
-                Text("Last 7 Days:")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                Spacer()
-                
-                Text(data.getProceeds(7, size: .compact).appending(data.currency))
-                    .font(.system(.headline, design: .rounded))
-            }
-            .minimumScaleFactor(0.6)
-            .lineLimit(1)
-            
-            HStack {
-                Text("Last 30 Days:")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                Spacer()
-                
-                Text(data.getProceeds(30, size: .compact).appending(data.currency))
-                    .font(.system(.headline, design: .rounded))
-            }
-            .minimumScaleFactor(0.6)
-            .lineLimit(1)
+            DescribedValueView("7 Days:", value: data.getProceeds(7, size: .compact).appending(data.currency))
+            DescribedValueView("30 Days:", value: data.getProceeds(30, size: .compact).appending(data.currency))
         }
         .padding()
     }

@@ -37,7 +37,7 @@ struct ACData {
             }
         case .standard:
             nf.numberStyle = .decimal
-            nf.maximumFractionDigits = 3
+            nf.maximumFractionDigits = 2
         }
         
         return (nf.string(from: fNum) ?? "0").appending("K")
@@ -134,51 +134,23 @@ struct ACData {
     
     
     // MARK: Mock Data
-    static let example = ACData(downloads: [
-        (47, Date(timeIntervalSinceNow: -86400*1)),
-        (34, Date(timeIntervalSinceNow: -86400*2)),
-        (44, Date(timeIntervalSinceNow: -86400*3)),
-        (12, Date(timeIntervalSinceNow: -86400*4)),
-        (43, Date(timeIntervalSinceNow: -86400*5)),
-        (53, Date(timeIntervalSinceNow: -86400*6)),
-        (69, Date(timeIntervalSinceNow: -86400*7)),
-        (37, Date(timeIntervalSinceNow: -86400*8)),
-        (82, Date(timeIntervalSinceNow: -86400*9)),
-        (79, Date(timeIntervalSinceNow: -86400*10))
-    ], proceeds: [
-        (13.5, Date(timeIntervalSinceNow: -86400*1)),
-        (18.2, Date(timeIntervalSinceNow: -86400*2)),
-        (9.7, Date(timeIntervalSinceNow: -86400*3)),
-        (15.0, Date(timeIntervalSinceNow: -86400*4)),
-        (16.3, Date(timeIntervalSinceNow: -86400*5)),
-        (13.9, Date(timeIntervalSinceNow: -86400*6)),
-        (15.5, Date(timeIntervalSinceNow: -86400*7)),
-        (18.1, Date(timeIntervalSinceNow: -86400*8)),
-        (34.5, Date(timeIntervalSinceNow: -86400*9)),
-        (22.4, Date(timeIntervalSinceNow: -86400*10))
-    ], currency: "$")
+    static let example = createMockData(35)
+    static let exampleLargeSums = createMockData(35, largeValues: true)
     
-    static let exampleLargeSums = ACData(downloads: [
-        (473, Date(timeIntervalSinceNow: -86400*1)),
-        (344, Date(timeIntervalSinceNow: -86400*2)),
-        (447, Date(timeIntervalSinceNow: -86400*3)),
-        (121, Date(timeIntervalSinceNow: -86400*4)),
-        (435, Date(timeIntervalSinceNow: -86400*5)),
-        (538, Date(timeIntervalSinceNow: -86400*6)),
-        (690, Date(timeIntervalSinceNow: -86400*7)),
-        (378, Date(timeIntervalSinceNow: -86400*8)),
-        (823, Date(timeIntervalSinceNow: -86400*9)),
-        (797, Date(timeIntervalSinceNow: -86400*10))
-    ], proceeds: [
-        (453.54, Date(timeIntervalSinceNow: -86400*1)),
-        (128.2, Date(timeIntervalSinceNow: -86400*2)),
-        (69.7, Date(timeIntervalSinceNow: -86400*3)),
-        (195.0, Date(timeIntervalSinceNow: -86400*4)),
-        (316.3, Date(timeIntervalSinceNow: -86400*5)),
-        (173.9, Date(timeIntervalSinceNow: -86400*6)),
-        (135.5, Date(timeIntervalSinceNow: -86400*7)),
-        (418.1, Date(timeIntervalSinceNow: -86400*8)),
-        (324.5, Date(timeIntervalSinceNow: -86400*9)),
-        (542.4, Date(timeIntervalSinceNow: -86400*10))
-    ], currency: "$")
+    private static func createMockData(_ days: Int, largeValues: Bool = false) -> ACData {
+        var downloads: [(Int, Date)] = []
+        var proceeds: [(Float, Date)] = []
+        
+        for i in 1..<days+1 {
+            if largeValues {
+                downloads.append((Int.random(in: 0..<1600), Date(timeIntervalSinceNow: -86400*Double(i))))
+                proceeds.append((Float.random(in: 0..<700), Date(timeIntervalSinceNow: -86400*Double(i))))
+            } else {
+                downloads.append((Int.random(in: 0..<110), Date(timeIntervalSinceNow: -86400*Double(i))))
+                proceeds.append((Float.random(in: 0..<40), Date(timeIntervalSinceNow: -86400*Double(i))))
+            }
+        }
+        
+        return ACData(downloads: downloads, proceeds: proceeds, currency: "$")
+    }
 }

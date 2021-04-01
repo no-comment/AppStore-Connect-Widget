@@ -24,19 +24,25 @@ struct GraphView: View {
     }
     
     var body: some View {
-        GeometryReader { reading in
-            HStack(alignment: .bottom, spacing: 0) {
-                ForEach(data.indices) { i in
-                    Capsule()
-                        .frame(width: (reading.size.width/CGFloat(data.count))*0.7 ,height: reading.size.height * data[i])
-                        .foregroundColor(.accentColor)
-                    
-                    if i != data.count-1 {
-                        Spacer()
-                            .frame(minWidth: 0)
+        if !data.isEmpty {
+            GeometryReader { reading in
+                HStack(alignment: .bottom, spacing: 0) {
+                    ForEach(data.indices) { i in
+                        Capsule()
+                            .frame(width: (reading.size.width/CGFloat(data.count))*0.7 ,height: reading.size.height * data[i])
+                            .foregroundColor(.accentColor)
+                        
+                        if i != data.count-1 {
+                            Spacer()
+                                .frame(minWidth: 0)
+                        }
                     }
                 }
             }
+        } else {
+            Text("No Data")
+                .foregroundColor(.gray)
+                .italic()
         }
     }
 }
@@ -49,6 +55,10 @@ struct GraphView_Previews: PreviewProvider {
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
             
             GraphView(ACData.example.getProceeds(30))
+                .padding()
+                .previewContext(WidgetPreviewContext(family: .systemSmall))
+            
+            GraphView([(Float, Date)]())
                 .padding()
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
         }

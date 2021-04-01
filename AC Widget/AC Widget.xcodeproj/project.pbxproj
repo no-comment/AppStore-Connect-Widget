@@ -45,6 +45,8 @@
 		CB28AEFC2615F5E700B48215 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEFB2615F5E700B48215 /* GraphView.swift */; };
 		CB28AEFD2615F5E700B48215 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEFB2615F5E700B48215 /* GraphView.swift */; };
 		CB28AF012616163600B48215 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AF002616163600B48215 /* SettingsView.swift */; };
+		CB28AF0926161D5E00B48215 /* DescribedValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AF0826161D5D00B48215 /* DescribedValueView.swift */; };
+		CB28AF0A26161D5E00B48215 /* DescribedValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AF0826161D5D00B48215 /* DescribedValueView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,7 @@
 		CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorWidget.swift; sourceTree = "<group>"; };
 		CB28AEFB2615F5E700B48215 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		CB28AF002616163600B48215 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CB28AF0826161D5D00B48215 /* DescribedValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescribedValueView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +193,7 @@
 				CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */,
 				CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */,
 				CB28AEDF2615D24400B48215 /* UnitText.swift */,
+				CB28AF0826161D5D00B48215 /* DescribedValueView.swift */,
 				CB28AEFB2615F5E700B48215 /* GraphView.swift */,
 				45E8C49D2612531D007F9B0E /* Widgets.intentdefinition */,
 				45E8C49E2612531E007F9B0E /* Assets.xcassets */,
@@ -326,6 +330,7 @@
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
 				45CAC1152615CDBE00FF63E7 /* AppStoreConnectApi.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
+				CB28AF0926161D5E00B48215 /* DescribedValueView.swift in Sources */,
 				CB28AED42615D1FA00B48215 /* APIError.swift in Sources */,
 				CB28AEFC2615F5E700B48215 /* GraphView.swift in Sources */,
 				CB28AF012616163600B48215 /* SettingsView.swift in Sources */,
@@ -344,6 +349,7 @@
 				CB28AEE12615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AEE62615D28F00B48215 /* SummarySmall.swift in Sources */,
 				45E8C4A12612531E007F9B0E /* Widgets.intentdefinition in Sources */,
+				CB28AF0A26161D5E00B48215 /* DescribedValueView.swift in Sources */,
 				45E8C49C2612531D007F9B0E /* Widgets.swift in Sources */,
 				CB28AEF02615D2E900B48215 /* ErrorWidget.swift in Sources */,
 				CB28AEDC2615D21F00B48215 /* APIError.swift in Sources */,
