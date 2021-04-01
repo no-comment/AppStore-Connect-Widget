@@ -24,7 +24,9 @@ class AppStoreConnectApi {
         self.vendorNumber = vendorNumber
     }
     
-    public func getData() {
+    public func getData() -> Promise<ACData> {
+        let promise = Promise<ACData>.pending()
+        
         let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
         
         let provider: APIProvider = APIProvider(configuration: configuration)
@@ -99,10 +101,35 @@ class AppStoreConnectApi {
                 
                 proceeds.sort(by: { $0.1.compare($1.1) == .orderedDescending })
                 downloads.sort(by: { $0.1.compare($1.1) == .orderedDescending })
+                
+                promise.fulfill(ACData(downloads: downloads, proceeds: proceeds, currency: currency))
             }
             .catch { err in
-                print(err)
+                if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
+                    switch apiError {
+                    case .requestFailure(let statusCode, _):
+                        print(statusCode)
+                        switch statusCode {
+                        case 401:
+                            promise.reject(APIError.invalidCredentials)
+                        case 429:
+                            promise.reject(APIError.exceededLimit)
+                        case 403:
+                            promise.reject(APIError.wrongPermissions)
+                        default:
+                            promise.reject(APIError.unknown)
+                        }
+                    case .requestGeneration:
+                        promise.reject(APIError.invalidCredentials)
+                    default:
+                        promise.reject(APIError.unknown)
+                    }
+                } else {
+                    promise.reject(APIError.unknown)
+                }
             }
+        
+        return promise
     }
     
     private func apiWrapped(provider: APIProvider, vendorNumber: String, date: String) -> Promise<Data> {

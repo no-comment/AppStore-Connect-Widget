@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var downloads: [(Int, Date)] = []
-    @State var proceeds: [(Float, Date)] = []
-    @State var currency: String = ""
+    @State var data: ACData?
     
     var body: some View {
-        Text(downloads.map { day in
-            "\(day.1.acApiFormat()) \(day.0)"
-        }.joined(separator: "\n"))
+        Text(data?.getProceeds() ?? "No Data")
         .onAppear {
+            api.getData().then { (data) in
+                self.data = data
+            }.catch { (err) in
+                print(err)
+            }
         }
     }
 }

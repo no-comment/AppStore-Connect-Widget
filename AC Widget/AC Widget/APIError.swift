@@ -11,6 +11,7 @@ enum APIError: Error {
     case invalidCredentials
     case wrongPermissions
     case exceededLimit
+    case unknown
     
     var userDescription: String {
         switch self {
@@ -20,6 +21,8 @@ enum APIError: Error {
             return "Your API-key does not have the right permissions."
         case .exceededLimit:
             return "You have exceeded the daily limit of API requests."
+        case .unknown:
+            return "An unknown error occurred. Please file a bug report."
         }
     }
 }
