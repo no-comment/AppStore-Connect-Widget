@@ -13,13 +13,27 @@ struct ContentView: View {
     let api = AppStoreConnectApi(issuerID: "", privateKeyID: "", privateKey: "", vendorNumber: "")
     
     var body: some View {
-        Text((data?.getProceeds() ?? "No Data") + (data?.currency ?? ""))
-        .onAppear {
-            api.getData().then { (data) in
-                self.data = data
-            }.catch { (err) in
-                print(err)
+        NavigationView {
+            ScrollView {
+                Text((data?.getProceeds() ?? "No Data") + (data?.currency ?? ""))
+                    .onAppear {
+                        api.getData().then { (data) in
+                            self.data = data
+                        }.catch { (err) in
+                            print(err)
+                        }
+                    }
             }
+            .navigationTitle("Home")
+            .toolbar(content: { toolbar })
+        }
+    }
+    
+    var toolbar: some ToolbarContent {
+        ToolbarItem {
+            NavigationLink(destination: SettingsView(),
+                           label: { Image(systemName: "gear") }
+            )
         }
     }
 }
