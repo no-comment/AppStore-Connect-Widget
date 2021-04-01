@@ -42,11 +42,11 @@ class AppStoreConnectApi {
             }
             .then { results in
                 for result in results {
-                    guard let result = result.value else {
+                    guard let resultValue = result.value else {
                         print("ERROR: \(result.error?.localizedDescription ?? "")")
                         continue
                     }
-                    guard let decompressedData = try? result.gunzipped() else {
+                    guard let decompressedData = try? resultValue.gunzipped() else {
                         #if DEBUG
                         fatalError()
                         #endif
