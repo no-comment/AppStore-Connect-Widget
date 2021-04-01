@@ -33,7 +33,8 @@ class AppStoreConnectApi {
         
         var downloads: [(Int, Date)] = []
         var proceeds: [(Float, Date)] = []
-        var currency: String = ""
+
+        let localCurrency: Currency = Currency(rawValue: Locale.current.currencyCode ?? "USD") ?? .USD
         
         let converter = CurrencyConverter.shared
         converter.updateExchangeRates()
@@ -72,7 +73,7 @@ class AppStoreConnectApi {
                         if let units = Int(dict["Units"] ?? "0"), let pro: Double = Double(dict["Developer Proceeds"] ?? "0.00") {
                             if pro > 0 {
                                 if  let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
-                                    procForDay += converter.convert(Double(units) * pro, valueCurrency: cur, outputCurrency: .EUR) ?? 0
+                                    procForDay += converter.convert(Double(units) * pro, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
                                 }
                             } else {
                                 downloadsForDay += 1
@@ -102,7 +103,7 @@ class AppStoreConnectApi {
                 proceeds.sort(by: { $0.1.compare($1.1) == .orderedDescending })
                 downloads.sort(by: { $0.1.compare($1.1) == .orderedDescending })
                 
-                promise.fulfill(ACData(downloads: downloads, proceeds: proceeds, currency: currency))
+                promise.fulfill(ACData(downloads: downloads, proceeds: proceeds, currency: localCurrency.symbol))
             }
             .catch { err in
                 if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {

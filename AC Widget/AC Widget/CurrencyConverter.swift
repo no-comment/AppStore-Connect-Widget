@@ -30,6 +30,10 @@ enum Currency : String, CaseIterable {
     case HUF = "HUF"; case SEK = "SEK"
     case IDR = "IDR"; case SGD = "SGD"
     case ILS = "ILS"; case THB = "THB"
+    
+    var symbol: String {
+        return NSLocale(localeIdentifier: self.rawValue).displayName(forKey: .currencySymbol, value: self.rawValue) ?? "$"
+    }
 }
 
 // Global Classes:

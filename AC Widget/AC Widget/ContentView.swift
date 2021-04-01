@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var data: ACData?
     
     var body: some View {
-        Text(data?.getProceeds() ?? "No Data")
+        Text((data?.getProceeds() ?? "No Data") + (data?.currency ?? ""))
         .onAppear {
             api.getData().then { (data) in
                 self.data = data
