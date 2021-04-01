@@ -1,0 +1,4 @@
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+AC Widget/.DS_Store

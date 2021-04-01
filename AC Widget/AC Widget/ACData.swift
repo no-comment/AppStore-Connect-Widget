@@ -20,7 +20,7 @@ struct ACData {
     
     
     // MARK: Getting Numbers
-    func getDownloads(_ lastNDays: Int = 1) -> String {
+    func getDownloads(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
         let num: Int = getDownloads(lastNDays)
         if num < 1000 {
             return "\(num)"
@@ -28,24 +28,56 @@ struct ACData {
         
         let fNum: NSNumber = NSNumber(value: Float(num)/1000)
         let nf = NumberFormatter()
-        nf.numberStyle = .decimal
-        nf.maximumFractionDigits = 1
-        return (nf.string(from: fNum) ?? "0").appending("k")
-    }
-    
-    func getProceeds(_ lastNDays: Int = 1) -> String {
-        var num: Float = getProceeds(lastNDays)
-        var oneK = false
-        if num >= 1000 {
-            num = num/1000
-            oneK = true
+        
+        switch size {
+        case .compact:
+            if num <  10000 {
+                nf.numberStyle = .decimal
+                nf.maximumFractionDigits = 1
+            }
+        case .standard:
+            nf.numberStyle = .decimal
+            nf.maximumFractionDigits = 3
         }
         
-        let formatteableNum: NSNumber = NSNumber(value: num)
+        return (nf.string(from: fNum) ?? "0").appending("K")
+    }
+    
+    func getProceeds(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
+        let num: Float = getProceeds(lastNDays)
+        var fNum: NSNumber = NSNumber(value: num)
         let nf = NumberFormatter()
-        nf.numberStyle = .decimal
-        nf.maximumFractionDigits = 1
-        return (nf.string(from: formatteableNum) ?? "0").appending(oneK ? "k" : "")
+        var addK = false
+        
+        switch size {
+        case .compact:
+            if num <  10 {
+                nf.numberStyle = .decimal
+                nf.maximumFractionDigits = 2
+            } else if num < 100 {
+                nf.numberStyle = .decimal
+                nf.maximumFractionDigits = 1
+            } else if num < 1000 {
+            } else if num < 10000 {
+                fNum = NSNumber(value: num/1000)
+                nf.numberStyle = .decimal
+                nf.maximumFractionDigits = 1
+                addK = true
+            } else if num < 100000 {
+                fNum = NSNumber(value: num/1000)
+                addK = true
+            }
+        case .standard:
+            if num >= 1000 {
+                fNum = NSNumber(value: num/1000)
+                addK = true
+            }
+            
+            nf.numberStyle = .decimal
+            nf.maximumFractionDigits = (num >= 1000 && num/1000 < 10) || num < 10 ? 2 : 1
+        }
+        
+        return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
     }
     
     private func getDownloads(_ lastNDays: Int = 1) -> Int {
@@ -65,6 +97,8 @@ struct ACData {
         }
         return result
     }
+    
+    enum NumberLength { case compact, standard }
     
     
     // MARK: Getting Dates
@@ -125,7 +159,7 @@ struct ACData {
         (823, Date(timeIntervalSinceNow: -86400*9)),
         (797, Date(timeIntervalSinceNow: -86400*10))
     ], proceeds: [
-        (153.5, Date(timeIntervalSinceNow: -86400*1)),
+        (453.54, Date(timeIntervalSinceNow: -86400*1)),
         (128.2, Date(timeIntervalSinceNow: -86400*2)),
         (69.7, Date(timeIntervalSinceNow: -86400*3)),
         (195.0, Date(timeIntervalSinceNow: -86400*4)),
@@ -134,6 +168,6 @@ struct ACData {
         (135.5, Date(timeIntervalSinceNow: -86400*7)),
         (418.1, Date(timeIntervalSinceNow: -86400*8)),
         (324.5, Date(timeIntervalSinceNow: -86400*9)),
-        (522.4, Date(timeIntervalSinceNow: -86400*10))
+        (542.4, Date(timeIntervalSinceNow: -86400*10))
     ], currency: "$")
 }

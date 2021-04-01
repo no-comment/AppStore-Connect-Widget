@@ -30,7 +30,7 @@ struct SummarySmall: View {
                 
                 Spacer()
                 
-                Text(data.getProceeds(7).appending(data.currency))
+                Text(data.getProceeds(7, size: .compact).appending(data.currency))
                     .font(.system(.headline, design: .rounded))
             }
             .minimumScaleFactor(0.8)
@@ -43,7 +43,7 @@ struct SummarySmall: View {
                 
                 Spacer()
                 
-                Text(data.getProceeds(30).appending(data.currency))
+                Text(data.getProceeds(30, size: .compact).appending(data.currency))
                     .font(.system(.headline, design: .rounded))
             }
             .minimumScaleFactor(0.8)
