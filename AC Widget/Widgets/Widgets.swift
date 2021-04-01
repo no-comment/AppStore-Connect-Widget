@@ -8,54 +8,85 @@
 import WidgetKit
 import SwiftUI
 import Intents
+import Promises
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
-        ACStatEntry(date: Date(), proceedToday: 4, configuration: ConfigurationIntent())
+        ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent())
     }
     
     func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (ACStatEntry) -> ()) {
         if context.isPreview {
             completion(.placeholder)
         } else {
-            let entry = ACStatEntry(date: Date(), proceedToday: 4, configuration: configuration)
-            completion(entry)
+            getApiData()
+                .then { data in
+                    let entry = ACStatEntry(date: Date(), data: data, configuration: configuration)
+                    completion(entry)
+                }
+                .catch { err in
+                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration)
+                    completion(entry)
+                }
         }
     }
     
     func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [ACStatEntry] = []
         
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = ACStatEntry(date: entryDate, proceedToday: 4, configuration: configuration)
-            entries.append(entry)
-        }
-        
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
+        getApiData()
+            .then { data in
+                let entry = ACStatEntry(date: Date(), data: data, configuration: configuration)
+                entries.append(entry)
+                
+                let nextUpdateDate = Date().advanced(by: 5 * 60)
+                let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
+                completion(timeline)
+            }
+            .catch { err in
+                let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration)
+                entries.append(entry)
+                
+                let nextUpdateDate = Date().advanced(by: 5 * 60)
+                let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
+                completion(timeline)
+            }
+    }
+    
+    func getApiData() -> Promise<ACData> {
+        let api = AppStoreConnectApi(issuerID: "7430ebed-8822-4eaa-ba00-97592cdb38b2", privateKeyID: "ABKAQ928YH", privateKey: "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgbMD68WtndmOxWw0xdeMfPdzX096ie1ahRmRmlwJQGGmgCgYIKoZIzj0DAQehRANCAAR+ys9MVkO+PyE1lCG0HOZkl+WqwGggTQsdFr3acXOogX9YNMakC4fLtr6BQdnYz6hyab09BxKfAczJJdJl/4Fb", vendorNumber: "89258042")
+        return api.getData()
     }
 }
 
 struct ACStatEntry: TimelineEntry {
     let date: Date
-    let proceedToday: Float
+    let data: ACData?
+    var error: APIError? = nil
     let configuration: ConfigurationIntent
 }
 
 extension ACStatEntry {
-    static let placeholder = ACStatEntry(date: Date(), proceedToday: 42.69, configuration: ConfigurationIntent())
+    static let placeholder = ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent())
 }
 
 struct WidgetsEntryView : View {
+    @Environment(\.widgetFamily) var size
+    
     var entry: Provider.Entry
     
     var body: some View {
-        VStack {
-            Text(entry.date, style: .time)
-            Text("\(entry.proceedToday)$")
+        if let data = entry.data {
+            switch size {
+            case .systemSmall:
+                SummarySmall(data: data)
+            case .systemMedium:
+                SummaryMedium(data: data)
+            default:
+                ErrorWidget(error: .unknown)
+            }
+        } else {
+            ErrorWidget(error: entry.error ?? .unknown)
         }
     }
 }
@@ -75,7 +106,7 @@ struct Widgets: Widget {
 
 struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), proceedToday: 42.49, configuration: ConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

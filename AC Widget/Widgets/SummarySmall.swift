@@ -33,7 +33,7 @@ struct SummarySmall: View {
                 Text(data.getProceeds(7, size: .compact).appending(data.currency))
                     .font(.system(.headline, design: .rounded))
             }
-            .minimumScaleFactor(0.8)
+            .minimumScaleFactor(0.6)
             .lineLimit(1)
             
             HStack {
@@ -46,7 +46,7 @@ struct SummarySmall: View {
                 Text(data.getProceeds(30, size: .compact).appending(data.currency))
                     .font(.system(.headline, design: .rounded))
             }
-            .minimumScaleFactor(0.8)
+            .minimumScaleFactor(0.6)
             .lineLimit(1)
         }
         .padding()

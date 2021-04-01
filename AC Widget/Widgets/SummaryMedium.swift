@@ -25,74 +25,74 @@ struct SummaryMedium: View {
     }
     
     var downloadsSection: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 5.0) {
             UnitText(data.getDownloads(), metricSymbol: "square.and.arrow.down")
-            
-            Spacer()
             
             GraphView(data.getDownloads(30))
             
-            HStack {
-                Text("Last 7 Days:")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-            
-                Spacer()
-            
-                Text(data.getDownloads(7))
-                    .font(.system(.headline, design: .rounded))
-            }
-            .minimumScaleFactor(0.8)
-            .lineLimit(1)
-            
-            HStack {
-                Text("Last 30 Days:")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+            VStack {
+                HStack {
+                    Text("Last 7 Days:")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Text(data.getDownloads(7))
+                        .font(.system(.headline, design: .rounded))
+                }
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
                 
-                Spacer()
-                
-                Text(data.getDownloads(30))
-                    .font(.system(.headline, design: .rounded))
+                HStack {
+                    Text("Last 30 Days:")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Text(data.getDownloads(30))
+                        .font(.system(.headline, design: .rounded))
+                }
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
             }
-            .minimumScaleFactor(0.8)
-            .lineLimit(1)
         }
     }
     
     var proceedsSection: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 5.0) {
             UnitText(data.getProceeds(), metric: data.currency)
-                        
-            Spacer()
             
             GraphView(data.getProceeds(30))
             
-            HStack {
-                Text("Last 7 Days:")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+            VStack {
+                HStack {
+                    Text("Last 7 Days:")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Text(data.getProceeds(7, size: .compact).appending(data.currency))
+                        .font(.system(.headline, design: .rounded))
+                }
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
                 
-                Spacer()
-                
-                Text(data.getProceeds(7, size: .compact).appending(data.currency))
-                    .font(.system(.headline, design: .rounded))
+                HStack {
+                    Text("Last 30 Days:")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Text(data.getProceeds(30, size: .compact).appending(data.currency))
+                        .font(.system(.headline, design: .rounded))
+                }
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
             }
-            .minimumScaleFactor(0.8)
-            .lineLimit(1)
-            
-            HStack {
-                Text("Last 30 Days:")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                Spacer()
-                
-                Text(data.getProceeds(30, size: .compact).appending(data.currency))
-                    .font(.system(.headline, design: .rounded))
-            }
-            .minimumScaleFactor(0.8)
-            .lineLimit(1)
         }
     }
 }
