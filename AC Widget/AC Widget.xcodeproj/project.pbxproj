@@ -30,6 +30,18 @@
 		45E8C4BD261267FB007F9B0E /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 45E8C4BC261267FB007F9B0E /* Gzip */; };
 		45E8C4C0261268D4007F9B0E /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 45E8C4BF261268D4007F9B0E /* SwiftCSV */; };
 		45E8C4C226126B34007F9B0E /* CurrencyConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8C4C126126B34007F9B0E /* CurrencyConverter.swift */; };
+		CB28AED42615D1FA00B48215 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AED32615D1FA00B48215 /* APIError.swift */; };
+		CB28AED82615D21C00B48215 /* ACData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AED72615D21C00B48215 /* ACData.swift */; };
+		CB28AED92615D21C00B48215 /* ACData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AED72615D21C00B48215 /* ACData.swift */; };
+		CB28AEDC2615D21F00B48215 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AED32615D1FA00B48215 /* APIError.swift */; };
+		CB28AEE02615D24400B48215 /* UnitText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEDF2615D24400B48215 /* UnitText.swift */; };
+		CB28AEE12615D24400B48215 /* UnitText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEDF2615D24400B48215 /* UnitText.swift */; };
+		CB28AEE52615D28F00B48215 /* SummarySmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEE42615D28F00B48215 /* SummarySmall.swift */; };
+		CB28AEE62615D28F00B48215 /* SummarySmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEE42615D28F00B48215 /* SummarySmall.swift */; };
+		CB28AEEA2615D2BB00B48215 /* SummaryMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */; };
+		CB28AEEB2615D2BB00B48215 /* SummaryMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */; };
+		CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */; };
+		CB28AEF02615D2E900B48215 /* ErrorWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +86,12 @@
 		45E8C4A02612531E007F9B0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45E8C4A62612531E007F9B0E /* WidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetsExtension.entitlements; sourceTree = "<group>"; };
 		45E8C4C126126B34007F9B0E /* CurrencyConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverter.swift; sourceTree = "<group>"; };
+		CB28AED32615D1FA00B48215 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		CB28AED72615D21C00B48215 /* ACData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACData.swift; sourceTree = "<group>"; };
+		CB28AEDF2615D24400B48215 /* UnitText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitText.swift; sourceTree = "<group>"; };
+		CB28AEE42615D28F00B48215 /* SummarySmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummarySmall.swift; sourceTree = "<group>"; };
+		CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryMedium.swift; sourceTree = "<group>"; };
+		CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorWidget.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +153,8 @@
 				45E8C4862612512F007F9B0E /* Preview Content */,
 				45E8C4C126126B34007F9B0E /* CurrencyConverter.swift */,
 				45CAC1142615CDBE00FF63E7 /* AppStoreConnectApi.swift */,
+				CB28AED72615D21C00B48215 /* ACData.swift */,
+				CB28AED32615D1FA00B48215 /* APIError.swift */,
 			);
 			path = "AC Widget";
 			sourceTree = "<group>";
@@ -160,6 +180,10 @@
 			isa = PBXGroup;
 			children = (
 				45E8C49B2612531D007F9B0E /* Widgets.swift */,
+				CB28AEE42615D28F00B48215 /* SummarySmall.swift */,
+				CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */,
+				CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */,
+				CB28AEDF2615D24400B48215 /* UnitText.swift */,
 				45E8C49D2612531D007F9B0E /* Widgets.intentdefinition */,
 				45E8C49E2612531E007F9B0E /* Assets.xcassets */,
 				45E8C4A02612531E007F9B0E /* Info.plist */,
@@ -285,11 +309,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB28AED82615D21C00B48215 /* ACData.swift in Sources */,
 				45E8C4832612512E007F9B0E /* ContentView.swift in Sources */,
+				CB28AEE52615D28F00B48215 /* SummarySmall.swift in Sources */,
 				45E8C4C226126B34007F9B0E /* CurrencyConverter.swift in Sources */,
 				45E8C4A22612531E007F9B0E /* Widgets.intentdefinition in Sources */,
+				CB28AEEA2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
+				CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
 				45CAC1152615CDBE00FF63E7 /* AppStoreConnectApi.swift in Sources */,
+				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
+				CB28AED42615D1FA00B48215 /* APIError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,10 +327,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB28AED92615D21C00B48215 /* ACData.swift in Sources */,
 				45CAC1132615CC5F00FF63E7 /* CurrencyConverter.swift in Sources */,
 				45CAC1162615CDBE00FF63E7 /* AppStoreConnectApi.swift in Sources */,
+				CB28AEEB2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
+				CB28AEE12615D24400B48215 /* UnitText.swift in Sources */,
+				CB28AEE62615D28F00B48215 /* SummarySmall.swift in Sources */,
 				45E8C4A12612531E007F9B0E /* Widgets.intentdefinition in Sources */,
 				45E8C49C2612531D007F9B0E /* Widgets.swift in Sources */,
+				CB28AEF02615D2E900B48215 /* ErrorWidget.swift in Sources */,
+				CB28AEDC2615D21F00B48215 /* APIError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
