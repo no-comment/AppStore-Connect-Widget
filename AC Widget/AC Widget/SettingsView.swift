@@ -13,13 +13,13 @@ struct SettingsView: View {
     @State var privateKeyID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
     @State var privateKey: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
     @State var vendorNumber: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
-
+    
     var body: some View {
         Form {
             keySection
             
             saveSection
-
+            
             contactSection
         }
         .navigationTitle("Settings")
@@ -65,6 +65,9 @@ struct SettingsView: View {
                 TextField("Vendor Number", text: $vendorNumber)
             }
         }
+        .onAppear {
+            resetToUserDefaults()
+        }
     }
     
     var saveSection: some View {
@@ -78,12 +81,7 @@ struct SettingsView: View {
                 WidgetCenter.shared.reloadAllTimelines()
             }
             
-            Button("Cancel") {
-                issuerID = UserDefaults.shared?.string(forKey: UserDefaultsKey.issuerID) ?? ""
-                privateKeyID = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
-                privateKey = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
-                vendorNumber = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
-            }
+            Button("Cancel", action: resetToUserDefaults)
         }
     }
     
@@ -93,6 +91,14 @@ struct SettingsView: View {
                 Text("GitHub")
             })
         }
+    }
+    
+    func resetToUserDefaults() {
+        issuerID = UserDefaults.shared?.string(forKey: UserDefaultsKey.issuerID) ?? ""
+        privateKeyID = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
+        privateKey = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
+        vendorNumber = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
+        
     }
 }
 
