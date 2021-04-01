@@ -42,6 +42,8 @@
 		CB28AEEB2615D2BB00B48215 /* SummaryMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */; };
 		CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */; };
 		CB28AEF02615D2E900B48215 /* ErrorWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */; };
+		CB28AEFC2615F5E700B48215 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEFB2615F5E700B48215 /* GraphView.swift */; };
+		CB28AEFD2615F5E700B48215 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEFB2615F5E700B48215 /* GraphView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +94,7 @@
 		CB28AEE42615D28F00B48215 /* SummarySmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummarySmall.swift; sourceTree = "<group>"; };
 		CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryMedium.swift; sourceTree = "<group>"; };
 		CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorWidget.swift; sourceTree = "<group>"; };
+		CB28AEFB2615F5E700B48215 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +187,7 @@
 				CB28AEE92615D2BB00B48215 /* SummaryMedium.swift */,
 				CB28AEEE2615D2E900B48215 /* ErrorWidget.swift */,
 				CB28AEDF2615D24400B48215 /* UnitText.swift */,
+				CB28AEFB2615F5E700B48215 /* GraphView.swift */,
 				45E8C49D2612531D007F9B0E /* Widgets.intentdefinition */,
 				45E8C49E2612531E007F9B0E /* Assets.xcassets */,
 				45E8C4A02612531E007F9B0E /* Info.plist */,
@@ -320,6 +324,7 @@
 				45CAC1152615CDBE00FF63E7 /* AppStoreConnectApi.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AED42615D1FA00B48215 /* APIError.swift in Sources */,
+				CB28AEFC2615F5E700B48215 /* GraphView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,6 +335,7 @@
 				CB28AED92615D21C00B48215 /* ACData.swift in Sources */,
 				45CAC1132615CC5F00FF63E7 /* CurrencyConverter.swift in Sources */,
 				45CAC1162615CDBE00FF63E7 /* AppStoreConnectApi.swift in Sources */,
+				CB28AEFD2615F5E700B48215 /* GraphView.swift in Sources */,
 				CB28AEEB2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
 				CB28AEE12615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AEE62615D28F00B48215 /* SummarySmall.swift in Sources */,

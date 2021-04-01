@@ -80,6 +80,14 @@ struct ACData {
         return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
     }
     
+    func getDownloads(_ lastNDays: Int) -> [(Int, Date)] {
+        return downloads
+    }
+    
+    func getProceeds(_ lastNDays: Int) -> [(Float, Date)] {
+        return proceeds
+    }
+    
     private func getDownloads(_ lastNDays: Int = 1) -> Int {
         var result: Int = 0
         let range = min(downloads.count, lastNDays)
@@ -117,7 +125,10 @@ struct ACData {
             return "Yesterday"
         }
         let df = DateFormatter()
-        df.dateFormat = "dd. MM."
+        if Calendar.current.isDate(date, inSameDayAs: date.advanced(by: -86400*6)) || date > date.advanced(by: -86400*6) {
+            return df.weekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
+        }
+        df.dateFormat = "dd. MMM."
         return df.string(from: date)
     }
     

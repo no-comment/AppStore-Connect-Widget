@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import AppStoreConnect_Swift_SDK
 
 struct ContentView: View {
     @State var data: ACData?
+    let api = AppStoreConnectApi(issuerID: "", privateKeyID: "", privateKey: "", vendorNumber: "")
     
     var body: some View {
         Text((data?.getProceeds() ?? "No Data") + (data?.currency ?? ""))

@@ -30,6 +30,8 @@ struct SummaryMedium: View {
             
             Spacer()
             
+            GraphView(data.getDownloads(30))
+            
             HStack {
                 Text("Last 7 Days:")
                     .font(.subheadline)
@@ -63,6 +65,8 @@ struct SummaryMedium: View {
             UnitText(data.getProceeds(), metric: data.currency)
                         
             Spacer()
+            
+            GraphView(data.getProceeds(30))
             
             HStack {
                 Text("Last 7 Days:")
