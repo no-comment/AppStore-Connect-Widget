@@ -10,13 +10,17 @@ import AppStoreConnect_Swift_SDK
 
 struct ContentView: View {
     @State var data: ACData?
-    let api = AppStoreConnectApi(issuerID: "", privateKeyID: "", privateKey: "", vendorNumber: "")
+    @AppStorage(UserDefaultsKey.issuerID, store: UserDefaults.shared) var issuerID: String = ""
+    @AppStorage(UserDefaultsKey.privateKeyID, store: UserDefaults.shared) var privateKeyID: String = ""
+    @AppStorage(UserDefaultsKey.privateKey, store: UserDefaults.shared) var privateKey: String = ""
+    @AppStorage(UserDefaultsKey.vendorNumber, store: UserDefaults.shared) var vendorNumber: String = ""
     
     var body: some View {
         NavigationView {
             ScrollView {
                 Text((data?.getProceeds() ?? "No Data") + (data?.currency ?? ""))
                     .onAppear {
+                        let api = AppStoreConnectApi(issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber)
                         api.getData().then { (data) in
                             self.data = data
                         }.catch { (err) in

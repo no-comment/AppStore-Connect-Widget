@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		452A37F126161C97005CD1DA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452A37F026161C97005CD1DA /* Extensions.swift */; };
+		452A37F226161C97005CD1DA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452A37F026161C97005CD1DA /* Extensions.swift */; };
 		455B4AA02613BAA80061785A /* Promises in Frameworks */ = {isa = PBXBuildFile; productRef = 455B4A9F2613BAA80061785A /* Promises */; };
 		45CAC1092615CB8100FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC1082615CB8100FF63E7 /* AppStoreConnect-Swift-SDK */; };
 		45CAC10B2615CBC200FF63E7 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC10A2615CBC200FF63E7 /* Gzip */; };
@@ -74,6 +76,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		452A37F026161C97005CD1DA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		45CAC1142615CDBE00FF63E7 /* AppStoreConnectApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreConnectApi.swift; sourceTree = "<group>"; };
 		45E8C47D2612512E007F9B0E /* AC Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AC Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45E8C4802612512E007F9B0E /* AC_WidgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AC_WidgetApp.swift; sourceTree = "<group>"; };
@@ -164,6 +167,7 @@
 				CB28AED72615D21C00B48215 /* ACData.swift */,
 				CB28AED32615D1FA00B48215 /* APIError.swift */,
 				CB28AF002616163600B48215 /* SettingsView.swift */,
+				452A37F026161C97005CD1DA /* Extensions.swift */,
 			);
 			path = "AC Widget";
 			sourceTree = "<group>";
@@ -334,6 +338,7 @@
 				CB28AED42615D1FA00B48215 /* APIError.swift in Sources */,
 				CB28AEFC2615F5E700B48215 /* GraphView.swift in Sources */,
 				CB28AF012616163600B48215 /* SettingsView.swift in Sources */,
+				452A37F126161C97005CD1DA /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +353,7 @@
 				CB28AEEB2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
 				CB28AEE12615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AEE62615D28F00B48215 /* SummarySmall.swift in Sources */,
+				452A37F226161C97005CD1DA /* Extensions.swift in Sources */,
 				45E8C4A12612531E007F9B0E /* Widgets.intentdefinition in Sources */,
 				CB28AF0A26161D5E00B48215 /* DescribedValueView.swift in Sources */,
 				45E8C49C2612531D007F9B0E /* Widgets.swift in Sources */,

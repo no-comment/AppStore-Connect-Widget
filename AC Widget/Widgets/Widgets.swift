@@ -54,7 +54,17 @@ struct Provider: IntentTimelineProvider {
     }
     
     func getApiData() -> Promise<ACData> {
-        let api = AppStoreConnectApi(issuerID: "7430ebed-8822-4eaa-ba00-97592cdb38b2", privateKeyID: "ABKAQ928YH", privateKey: "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgbMD68WtndmOxWw0xdeMfPdzX096ie1ahRmRmlwJQGGmgCgYIKoZIzj0DAQehRANCAAR+ys9MVkO+PyE1lCG0HOZkl+WqwGggTQsdFr3acXOogX9YNMakC4fLtr6BQdnYz6hyab09BxKfAczJJdJl/4Fb", vendorNumber: "89258042")
+        let issuerID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.issuerID) ?? ""
+        let privateKeyID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
+        let privateKey: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
+        let vendorNumber: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
+
+        if issuerID == "" || privateKeyID == "" || privateKey == "" || vendorNumber == "" {
+            let promise = Promise<ACData>.pending()
+            promise.reject(APIError.invalidCredentials)
+            return promise
+        }
+        let api = AppStoreConnectApi(issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber)
         return api.getData()
     }
 }
@@ -101,6 +111,7 @@ struct Widgets: Widget {
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
