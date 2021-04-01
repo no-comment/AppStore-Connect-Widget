@@ -49,6 +49,8 @@
 		CB28AF012616163600B48215 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AF002616163600B48215 /* SettingsView.swift */; };
 		CB28AF0926161D5E00B48215 /* DescribedValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AF0826161D5D00B48215 /* DescribedValueView.swift */; };
 		CB28AF0A26161D5E00B48215 /* DescribedValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AF0826161D5D00B48215 /* DescribedValueView.swift */; };
+		CB400DDB26162D19009E14E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45E8C49E2612531E007F9B0E /* Assets.xcassets */; };
+		CB400DDE26162EAA009E14E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45E8C4842612512F007F9B0E /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -305,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45E8C4882612512F007F9B0E /* Preview Assets.xcassets in Resources */,
+				CB400DDB26162D19009E14E1 /* Assets.xcassets in Resources */,
 				45E8C4852612512F007F9B0E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,6 +316,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB400DDE26162EAA009E14E1 /* Assets.xcassets in Resources */,
 				45E8C49F2612531E007F9B0E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,7 +428,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -479,7 +483,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
