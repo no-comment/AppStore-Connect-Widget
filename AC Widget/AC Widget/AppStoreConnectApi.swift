@@ -20,8 +20,12 @@ class AppStoreConnectApi {
     init(issuerID: String, privateKeyID: String, privateKey: String, vendorNumber: String) {
         self.issuerID = issuerID
         self.privateKeyID = privateKeyID
-        self.privateKey = privateKey
         self.vendorNumber = vendorNumber
+        
+        self.privateKey = privateKey
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "-----BEGIN PRIVATE KEY-----", with: "")
+            .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
     }
     
     public func getData() -> Promise<ACData> {
