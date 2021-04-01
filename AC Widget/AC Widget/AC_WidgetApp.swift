@@ -1,6 +1,6 @@
 //
 //  AC_WidgetApp.swift
-//  Shared
+//  AC Widget
 //
 //  Created by Miká Kruschel on 29.03.21.
 //
