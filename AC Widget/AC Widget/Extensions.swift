@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension UserDefaults {
     static var shared: UserDefaults? {
@@ -18,4 +19,23 @@ struct UserDefaultsKey {
     static let privateKeyID = "privateKeyID"
     static let privateKey = "privateKey"
     static let vendorNumber = "vendorNumber"
+}
+
+struct HideViewRedacted: ViewModifier {
+    @Environment(\.redactionReasons) private var reasons
+    
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if reasons.isEmpty {
+            content
+        } else {
+            EmptyView()
+        }
+    }
+}
+
+extension View {
+    func hideWhenRedacted() -> some View {
+        self.modifier(HideViewRedacted())
+    }
 }
