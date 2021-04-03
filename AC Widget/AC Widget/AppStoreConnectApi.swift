@@ -31,6 +31,10 @@ class AppStoreConnectApi {
     public func getData() -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
         
+        if self.privateKey.count < 20 {
+            promise.reject(APIError.invalidCredentials)
+            return promise
+        }
         let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
         
         let provider: APIProvider = APIProvider(configuration: configuration)
