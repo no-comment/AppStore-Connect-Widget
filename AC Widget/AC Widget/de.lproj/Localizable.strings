@@ -32,4 +32,4 @@
 "ERROR_INVALID_CREDENTIALS" = "Die eingegeben Zugangsdaten sind inkorrekt.";
 "ERROR_WRONG_PERMISSIONS" = "Dein API-key hat nicht die erforderlichen Befugnisse.";
 "ERROR_EXCEEDED_LIMIT" = "Du hast das tägliche Limit an API Zugriffen erreicht.";
-"ERROR_UNKNOWS" = "Es ist ein unbekannter Fehler aufgetreten.";
+"ERROR_UNKNOWN" = "Es ist ein unbekannter Fehler aufgetreten.";

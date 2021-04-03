@@ -22,7 +22,7 @@ enum APIError: Error {
         case .exceededLimit:
             return NSLocalizedString("ERROR_EXCEEDED_LIMIT", comment: "")
         case .unknown:
-            return NSLocalizedString("ERROR_UNKNOWS", comment: "")
+            return NSLocalizedString("ERROR_UNKNOWN", comment: "")
         }
     }
 }
