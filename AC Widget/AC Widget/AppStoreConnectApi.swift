@@ -76,11 +76,11 @@ class AppStoreConnectApi {
                         if type.contains("7") || type.contains("3") { return } // skip redownloads, updates and restoring of iap
                         if let units = Int(dict["Units"] ?? "0"), let pro: Double = Double(dict["Developer Proceeds"] ?? "0.00") {
                             if pro > 0 {
-                                if  let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
+                                if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
                                     procForDay += converter.convert(Double(units) * pro, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
                                 }
                             } else {
-                                downloadsForDay += 1
+                                downloadsForDay += units
                             }
                         }
                     }
