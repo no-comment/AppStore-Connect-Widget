@@ -30,7 +30,7 @@ struct GraphView: View {
                     ForEach(data.indices) { i in
                         Capsule()
                             .frame(width: (reading.size.width/CGFloat(data.count))*0.7 ,height: reading.size.height * getHeight(i))
-                            .foregroundColor(.accentColor)
+                            .foregroundColor(getColor(i))
                         
                         if i != data.count-1 {
                             Spacer()
@@ -47,7 +47,23 @@ struct GraphView: View {
     }
     
     private func getHeight(_ i: Int) -> CGFloat {
-        return (i >= data.count || data[i] == 0) ? 0.01 : data[i]
+        if i < data.count && data[i] > 0 {
+            return data[i]
+        }
+        if i < data.count && data[i] < 0 {
+            return abs(data[i])
+        }
+        return 0.01
+    }
+    
+    private func getColor(_ i: Int) -> Color {
+        if i < data.count && data[i] > 0 {
+            return .accentColor
+        }
+        if i < data.count && data[i] < 0 {
+            return .red
+        }
+        return .gray
     }
 }
 
