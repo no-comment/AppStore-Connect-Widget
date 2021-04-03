@@ -39,15 +39,41 @@ struct Provider: IntentTimelineProvider {
                 let entry = ACStatEntry(date: Date(), data: data, configuration: configuration)
                 entries.append(entry)
                 
-                let nextUpdateDate = Date().advanced(by: 5 * 60)
-                let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
+                // Report is not available yet. Daily reports for the Americas are available by 5 am Pacific Time; Japan, Australia, and New Zealand by 5 am Japan Standard Time; and 5 am Central European Time for all other territories.
+                
+                var nextUpdate = Date()
+                
+                if nextUpdate.getPSTHour() == 5 || nextUpdate.getJSTHour() == 5 || nextUpdate.getCETHour() == 5 {
+                    let minutes = nextUpdate.getMinutes()
+                    
+                    if minutes < 15 {
+                        nextUpdate = nextUpdate.nextDateWithMinute(15)
+                    } else if minutes < 30 {
+                        nextUpdate = nextUpdate.nextDateWithMinute(30)
+                    } else if minutes < 45 {
+                        nextUpdate = nextUpdate.nextDateWithMinute(45)
+                    } else {
+                        nextUpdate = nextUpdate.nextFullHour()
+                    }
+                } else {
+                    nextUpdate = nextUpdate.nextFullHour()
+                }
+                
+                let timeline = Timeline(entries: entries, policy: .after(nextUpdate))
                 completion(timeline)
             }
             .catch { err in
                 let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration)
                 entries.append(entry)
                 
-                let nextUpdateDate = Date().advanced(by: 5 * 60)
+                var nextUpdateDate = Date()
+                if err as? APIError == .invalidCredentials {
+                    nextUpdateDate = nextUpdateDate.advanced(by: 60 * 60 * 24)
+                } else {
+                    // wenn api down, update in 5 min erneut
+                    nextUpdateDate = nextUpdateDate.advanced(by: 5 * 60)
+                }
+                
                 let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
                 completion(timeline)
             }
@@ -58,7 +84,7 @@ struct Provider: IntentTimelineProvider {
         let privateKeyID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
         let privateKey: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
         let vendorNumber: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
-
+        
         if issuerID == "" || privateKeyID == "" || privateKey == "" || vendorNumber == "" {
             let promise = Promise<ACData>.pending()
             promise.reject(APIError.invalidCredentials)
@@ -119,7 +145,7 @@ struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
         WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
-
+        
         WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }

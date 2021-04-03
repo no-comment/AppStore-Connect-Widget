@@ -9,6 +9,46 @@ import Foundation
 import SwiftUI
 import WidgetKit
 
+extension Date {
+    func getCETHour() -> Int {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(abbreviation: "CET")!
+        return calendar.component(.hour, from: self)
+    }
+    
+    func getPSTHour() -> Int {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(abbreviation: "PST")!
+        return calendar.component(.hour, from: self)
+    }
+    
+    func getJSTHour() -> Int {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "JST")!
+        return calendar.component(.hour, from: self)
+    }
+    
+    func getMinutes() -> Int {
+        return Calendar(identifier: .gregorian).component(.minute, from: self)
+    }
+    
+    func nextFullHour() -> Date {
+        if let next = Calendar.current.date(bySetting: .minute, value: 0, of: self) {
+            return next.addingTimeInterval(60 * 60) // next hour
+        }
+        
+        return self
+    }
+
+    func nextDateWithMinute(_ minute: Int) -> Date {
+        if let next = Calendar.current.date(bySetting: .minute, value: 30, of: self) {
+            return next
+        }
+
+        return self
+    }
+}
+
 extension UserDefaults {
     static var shared: UserDefaults? {
         UserDefaults(suiteName: "group.dev.kruschel.ACWidget")
