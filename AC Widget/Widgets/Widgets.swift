@@ -41,8 +41,14 @@ struct Provider: IntentTimelineProvider {
         
         getApiData()
             .then { data in
-                let entry = ACStatEntry(date: Date(), data: data, configuration: configuration)
+                let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
+                    Calendar.current.isDateInToday(proceed.1) ||
+                        Calendar.current.isDateInYesterday(proceed.1)
+                }
+                
+                let entry = ACStatEntry(date: Date(), data: data, configuration: configuration, relevance: isNewData ? .high : .medium)
                 entries.append(entry)
+                //                let api = AppStoreConnectApi(issuerID: "7430ebed-8822-4eaa-ba00-97592cdb38b2", privateKeyID: "ABKAQ928YH", privateKey: "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgbMD68WtndmOxWw0xdeMfPdzX096ie1ahRmRmlwJQGGmgCgYIKoZIzj0DAQehRANCAAR+ys9MVkO+PyE1lCG0HOZkl+WqwGggTQsdFr3acXOogX9YNMakC4fLtr6BQdnYz6hyab09BxKfAczJJdJl/4Fb", vendorNumber: "89258042")
                 
                 // Report is not available yet. Daily reports for the Americas are available by 5 am Pacific Time; Japan, Australia, and New Zealand by 5 am Japan Standard Time; and 5 am Central European Time for all other territories.
                 
