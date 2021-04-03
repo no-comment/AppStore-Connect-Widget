@@ -21,11 +21,16 @@ struct Provider: IntentTimelineProvider {
         } else {
             getApiData()
                 .then { data in
-                    let entry = ACStatEntry(date: Date(), data: data, configuration: configuration)
+                    let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
+                        Calendar.current.isDateInToday(proceed.1) ||
+                            Calendar.current.isDateInYesterday(proceed.1)
+                    }
+                    
+                    let entry = ACStatEntry(date: Date(), data: data, configuration: configuration, relevance: isNewData ? .high : .medium)
                     completion(entry)
                 }
                 .catch { err in
-                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration)
+                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration, relevance: .low)
                     completion(entry)
                 }
         }
@@ -100,10 +105,17 @@ struct ACStatEntry: TimelineEntry {
     let data: ACData?
     var error: APIError? = nil
     let configuration: ConfigurationIntent
+    var relevance: TimelineEntryRelevance?
 }
 
 extension ACStatEntry {
     static let placeholder = ACStatEntry(date: Date(), data: .example, configuration: ConfigurationIntent())
+}
+
+extension TimelineEntryRelevance {
+    static let low = TimelineEntryRelevance(score: 0, duration: 0)
+    static let medium = TimelineEntryRelevance(score: 50, duration: 60 * 60)
+    static let high = TimelineEntryRelevance(score: 100, duration: 60 * 60)
 }
 
 struct WidgetsEntryView : View {
