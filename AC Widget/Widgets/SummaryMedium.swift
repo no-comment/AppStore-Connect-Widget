@@ -12,6 +12,23 @@ struct SummaryMedium: View {
     let data: ACData
     
     var body: some View {
+        HStack(spacing: 0) {
+            dateSection
+            informationSection
+                .padding([.vertical, .trailing], 12)
+        }
+    }
+    
+    var dateSection: some View {
+        Text(data.latestReportingDate())
+            .font(.subheadline)
+            .rotationEffect(.degrees(-90))
+            .fixedSize()
+            .frame(maxWidth: 30, maxHeight: .infinity)
+            .background(Color(UIColor.systemGray6))
+    }
+    
+    var informationSection: some View {
         HStack(alignment: .top, spacing: 0) {
             Spacer()
             downloadsSection
@@ -21,7 +38,6 @@ struct SummaryMedium: View {
             proceedsSection
             Spacer()
         }
-        .padding(12)
     }
     
     var downloadsSection: some View {
