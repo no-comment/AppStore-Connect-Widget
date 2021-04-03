@@ -43,52 +43,80 @@ struct OnboardingView: View {
     
     // MARK: Pages
     var welcomeSection: some View {
-        VStack {
+        VStack(spacing: 20) {
             Text("Welcome")
+                .font(.system(.largeTitle, design: .rounded))
             
+            SummaryMedium(data: ACData.exampleLargeSums)
+                .showAsWidget(.systemMedium)
+            
+            Text("ONBOARD_WELCOME")
+            
+            Spacer()
             nextButton
         }
     }
     
     var issuerIDSection: some View {
-        VStack {
-            Text("issuerID")
+        VStack(spacing: 20) {
+            Text("Issuer ID")
+                .font(.system(.largeTitle, design: .rounded))
             
             TextField("Issuer ID", text: $issuerID)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
             
+            Text("ONBOARD_ISSUER_ID")
+            
+            Spacer()
             nextButton
                 .disabled(issuerID.isEmpty)
         }
     }
     
     var privateKeyIDSection: some View {
-        VStack {
+        VStack(spacing: 20) {
             Text("Private Key ID")
+                .font(.system(.largeTitle, design: .rounded))
             
             TextField("Private Key ID", text: $keyID)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
             
+            Text("ONBOARD_PRIVATE_KEY_ID")
+            
+            Spacer()
             nextButton
                 .disabled(keyID.isEmpty)
         }
     }
     
     var privateKeySection: some View {
-        VStack {
+        VStack(spacing: 20) {
             Text("Private Key")
+                .font(.system(.largeTitle, design: .rounded))
             
             TextEditor(text: $key)
+                .frame(maxHeight: 250)
+                .border(Color.gray)
             
+            Text("ONBOARD_PRIVATE_KEY")
+            
+            Spacer()
             nextButton
                 .disabled(key.isEmpty)
         }
     }
     
     var VendorNrSection: some View {
-        VStack {
+        VStack(spacing: 20) {
             Text("Vendor Nr.")
+                .font(.system(.largeTitle, design: .rounded))
             
             TextField("Vendor Nr.", text: $vendor)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
             
+            Text("ONBOARD_VENDOR_NR")
+            
+            Spacer()
             nextButton
                 .disabled(vendor.isEmpty)
         }
