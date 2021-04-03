@@ -24,6 +24,7 @@ struct ErrorWidget: View {
                 .multilineTextAlignment(.center)
                 .font(.system(size: 14))
         }
+        .minimumScaleFactor(0.5)
         .padding()
     }
 }
