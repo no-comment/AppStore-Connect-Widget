@@ -22,6 +22,9 @@ struct SettingsView: View {
             
             contactSection
         }
+        .onAppear {
+            resetToUserDefaults()
+        }
         .navigationTitle("Settings")
     }
     
@@ -64,9 +67,6 @@ struct SettingsView: View {
                 
                 TextField("Vendor Number", text: $vendorNumber)
             }
-        }
-        .onAppear {
-            resetToUserDefaults()
         }
     }
     
