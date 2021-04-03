@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct ACData {
     private let downloads: [(Int, Date)]
@@ -120,17 +121,17 @@ struct ACData {
     // MARK: Getting Dates
     func latestReportingDate() -> String {
         guard let date = downloads.first?.1 else {
-            return "No Data"
+            return NSLocalizedString("NO_DATA", comment: "")
         }
         return dateToString(date)
     }
     
     private func dateToString(_ date: Date) -> String {
         if Calendar.current.isDateInToday(date) {
-            return "Today"
+            return NSLocalizedString("TODAY", comment: "")
         }
         if Calendar.current.isDateInYesterday(date) {
-            return "Yesterday"
+            return NSLocalizedString("YESTERDAY", comment: "")
         }
         let df = DateFormatter()
         if Calendar.current.isDate(date, inSameDayAs: date.advanced(by: -86400*6)) || date > date.advanced(by: -86400*6) {
