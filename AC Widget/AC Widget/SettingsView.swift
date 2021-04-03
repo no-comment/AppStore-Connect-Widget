@@ -86,9 +86,13 @@ struct SettingsView: View {
     }
     
     var contactSection: some View {
-        Section(header: Label("Development", systemImage: "hammer.fill")) {
-            Button(action: {}, label: {
+        Section(header: Label("Links", systemImage: "link")) {
+            Link(destination: URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget")!, label: {
                 Text("GitHub")
+            })
+            
+            Link(destination: URL(string: "https://www.apple.com")!, label: {
+                Text("Buy me a coffee")
             })
         }
     }
