@@ -29,7 +29,7 @@ struct GraphView: View {
                 HStack(alignment: .bottom, spacing: 0) {
                     ForEach(data.indices) { i in
                         Capsule()
-                            .frame(width: (reading.size.width/CGFloat(data.count))*0.7 ,height: reading.size.height * data[i])
+                            .frame(width: (reading.size.width/CGFloat(data.count))*0.7 ,height: reading.size.height * getHeight(i))
                             .foregroundColor(.accentColor)
                         
                         if i != data.count-1 {
@@ -44,6 +44,10 @@ struct GraphView: View {
                 .foregroundColor(.gray)
                 .italic()
         }
+    }
+    
+    private func getHeight(_ i: Int) -> CGFloat {
+        return (i >= data.count || data[i] == 0) ? 0.01 : data[i]
     }
 }
 
