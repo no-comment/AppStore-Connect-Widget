@@ -44,7 +44,7 @@ struct OnboardingView: View {
     // MARK: Pages
     var welcomeSection: some View {
         VStack(spacing: 20) {
-            Text("Welcome")
+            Text("WELCOME")
                 .font(.system(.largeTitle, design: .rounded))
             
             SummaryMedium(data: ACData.exampleLargeSums)
@@ -59,10 +59,10 @@ struct OnboardingView: View {
     
     var issuerIDSection: some View {
         VStack(spacing: 20) {
-            Text("Issuer ID")
+            Text("ISSUER_ID")
                 .font(.system(.largeTitle, design: .rounded))
             
-            TextField("Issuer ID", text: $issuerID)
+            TextField("ISSUER_ID", text: $issuerID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Text("ONBOARD_ISSUER_ID")
@@ -75,10 +75,10 @@ struct OnboardingView: View {
     
     var privateKeyIDSection: some View {
         VStack(spacing: 20) {
-            Text("Private Key ID")
+            Text("PRIVATE_KEY_ID")
                 .font(.system(.largeTitle, design: .rounded))
             
-            TextField("Private Key ID", text: $keyID)
+            TextField("PRIVATE_KEY_ID", text: $keyID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Text("ONBOARD_PRIVATE_KEY_ID")
@@ -91,7 +91,7 @@ struct OnboardingView: View {
     
     var privateKeySection: some View {
         VStack(spacing: 20) {
-            Text("Private Key")
+            Text("PRIVATE_KEY")
                 .font(.system(.largeTitle, design: .rounded))
             
             TextEditor(text: $key)
@@ -108,10 +108,10 @@ struct OnboardingView: View {
     
     var VendorNrSection: some View {
         VStack(spacing: 20) {
-            Text("Vendor Nr.")
+            Text("VENDOR_NR")
                 .font(.system(.largeTitle, design: .rounded))
             
-            TextField("Vendor Nr.", text: $vendor)
+            TextField("VENDOR_NR", text: $vendor)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Text("ONBOARD_VENDOR_NR")
@@ -126,7 +126,7 @@ struct OnboardingView: View {
     // MARK: Next Button
     var nextButton: some View {
         Button(action: onNextPress, label: {
-            Text(selection < 4 ? "Next" : "Finish")
+            Text(selection < 4 ? "NEXT" : "FINISH")
                 .font(.system(size: 18, weight: .bold))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)

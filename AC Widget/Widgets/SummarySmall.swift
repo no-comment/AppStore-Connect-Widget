@@ -23,8 +23,8 @@ struct SummarySmall: View {
             Spacer()
                 .frame(minHeight: 0)
             
-            DescribedValueView("7 Days:", value: data.getProceeds(7, size: .compact).appending(data.currency))
-            DescribedValueView("30 Days:", value: data.getProceeds(30, size: .compact).appending(data.currency))
+            DescribedValueView("LAST_SEVEN_DAYS", value: data.getProceeds(7, size: .compact).appending(data.currency))
+            DescribedValueView("LAST_THIRTY_DAYS", value: data.getProceeds(30, size: .compact).appending(data.currency))
         }
         .padding()
     }

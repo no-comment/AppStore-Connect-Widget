@@ -25,34 +25,34 @@ struct SettingsView: View {
         .onAppear {
             resetToUserDefaults()
         }
-        .navigationTitle("Settings")
+        .navigationTitle("SETTINGS")
     }
     
     var keySection: some View {
-        Section(header: Label("API Key", systemImage: "key.fill")) {
+        Section(header: Label("API_KEY", systemImage: "key.fill")) {
             VStack(alignment: .leading, spacing: 0.0) {
-                Text("Issuer ID")
+                Text("ISSUER_ID")
                     .bold()
                 
-                TextField("Issuer ID", text: $issuerID)
+                TextField("ISSUER_ID", text: $issuerID)
             }
             
             VStack(alignment: .leading, spacing: 0.0) {
-                Text("Private Key ID")
+                Text("PRIVATE_KEY_ID")
                     .bold()
                 
-                TextField("Private Key ID", text: $privateKeyID)
+                TextField("PRIVATE_KEY_ID", text: $privateKeyID)
             }
             
             VStack(alignment: .leading, spacing: 0.0) {
-                Text("Private Key")
+                Text("PRIVATE_KEY")
                     .bold()
                 ZStack {
                     TextEditor(text: $privateKey)
                     if privateKey.isEmpty {
                         VStack {
                             HStack {
-                                Text("Private Key")
+                                Text("PRIVATE_KEY")
                                     .foregroundColor(Color(UIColor.placeholderText))
                                 Spacer()
                             }
@@ -62,17 +62,17 @@ struct SettingsView: View {
             }
             
             VStack(alignment: .leading, spacing: 0.0) {
-                Text("Vendor Number")
+                Text("VENDOR_NR")
                     .bold()
                 
-                TextField("Vendor Number", text: $vendorNumber)
+                TextField("VENDOR_NR", text: $vendorNumber)
             }
         }
     }
     
     var saveSection: some View {
         Section {
-            Button("Save") {
+            Button("SAVE") {
                 UserDefaults.shared?.setValue(issuerID, forKey: UserDefaultsKey.issuerID)
                 UserDefaults.shared?.setValue(privateKeyID, forKey: UserDefaultsKey.privateKeyID)
                 UserDefaults.shared?.setValue(privateKey, forKey: UserDefaultsKey.privateKey)
@@ -81,7 +81,7 @@ struct SettingsView: View {
                 WidgetCenter.shared.reloadAllTimelines()
             }
             
-            Button("Cancel", action: resetToUserDefaults)
+            Button("CANCEL", action: resetToUserDefaults)
         }
     }
     

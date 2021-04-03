@@ -46,8 +46,8 @@ struct SummaryMedium: View {
             GraphView(data.getDownloads(30))
             
             VStack(spacing: 0) {
-                DescribedValueView("7 Days:", value: data.getDownloads(7, size: .compact))
-                DescribedValueView("30 Days:", value: data.getDownloads(30, size: .compact))
+                DescribedValueView("LAST_SEVEN_DAYS", value: data.getDownloads(7, size: .compact))
+                DescribedValueView("LAST_THIRTY_DAYS", value: data.getDownloads(30, size: .compact))
             }
         }
     }
@@ -58,8 +58,8 @@ struct SummaryMedium: View {
             GraphView(data.getProceeds(30))
             
             VStack(spacing: 0) {
-                DescribedValueView("7 Days:", value: data.getProceeds(7, size: .compact).appending(data.currency))
-                DescribedValueView("30 Days:", value: data.getProceeds(30, size: .compact).appending(data.currency))
+                DescribedValueView("LAST_SEVEN_DAYS", value: data.getProceeds(7, size: .compact).appending(data.currency))
+                DescribedValueView("LAST_THIRTY_DAYS", value: data.getProceeds(30, size: .compact).appending(data.currency))
             }
         }
     }

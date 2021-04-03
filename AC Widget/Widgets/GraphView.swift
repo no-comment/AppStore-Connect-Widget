@@ -40,7 +40,7 @@ struct GraphView: View {
                 }
             }
         } else {
-            Text("No Data")
+            Text("NO_DATA")
                 .foregroundColor(.gray)
                 .italic()
         }

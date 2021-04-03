@@ -1,0 +1,35 @@
+// MARK: Onboarding
+"WELCOME" = "Willkommen";
+"NEXT" = "Weiter";
+"FINISH" = "Fertig";
+"ONBOARD_WELCOME" = "";
+"ONBOARD_ISSUER_ID" = "";
+"ONBOARD_PRIVATE_KEY_ID" = "";
+"ONBOARD_PRIVATE_KEY" = "";
+"ONBOARD_VENDOR_NR" = "";
+
+// MARK: Settings
+"SETTINGS" = "Einstellungen";
+"API_KEY" = "API Key";
+"ISSUER_ID" = "Issuer ID";
+"PRIVATE_KEY_ID" = "Private Key ID";
+"PRIVATE_KEY" = "Private Key";
+"VENDOR_NR" = "Vendor Number";
+"SAVE" = "Speichern";
+"CANCEL" = "Abbrechen";
+
+// MARK: Widgets
+"TODAY" = "Heute";
+"YESTERDAY" = "Gestern";
+
+"LAST_SEVEN_DAYS" = "7 Tage:";
+"LAST_THIRTY_DAYS" = "30 Tage:";
+
+"NO_DATA" = "Keine Daten";
+
+// MARK: ERRORS
+"ERROR_CAPS" = "ERROR";
+"ERROR_INVALID_CREDENTIALS" = "Die eingegeben Zugangsdaten sind inkorrekt.";
+"ERROR_WRONG_PERMISSIONS" = "Dein API-key hat nicht die erforderlichen Befugnisse.";
+"ERROR_EXCEEDED_LIMIT" = "Du hast das tägliche Limit an API Zugriffen erreicht.";
+"ERROR_UNKNOWS" = "Es ist ein unbekannter Fehler aufgetreten.";

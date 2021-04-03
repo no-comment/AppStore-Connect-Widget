@@ -17,7 +17,7 @@ struct ErrorWidget: View {
                 .font(.system(size: 20))
                 .foregroundColor(.red)
             
-            Text("ERROR")
+            Text("ERROR_CAPS")
                 .font(.system(size: 22, weight: .medium, design: .rounded))
             
             Text(error.userDescription)

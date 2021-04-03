@@ -16,13 +16,13 @@ enum APIError: Error {
     var userDescription: String {
         switch self {
         case .invalidCredentials:
-            return "The credentials you entered are incorrect."
+            return NSLocalizedString("ERROR_INVALID_CREDENTIALS", comment: "")
         case .wrongPermissions:
-            return "Your API-key does not have the right permissions."
+            return NSLocalizedString("ERROR_WRONG_PERMISSIONS", comment: "")
         case .exceededLimit:
-            return "You have exceeded the daily limit of API requests."
+            return NSLocalizedString("ERROR_EXCEEDED_LIMIT", comment: "")
         case .unknown:
-            return "An unknown error occurred. Please file a bug report."
+            return NSLocalizedString("ERROR_UNKNOWS", comment: "")
         }
     }
 }
