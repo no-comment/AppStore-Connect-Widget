@@ -20,8 +20,8 @@ struct ACData {
     
     
     // MARK: Getting Numbers
-    func getDownloads(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
-        let num: Int = getDownloads(lastNDays)
+    func getDownloadsString(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
+        let num: Int = getDownloadsSum(lastNDays)
         if num < 1000 {
             return "\(num)"
         }
@@ -43,8 +43,8 @@ struct ACData {
         return (nf.string(from: fNum) ?? "0").appending("K")
     }
     
-    func getProceeds(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
-        let num: Float = getProceeds(lastNDays)
+    func getProceedsString(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
+        let num: Float = getProceedsSum(lastNDays)
         var fNum: NSNumber = NSNumber(value: num)
         let nf = NumberFormatter()
         var addK = false
@@ -81,27 +81,35 @@ struct ACData {
     }
     
     func getDownloads(_ lastNDays: Int) -> [(Int, Date)] {
-        return downloads
-    }
-    
-    func getProceeds(_ lastNDays: Int) -> [(Float, Date)] {
-        return proceeds
-    }
-    
-    private func getDownloads(_ lastNDays: Int = 1) -> Int {
-        var result: Int = 0
+        var result: [(Int, Date)] = []
         let range = min(downloads.count, lastNDays)
         for i in 0..<range {
-            result += downloads[i].0
+            result.append(downloads[i])
         }
         return result
     }
     
-    private func getProceeds(_ lastNDays: Int = 1) -> Float {
-        var result: Float = 0
+    func getProceeds(_ lastNDays: Int) -> [(Float, Date)] {
+        var result: [(Float, Date)] = []
         let range = min(proceeds.count, lastNDays)
         for i in 0..<range {
-            result += proceeds[i].0
+            result.append(proceeds[i])
+        }
+        return result
+    }
+    
+    private func getDownloadsSum(_ lastNDays: Int = 1) -> Int {
+        var result: Int = 0
+        for download in getDownloads(lastNDays) {
+            result += download.0
+        }
+        return result
+    }
+    
+    private func getProceedsSum(_ lastNDays: Int = 1) -> Float {
+        var result: Float = 0
+        for proceed in getProceeds(lastNDays) {
+            result += proceed.0
         }
         return result
     }

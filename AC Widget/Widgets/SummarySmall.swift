@@ -17,14 +17,14 @@ struct SummarySmall: View {
                 .font(.subheadline)
                 .foregroundColor(.gray)
                         
-            UnitText(data.getDownloads(), metricSymbol: "square.and.arrow.down")
-            UnitText(data.getProceeds(), metric: data.currency)
+            UnitText(data.getDownloadsString(), metricSymbol: "square.and.arrow.down")
+            UnitText(data.getProceedsString(), metric: data.currency)
             
             Spacer()
                 .frame(minHeight: 0)
             
-            DescribedValueView("LAST_SEVEN_DAYS", value: data.getProceeds(7, size: .compact).appending(data.currency))
-            DescribedValueView("LAST_THIRTY_DAYS", value: data.getProceeds(30, size: .compact).appending(data.currency))
+            DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getProceedsString(7, size: .compact).appending(data.currency))
+            DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getProceedsString(30, size: .compact).appending(data.currency))
         }
         .padding()
     }
