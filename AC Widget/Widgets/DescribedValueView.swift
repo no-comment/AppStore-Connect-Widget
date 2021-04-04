@@ -11,16 +11,16 @@ import WidgetKit
 struct DescribedValueView: View {
     let description: LocalizedStringKey
     let value: String
-    
+
     var body: some View {
         HStack(spacing: 0) {
             Text(description)
                 .font(.system(size: 17, weight: .regular, design: .default))
                 .foregroundColor(.gray)
                 .minimumScaleFactor(0.6)
-            
+
             Spacer()
-            
+
             Text(value)
                 .font(.system(size: 20, weight: .semibold, design: .rounded))
                 .minimumScaleFactor(0.75)

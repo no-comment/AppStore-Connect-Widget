@@ -15,28 +15,28 @@ extension Date {
         calendar.timeZone = TimeZone(abbreviation: "CET")!
         return calendar.component(.hour, from: self)
     }
-    
+
     func getPSTHour() -> Int {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(abbreviation: "PST")!
         return calendar.component(.hour, from: self)
     }
-    
+
     func getJSTHour() -> Int {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "JST")!
         return calendar.component(.hour, from: self)
     }
-    
+
     func getMinutes() -> Int {
         return Calendar(identifier: .gregorian).component(.minute, from: self)
     }
-    
+
     func nextFullHour() -> Date {
         if let next = Calendar.current.date(bySetting: .minute, value: 0, of: self) {
             return next.addingTimeInterval(60 * 60) // next hour
         }
-        
+
         return self
     }
 
@@ -66,7 +66,7 @@ struct UserDefaultsKey {
 
 struct HideViewRedacted: ViewModifier {
     @Environment(\.redactionReasons) private var reasons
-    
+
     @ViewBuilder
     func body(content: Content) -> some View {
         if reasons.isEmpty {
@@ -86,7 +86,7 @@ extension View {
 struct ShowAsWidget: ViewModifier {
     let width: CGFloat
     let height: CGFloat
-    
+
     init(_ size: WidgetFamily) {
         switch size {
         case .systemSmall:
@@ -120,7 +120,7 @@ extension View {
 
 extension CurrencyParam {
     static let system = CurrencyParam(identifier: "System", display: NSLocalizedString("SYSTEM", comment: ""))
-    
+
     func toCurrency() -> Currency? {
         if self == .system {
             return Currency(rawValue: Locale.current.currencyCode ?? "")

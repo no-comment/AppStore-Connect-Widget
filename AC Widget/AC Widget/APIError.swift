@@ -12,7 +12,7 @@ enum APIError: Error {
     case wrongPermissions
     case exceededLimit
     case unknown
-    
+
     var userDescription: String {
         switch self {
         case .invalidCredentials:

@@ -15,7 +15,7 @@ struct HomeView: View {
     @AppStorage(UserDefaultsKey.privateKeyID, store: UserDefaults.shared) var privateKeyID: String = ""
     @AppStorage(UserDefaultsKey.privateKey, store: UserDefaults.shared) var privateKey: String = ""
     @AppStorage(UserDefaultsKey.vendorNumber, store: UserDefaults.shared) var vendorNumber: String = ""
-    
+
     var body: some View {
         ScrollView {
             if data != nil {
@@ -28,7 +28,7 @@ struct HomeView: View {
                 ErrorWidget(error: .unknown)
                     .showAsWidget(.systemMedium)
             }
-            
+
             HStack {
                 Spacer()
             }
@@ -37,7 +37,7 @@ struct HomeView: View {
         .toolbar(content: toolbar)
         .onAppear(perform: onAppear)
     }
-    
+
     func toolbar() -> some ToolbarContent {
         ToolbarItem {
             NavigationLink(destination: SettingsView(),
@@ -45,7 +45,7 @@ struct HomeView: View {
             )
         }
     }
-    
+
     private func onAppear() {
         let api = AppStoreConnectApi(issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber)
         api.getData().then { (data) in

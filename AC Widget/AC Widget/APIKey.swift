@@ -14,11 +14,11 @@ struct APIKey: Codable, Identifiable {
     let privateKeyID: String
     let privateKey: String
     let vendorNumber: String
-    
+
     func checkKey() -> APIError? {
         return nil
     }
-    
+
     static let example = APIKey(name: "NO-COMMENT",
                                 issuerID: "2345-324-12",
                                 privateKeyID: "AJDBS7K",

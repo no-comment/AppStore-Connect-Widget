@@ -16,34 +16,35 @@ class AppStoreConnectApi {
     private var privateKeyID: String
     private var privateKey: String
     private var vendorNumber: String
-    
+
     init(issuerID: String, privateKeyID: String, privateKey: String, vendorNumber: String) {
         self.issuerID = issuerID
         self.privateKeyID = privateKeyID
         self.vendorNumber = vendorNumber
-        
+
         self.privateKey = privateKey
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "-----BEGIN PRIVATE KEY-----", with: "")
             .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
     }
-    
+
+    // swiftlint:disable:next function_body_length
     public func getData(currency: CurrencyParam? = nil) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
-        
+
         if self.privateKey.count < 20 {
             promise.reject(APIError.invalidCredentials)
             return promise
         }
         let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
-        
+
         let provider: APIProvider = APIProvider(configuration: configuration)
-        
+
         var downloads: [(Int, Date)] = []
         var proceeds: [(Float, Date)] = []
 
         let localCurrency: Currency = currency?.toCurrency() ?? .USD
-        
+
         let converter = CurrencyConverter.shared
         converter.updateExchangeRates()
             .then { _ in
@@ -63,16 +64,16 @@ class AppStoreConnectApi {
                         #endif
                         continue
                     }
-                    
+
                     let str = String(decoding: decompressedData, as: UTF8.self)
-                    
+
                     guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
                         #if DEBUG
                         fatalError()
                         #endif
                         continue
                     }
-                    
+
                     var procForDay: Double = 0
                     var downloadsForDay: Int = 0
                     try? tsv.enumerateAsDict { dict in
@@ -88,13 +89,13 @@ class AppStoreConnectApi {
                             }
                         }
                     }
-                    
+
                     if let beginDate = tsv.namedRows.first?["Begin Date"], let entryDate = Date.fromACFormat(beginDate) {
                         proceeds.append((Float(procForDay), entryDate))
                         downloads.append((downloadsForDay, entryDate))
                     }
                 }
-                
+
                 let firstDate: Date = proceeds.count > 0 ? proceeds.map({ $0.1 }).reduce(Date.distantFuture, { $0 < $1 ? $0 : $1 }) : Date()
                 let lastDate: Date = proceeds.count > 0 ? proceeds.map({ $0.1 }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
                 var curDate = firstDate
@@ -107,10 +108,10 @@ class AppStoreConnectApi {
                         downloads.append((0, curDate))
                     }
                 }
-                
+
                 proceeds.sort(by: { $0.1.compare($1.1) == .orderedDescending })
                 downloads.sort(by: { $0.1.compare($1.1) == .orderedDescending })
-                
+
                 promise.fulfill(ACData(downloads: downloads, proceeds: proceeds, currency: localCurrency.symbol))
             }
             .catch { err in
@@ -137,10 +138,10 @@ class AppStoreConnectApi {
                     promise.reject(APIError.unknown)
                 }
             }
-        
+
         return promise
     }
-    
+
     private func apiWrapped(provider: APIProvider, vendorNumber: String, date: String) -> Promise<Data> {
         return Promise<Data> { fulfill, reject in
             provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
@@ -167,20 +168,20 @@ extension Date {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.string(from: self)
     }
-    
+
     static func fromACFormat(_ dateString: String) -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
         return dateFormatter.date(from: dateString)
     }
-    
+
     func getLastNDates(_ n: Int) -> [Date] {
         let cal = NSCalendar.current
         // start with today
         var date = cal.startOfDay(for: self)
-        
+
         var res: [Date] = []
-        
+
         for _ in 1 ... n {
             res.append(date)
             date = cal.date(byAdding: Calendar.Component.day, value: -1, to: date)!
