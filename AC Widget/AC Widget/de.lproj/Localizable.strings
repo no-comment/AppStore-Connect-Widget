@@ -3,21 +3,32 @@
 "NEXT" = "Weiter";
 "FINISH" = "Fertig";
 "ONBOARD_WELCOME" = "";
+"ONBOARD_KEY_NAME" = "";
 "ONBOARD_ISSUER_ID" = "";
 "ONBOARD_PRIVATE_KEY_ID" = "";
 "ONBOARD_PRIVATE_KEY" = "";
 "ONBOARD_VENDOR_NR" = "";
 
+"RECHECK_INPUTS" = "Key Überprüfen";
+"CONTINUE" = "Weiter";
+"OK" = "Ok";
+"INVALID_KEY" = "Invalider Key";
+"INVALID_KEY_MSG" = "Einige der Informationen sind inkorrekt. Möchtest du den Key überprüfen oder dennoch weitermachen?";
+"DUPLICATE_KEY" = "Duplizierter Key";
+"DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
+
 // MARK: Settings
 "SETTINGS" = "Einstellungen";
 "API_KEYS" = "API Keys";
+"KEY_NAME" = "Key Name";
 "ISSUER_ID" = "Issuer ID";
 "PRIVATE_KEY_ID" = "Private Key ID";
 "PRIVATE_KEY" = "Private Key";
 "VENDOR_NR" = "Vendor Number";
 "ADD_KEY" = "Key hinzufügen";
-"SAVE" = "Speichern";
-"CANCEL" = "Abbrechen";
+"VALID_KEY" = "Valider Key";
+"INVALID_KEY" = "Invalider Key";
+"PROBLEM_KEY" = "Dieser Key hat ein anderes Problem";
 
 // MARK: Widgets
 "TODAY" = "Heute";

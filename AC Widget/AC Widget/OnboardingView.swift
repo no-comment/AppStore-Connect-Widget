@@ -11,7 +11,7 @@ struct OnboardingView: View {
     @State private var selection: Int
     @State private var alert: AddAPIKeyAlert?
 
-    @State private var name = "" // TODO: add input for name
+    @State private var name = ""
     @State private var issuerID = ""
     @State private var keyID = ""
     @State private var key = ""
@@ -27,21 +27,25 @@ struct OnboardingView: View {
                 .padding()
                 .tag(0)
 
-            issuerIDSection
+            nameSection
                 .padding()
                 .tag(1)
 
-            privateKeyIDSection
+            issuerIDSection
                 .padding()
                 .tag(2)
 
-            privateKeySection
+            privateKeyIDSection
                 .padding()
                 .tag(3)
 
-            VendorNrSection
+            privateKeySection
                 .padding()
                 .tag(4)
+
+            VendorNrSection
+                .padding()
+                .tag(5)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .alert(item: $alert, content: { generateAlert($0) })
@@ -63,6 +67,22 @@ struct OnboardingView: View {
         }
     }
 
+    var nameSection: some View {
+        VStack(spacing: 20) {
+            Text("KEY_NAME")
+                .font(.system(.largeTitle, design: .rounded))
+
+            TextField("KEY_NAME", text: $name)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+
+            Text("ONBOARD_KEY_NAME")
+
+            Spacer()
+            nextButton
+                .disabled(name.isEmpty)
+        }
+    }
+
     var issuerIDSection: some View {
         VStack(spacing: 20) {
             Text("ISSUER_ID")
@@ -70,6 +90,7 @@ struct OnboardingView: View {
 
             TextField("ISSUER_ID", text: $issuerID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .disableAutocorrection(true)
 
             Text("ONBOARD_ISSUER_ID")
 
@@ -86,6 +107,7 @@ struct OnboardingView: View {
 
             TextField("PRIVATE_KEY_ID", text: $keyID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .disableAutocorrection(true)
 
             Text("ONBOARD_PRIVATE_KEY_ID")
 
@@ -103,6 +125,7 @@ struct OnboardingView: View {
             TextEditor(text: $key)
                 .frame(maxHeight: 250)
                 .border(Color.gray)
+                .disableAutocorrection(true)
 
             Text("ONBOARD_PRIVATE_KEY")
 
@@ -119,6 +142,7 @@ struct OnboardingView: View {
 
             TextField("VENDOR_NR", text: $vendor)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .disableAutocorrection(true)
 
             Text("ONBOARD_VENDOR_NR")
 
@@ -131,7 +155,7 @@ struct OnboardingView: View {
     // MARK: Next Button
     var nextButton: some View {
         Button(action: onNextPress, label: {
-            Text(selection < 4 ? "NEXT" : "FINISH")
+            Text(selection < 5 ? "NEXT" : "FINISH")
                 .font(.system(size: 18, weight: .bold))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
@@ -143,7 +167,7 @@ struct OnboardingView: View {
     }
 
     private func onNextPress() {
-        if selection < 4 {
+        if selection < 5 {
             selection += 1
         } else {
             let apiKey = APIKey(name: name, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
@@ -159,13 +183,7 @@ struct OnboardingView: View {
                         alert = .invalidKey
                         return
                     }
-                    let savedSuccessfully = APIKey.addApiKey(apiKey: apiKey)
-
-                    if !savedSuccessfully {
-                        alert = .couldNotSave
-                        return
-                    }
-
+                    APIKey.addApiKey(apiKey: apiKey)
                     UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
                 }
                 .catch { err in
@@ -181,13 +199,12 @@ struct OnboardingView: View {
     private enum AddAPIKeyAlert: Int, Identifiable {
         case invalidKey = 0
         case duplicateKey = 1
-        case couldNotSave = 2
 
         var id: Int { self.rawValue }
     }
 
     private func generateAlert(_ alertType: AddAPIKeyAlert) -> Alert {
-        let primaryBtn = Alert.Button.default(Text("REDO"), action: { self.selection = 0 })
+        let primaryBtn = Alert.Button.default(Text("RECHECK_INPUTS"), action: { self.selection = 1 })
         let secondaryBtn = Alert.Button.default(Text("CONTINUE"), action: { UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding) })
         let title: Text
         let message: Text
@@ -198,9 +215,8 @@ struct OnboardingView: View {
         case .duplicateKey:
             title = Text("DUPLICATE_KEY")
             message = Text("DUPLICATE_KEY_MSG")
-        case .couldNotSave:
-            title = Text("COULD_NOT_SAVE_KEY")
-            message = Text("COULD_NOT_SAVE_KEY_MSG")
+            let dismiss = Alert.Button.default(Text("OK"), action: { self.selection = 1 })
+            return Alert(title: title, message: message, dismissButton: dismiss)
         }
         return Alert(title: title, message: message, primaryButton: primaryBtn, secondaryButton: secondaryBtn)
     }
