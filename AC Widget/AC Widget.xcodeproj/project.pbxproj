@@ -65,6 +65,8 @@
 		CB436DDF261870D400A432B1 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB436DDE261870D400A432B1 /* HomeView.swift */; };
 		CB436DEB2618E80200A432B1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB436DEE2618E80200A432B1 /* Localizable.strings */; };
 		CB436DEC2618E80200A432B1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB436DEE2618E80200A432B1 /* Localizable.strings */; };
+		CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */; };
+		CB436E17261A422200A432B1 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AED32615D1FA00B48215 /* APIError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +141,7 @@
 		CB436DDE261870D400A432B1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		CB436DED2618E80200A432B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CB436DF12618E80600A432B1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +217,7 @@
 				CB28AED72615D21C00B48215 /* ACData.swift */,
 				CB28AED32615D1FA00B48215 /* APIError.swift */,
 				CB28AF002616163600B48215 /* SettingsView.swift */,
+				CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */,
 				452A37F026161C97005CD1DA /* Extensions.swift */,
 				CB436DDA26186B0C00A432B1 /* OnboardingView.swift */,
 				CB436DEE2618E80200A432B1 /* Localizable.strings */,
@@ -431,6 +435,7 @@
 				CB436DDF261870D400A432B1 /* HomeView.swift in Sources */,
 				CB28AEEA2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
 				CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */,
+				CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
 				45CAC1152615CDBE00FF63E7 /* AppStoreConnectApi.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
@@ -474,6 +479,7 @@
 				45FD5196261915F200603D8A /* IntentHandler.swift in Sources */,
 				45C1A3FF2619B402006C1650 /* Extensions.swift in Sources */,
 				4583A845261A3E3700368001 /* APIKey.swift in Sources */,
+				CB436E17261A422200A432B1 /* APIError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

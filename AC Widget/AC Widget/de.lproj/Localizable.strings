@@ -10,11 +10,12 @@
 
 // MARK: Settings
 "SETTINGS" = "Einstellungen";
-"API_KEY" = "API Key";
+"API_KEYS" = "API Keys";
 "ISSUER_ID" = "Issuer ID";
 "PRIVATE_KEY_ID" = "Private Key ID";
 "PRIVATE_KEY" = "Private Key";
 "VENDOR_NR" = "Vendor Number";
+"ADD_KEY" = "Key hinzufügen";
 "SAVE" = "Speichern";
 "CANCEL" = "Abbrechen";
 

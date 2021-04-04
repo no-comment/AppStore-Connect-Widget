@@ -7,9 +7,21 @@
 
 import Foundation
 
-struct Note: Codable {
+struct APIKey: Codable, Identifiable {
+    var id: String { privateKeyID }
+    let name: String
     let issuerID: String
     let privateKeyID: String
     let privateKey: String
     let vendorNumber: String
+    
+    func checkKey() -> APIError? {
+        return nil
+    }
+    
+    static let example = APIKey(name: "NO-COMMENT",
+                                issuerID: "2345-324-12",
+                                privateKeyID: "AJDBS7K",
+                                privateKey: "sjgdsdjfvnjsdhvjshgs834zuegrh794zthweurhgeurh3479zhuewfheuwzrt97834ehgh34e9tn",
+                                vendorNumber: "94658")
 }

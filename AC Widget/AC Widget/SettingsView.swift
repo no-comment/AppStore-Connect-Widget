@@ -14,6 +14,8 @@ struct SettingsView: View {
     @State var privateKey: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
     @State var vendorNumber: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
     
+    var apiKeys: [APIKey] = [APIKey.example]
+    
     var body: some View {
         Form {
             keySection
@@ -29,45 +31,43 @@ struct SettingsView: View {
     }
     
     var keySection: some View {
-        Section(header: Label("API_KEY", systemImage: "key.fill")) {
-            VStack(alignment: .leading, spacing: 0.0) {
-                Text("ISSUER_ID")
-                    .bold()
-                
-                TextField("ISSUER_ID", text: $issuerID)
+        Section(header: Label("API_KEYS", systemImage: "key.fill"), footer: keySectionFooter) {
+            ForEach(apiKeys) { key in
+                NavigationLink(destination: APIKeyDetailView(key),
+                               label: {
+                                HStack {
+                                    Text(key.name)
+                                    Spacer()
+                                    if key.checkKey() == nil {
+                                        Image(systemName: "checkmark.circle")
+                                            .foregroundColor(.green)
+                                    } else if key.checkKey() == .invalidCredentials {
+                                        Image(systemName: "xmark.circle")
+                                            .foregroundColor(.red)
+                                    } else {
+                                        Image(systemName: "exclamationmark.circle")
+                                            .foregroundColor(.orange)
+                                    }
+                                }
+                               })
             }
             
-            VStack(alignment: .leading, spacing: 0.0) {
-                Text("PRIVATE_KEY_ID")
-                    .bold()
-                
-                TextField("PRIVATE_KEY_ID", text: $privateKeyID)
-            }
-            
-            VStack(alignment: .leading, spacing: 0.0) {
-                Text("PRIVATE_KEY")
-                    .bold()
-                ZStack {
-                    TextEditor(text: $privateKey)
-                    if privateKey.isEmpty {
-                        VStack {
-                            HStack {
-                                Text("PRIVATE_KEY")
-                                    .foregroundColor(Color(UIColor.placeholderText))
-                                Spacer()
-                            }
-                        }
-                    }
-                }
-            }
-            
-            VStack(alignment: .leading, spacing: 0.0) {
-                Text("VENDOR_NR")
-                    .bold()
-                
-                TextField("VENDOR_NR", text: $vendorNumber)
-            }
+            Button("ADD_KEY", action: {})
         }
+    }
+    
+    var keySectionFooter: some View {
+        Text("\(Image(systemName: "checkmark.circle")): ")
+            +
+            Text("VALID_KEY")
+            +
+            Text(", \(Image(systemName: "xmark.circle")): ")
+            +
+            Text("INVALID_KEY")
+            +
+            Text(", \(Image(systemName: "exclamationmark.circle")): ")
+            +
+            Text("PROBLEM_KEY")
     }
     
     var saveSection: some View {
