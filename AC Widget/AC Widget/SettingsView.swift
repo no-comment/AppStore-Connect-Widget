@@ -17,6 +17,13 @@ struct SettingsView: View {
     var body: some View {
         Form {
             keySection
+
+            Section {
+                Button("Force Refresh Widget") {
+                    WidgetCenter.shared.reloadAllTimelines()
+                }
+            }
+
             contactSection
         }
         .navigationTitle("SETTINGS")
