@@ -44,14 +44,14 @@ extension APIKey {
         return getKeysFromData(data) ?? []
     }
 
-    @discardableResult
-    static func addApiKey(apiKey: APIKey) -> Bool {
-        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
-        guard var keys = getKeysFromData(data) else { return false }
+    static func addApiKey(apiKey: APIKey) {
+        var keys: [APIKey] = []
+        if let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) {
+            keys = getKeysFromData(data) ?? []
+        }
         keys.append(apiKey)
         let newData = getDataFromKeys(keys)
         UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
-        return true
     }
 
     @discardableResult
