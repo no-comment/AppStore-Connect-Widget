@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    @Environment(\.presentationMode) var presentationMode
     @State private var selection: Int
     @State private var alert: AddAPIKeyAlert?
 
@@ -184,7 +185,7 @@ struct OnboardingView: View {
                         return
                     }
                     APIKey.addApiKey(apiKey: apiKey)
-                    UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
+                    finishOnboarding()
                 }
                 .catch { err in
                     let apiErr: APIError = (err as? APIError) ?? .unknown
@@ -193,6 +194,11 @@ struct OnboardingView: View {
                     }
                 }
         }
+    }
+    
+    private func finishOnboarding() {
+        UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
+        presentationMode.wrappedValue.dismiss()
     }
 
     // MARK: Alert
@@ -205,7 +211,7 @@ struct OnboardingView: View {
 
     private func generateAlert(_ alertType: AddAPIKeyAlert) -> Alert {
         let primaryBtn = Alert.Button.default(Text("RECHECK_INPUTS"), action: { self.selection = 1 })
-        let secondaryBtn = Alert.Button.default(Text("CONTINUE"), action: { UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding) })
+        let secondaryBtn = Alert.Button.default(Text("CONTINUE"), action: finishOnboarding)
         let title: Text
         let message: Text
         switch alertType {
