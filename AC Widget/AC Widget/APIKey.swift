@@ -14,7 +14,9 @@ struct APIKey: Codable, Identifiable {
     let privateKeyID: String
     let privateKey: String
     let vendorNumber: String
+}
 
+extension APIKey {
     func checkKey() -> APIError? {
         return nil
     }
@@ -24,43 +26,43 @@ struct APIKey: Codable, Identifiable {
                                 privateKeyID: "AJDBS7K",
                                 privateKey: "sjgdsdjfvnjsdhvjshgs834zuegrh794zthweurhgeurh3479zhuewfheuwzrt97834ehgh34e9tn",
                                 vendorNumber: "94658")
-}
 
-func getDataFromKeys(_ keys: [APIKey]) -> Data? {
-    let encoder = JSONEncoder()
-    let data = try? encoder.encode(keys)
-    return data
-}
+    static func getDataFromKeys(_ keys: [APIKey]) -> Data? {
+        let encoder = JSONEncoder()
+        let data = try? encoder.encode(keys)
+        return data
+    }
 
-func getKeysFromData(_ data: Data) -> [APIKey]? {
-    let decoder = JSONDecoder()
-    let keys = try? decoder.decode([APIKey].self, from: data)
-    return keys
-}
+    static func getKeysFromData(_ data: Data) -> [APIKey]? {
+        let decoder = JSONDecoder()
+        let keys = try? decoder.decode([APIKey].self, from: data)
+        return keys
+    }
 
-func getApiKeys() -> [APIKey] {
-    guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return [] }
-    return getKeysFromData(data) ?? []
-}
+    static func getApiKeys() -> [APIKey] {
+        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return [] }
+        return getKeysFromData(data) ?? []
+    }
 
-@discardableResult
-func addApiKey(apiKey: APIKey) -> Bool {
-    guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
-    guard var keys = getKeysFromData(data) else { return false }
-    keys.append(apiKey)
-    let newData = getDataFromKeys(keys)
-    UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
-    return true
-}
+    @discardableResult
+    static func addApiKey(apiKey: APIKey) -> Bool {
+        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
+        guard var keys = getKeysFromData(data) else { return false }
+        keys.append(apiKey)
+        let newData = getDataFromKeys(keys)
+        UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
+        return true
+    }
 
-@discardableResult
-func deleteApiKey(apiKey: APIKey) -> Bool {
-    guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
-    guard var keys = getKeysFromData(data) else { return false }
-    keys.removeAll(where: { $0.id == apiKey.id })
-    let newData = getDataFromKeys(keys)
-    UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
-    return true
+    @discardableResult
+    static func deleteApiKey(apiKey: APIKey) -> Bool {
+        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
+        guard var keys = getKeysFromData(data) else { return false }
+        keys.removeAll(where: { $0.id == apiKey.id })
+        let newData = getDataFromKeys(keys)
+        UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
+        return true
+    }
 }
 
 extension ApiKeyParam {
@@ -69,6 +71,6 @@ extension ApiKeyParam {
     }
 
     func toApiKey() -> APIKey? {
-        return getApiKeys().first(where: { $0.id == self.identifier })
+        return APIKey.getApiKeys().first(where: { $0.id == self.identifier })
     }
 }

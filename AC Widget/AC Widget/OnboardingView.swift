@@ -148,7 +148,7 @@ struct OnboardingView: View {
         } else {
             // TODO: Check api key
 
-            let savedSuccessfully = addApiKey(apiKey: APIKey(name: name,
+            let savedSuccessfully = APIKey.addApiKey(apiKey: APIKey(name: name,
                                                              issuerID: issuerID,
                                                              privateKeyID: keyID,
                                                              privateKey: key,

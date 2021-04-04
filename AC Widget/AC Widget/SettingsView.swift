@@ -10,7 +10,7 @@ import WidgetKit
 
 struct SettingsView: View {
     var apiKeys: [APIKey] {
-        return getApiKeys()
+        return APIKey.getApiKeys()
     }
     @State private var addKeySheet: Bool = false
 
@@ -82,7 +82,7 @@ struct SettingsView: View {
 
     private func deleteKey(at offsets: IndexSet) {
         offsets.forEach {
-            deleteApiKey(apiKey: apiKeys[$0])
+            APIKey.deleteApiKey(apiKey: apiKeys[$0])
         }
     }
 }
