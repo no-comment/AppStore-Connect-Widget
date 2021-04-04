@@ -9,25 +9,16 @@ import SwiftUI
 import WidgetKit
 
 struct SettingsView: View {
-    @State var issuerID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.issuerID) ?? ""
-    @State var privateKeyID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
-    @State var privateKey: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
-    @State var vendorNumber: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
-    
     var apiKeys: [APIKey] = [APIKey.example]
+    @State private var addKeySheet: Bool = false
     
     var body: some View {
         Form {
             keySection
-            
-            saveSection
-            
             contactSection
         }
-        .onAppear {
-            resetToUserDefaults()
-        }
         .navigationTitle("SETTINGS")
+        .sheet(isPresented: $addKeySheet, content: sheet)
     }
     
     var keySection: some View {
@@ -52,7 +43,7 @@ struct SettingsView: View {
                                })
             }
             
-            Button("ADD_KEY", action: {})
+            Button("ADD_KEY", action: { addKeySheet.toggle() })
         }
     }
     
@@ -70,21 +61,6 @@ struct SettingsView: View {
             Text("PROBLEM_KEY")
     }
     
-    var saveSection: some View {
-        Section {
-            Button("SAVE") {
-                UserDefaults.shared?.setValue(issuerID, forKey: UserDefaultsKey.issuerID)
-                UserDefaults.shared?.setValue(privateKeyID, forKey: UserDefaultsKey.privateKeyID)
-                UserDefaults.shared?.setValue(privateKey, forKey: UserDefaultsKey.privateKey)
-                UserDefaults.shared?.setValue(vendorNumber, forKey: UserDefaultsKey.vendorNumber)
-                
-                WidgetCenter.shared.reloadAllTimelines()
-            }
-            
-            Button("CANCEL", action: resetToUserDefaults)
-        }
-    }
-    
     var contactSection: some View {
         Section(header: Label("Links", systemImage: "link")) {
             Link(destination: URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget")!, label: {
@@ -97,12 +73,8 @@ struct SettingsView: View {
         }
     }
     
-    func resetToUserDefaults() {
-        issuerID = UserDefaults.shared?.string(forKey: UserDefaultsKey.issuerID) ?? ""
-        privateKeyID = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
-        privateKey = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
-        vendorNumber = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
-        
+    private func sheet() -> some View {
+        return OnboardingView(startAt: 1)
     }
 }
 

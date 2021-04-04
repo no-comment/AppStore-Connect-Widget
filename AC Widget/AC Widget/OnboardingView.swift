@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State private var selection = 0
+    @State private var selection: Int
     
     @State private var issuerID = ""
     @State private var keyID = ""
     @State private var key = ""
     @State private var vendor = ""
+    
+    init(startAt: Int = 0) {
+        self._selection = State(initialValue: startAt)
+    }
     
     var body: some View {
         TabView(selection: $selection) {

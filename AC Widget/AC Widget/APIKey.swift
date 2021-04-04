@@ -19,7 +19,7 @@ struct APIKey: Codable, Identifiable {
         return nil
     }
     
-    static let example = APIKey(name: "NO-COMMENT",
+    static let example = APIKey(name: "Example Key",
                                 issuerID: "2345-324-12",
                                 privateKeyID: "AJDBS7K",
                                 privateKey: "sjgdsdjfvnjsdhvjshgs834zuegrh794zthweurhgeurh3479zhuewfheuwzrt97834ehgh34e9tn",

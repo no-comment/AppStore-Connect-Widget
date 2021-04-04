@@ -68,6 +68,7 @@
 		CB436DEC2618E80200A432B1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB436DEE2618E80200A432B1 /* Localizable.strings */; };
 		CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */; };
 		CB436E17261A422200A432B1 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AED32615D1FA00B48215 /* APIError.swift */; };
+		CB436E33261A4DE400A432B1 /* AddAPIKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB436E32261A4DE400A432B1 /* AddAPIKeyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,6 +144,7 @@
 		CB436DED2618E80200A432B1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CB436DF12618E80600A432B1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyDetailView.swift; sourceTree = "<group>"; };
+		CB436E32261A4DE400A432B1 /* AddAPIKeyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAPIKeyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 				CB28AED32615D1FA00B48215 /* APIError.swift */,
 				CB28AF002616163600B48215 /* SettingsView.swift */,
 				CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */,
+				CB436E32261A4DE400A432B1 /* AddAPIKeyView.swift */,
 				452A37F026161C97005CD1DA /* Extensions.swift */,
 				CB436DDA26186B0C00A432B1 /* OnboardingView.swift */,
 				CB436DEE2618E80200A432B1 /* Localizable.strings */,
@@ -437,6 +440,7 @@
 				CB28AEEA2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
 				CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */,
 				CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */,
+				CB436E33261A4DE400A432B1 /* AddAPIKeyView.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
 				45CAC1152615CDBE00FF63E7 /* AppStoreConnectApi.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
