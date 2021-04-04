@@ -44,6 +44,7 @@ struct SettingsView: View {
                                 }
                                })
             }
+            .onDelete(perform: deleteKey)
 
             Button("ADD_KEY", action: { addKeySheet.toggle() })
         }
@@ -77,6 +78,12 @@ struct SettingsView: View {
 
     private func sheet() -> some View {
         return OnboardingView(startAt: 1)
+    }
+
+    private func deleteKey(at offsets: IndexSet) {
+        offsets.forEach {
+            deleteApiKey(apiKey: apiKeys[$0])
+        }
     }
 }
 

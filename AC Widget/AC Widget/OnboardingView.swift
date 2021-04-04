@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var selection: Int
+    @State private var alert: AddAPIKeyAlert?
 
     @State private var name = "" // TODO: add input for name
     @State private var issuerID = ""
@@ -43,6 +44,7 @@ struct OnboardingView: View {
                 .tag(4)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .alert(item: $alert, content: { generateAlert($0) })
     }
 
     // MARK: Pages
@@ -145,13 +147,49 @@ struct OnboardingView: View {
             selection += 1
         } else {
             // TODO: Check api key
-            defer { UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding) }
 
-            let savedSuccessfully = addApiKey(apiKey: APIKey(name: name, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor))
-            // TODO: Show alert
+            let savedSuccessfully = addApiKey(apiKey: APIKey(name: name,
+                                                             issuerID: issuerID,
+                                                             privateKeyID: keyID,
+                                                             privateKey: key,
+                                                             vendorNumber: vendor))
+
+            if !savedSuccessfully {
+                alert = .couldNotSave
+                return
+            }
+
+            UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
         }
     }
 
+    // MARK: Alert
+    private enum AddAPIKeyAlert: Int, Identifiable {
+        case invalidKey = 0
+        case duplicateKey = 1
+        case couldNotSave = 2
+
+        var id: Int { self.rawValue }
+    }
+
+    private func generateAlert(_ alertType: AddAPIKeyAlert) -> Alert {
+        let primaryBtn = Alert.Button.default(Text("REDO"), action: { self.selection = 0 })
+        let secondaryBtn = Alert.Button.default(Text("CONTINUE"), action: { UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding) })
+        let title: Text
+        let message: Text
+        switch alertType {
+        case .invalidKey:
+            title = Text("INVALID_KEY")
+            message = Text("INVALID_KEY_MSG")
+        case .duplicateKey:
+            title = Text("DUPLICATE_KEY")
+            message = Text("DUPLICATE_KEY_MSG")
+        case .couldNotSave:
+            title = Text("COULD_NOT_SAVE_KEY")
+            message = Text("COULD_NOT_SAVE_KEY_MSG")
+        }
+        return Alert(title: title, message: message, primaryButton: primaryBtn, secondaryButton: secondaryBtn)
+    }
 }
 
 struct OnboardingView_Previews: PreviewProvider {
