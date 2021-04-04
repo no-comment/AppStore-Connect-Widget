@@ -33,6 +33,78 @@ class AppStoreConnectApi {
     }
 
     // swiftlint:disable:next function_body_length
+    public func testApiKeys() -> Promise<Bool> {
+        let promise = Promise<Bool>.pending()
+
+        if self.privateKey.count < 20 {
+            promise.reject(APIError.invalidCredentials)
+            return promise
+        }
+        let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
+
+        let provider: APIProvider = APIProvider(configuration: configuration)
+
+        any(Date().getLastNDates(10)
+                .map({ $0.acApiFormat() })
+                .map({ self.apiWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
+            .then { results in
+                var success = false
+                for result in results {
+                    guard let resultValue = result.value else {
+                        print("ERROR: \(result.error?.localizedDescription ?? "")")
+                        continue
+                    }
+                    guard let decompressedData = try? resultValue.gunzipped() else {
+                        #if DEBUG
+                        fatalError()
+                        #endif
+                        continue
+                    }
+
+                    let str = String(decoding: decompressedData, as: UTF8.self)
+
+                    guard let _: CSV = try? CSV(string: str, delimiter: "\t") else {
+                        #if DEBUG
+                        fatalError()
+                        #endif
+                        continue
+                    }
+
+                    success = true
+                    break
+                }
+
+                promise.fulfill(success)
+            }
+            .catch { err in
+                if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
+                    switch apiError {
+                    case .requestFailure(let statusCode, _):
+                        print(statusCode)
+                        switch statusCode {
+                        case 401:
+                            promise.reject(APIError.invalidCredentials)
+                        case 429:
+                            promise.reject(APIError.exceededLimit)
+                        case 403:
+                            promise.reject(APIError.wrongPermissions)
+                        default:
+                            promise.reject(APIError.unknown)
+                        }
+                    case .requestGeneration:
+                        promise.reject(APIError.invalidCredentials)
+                    default:
+                        promise.reject(APIError.unknown)
+                    }
+                } else {
+                    promise.reject(APIError.unknown)
+                }
+            }
+
+        return promise
+    }
+
+    // swiftlint:disable:next function_body_length
     public func getData(currency: CurrencyParam? = nil) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
 
