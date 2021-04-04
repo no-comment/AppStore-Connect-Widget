@@ -43,6 +43,7 @@ func getApiKeys() -> [APIKey] {
     return getKeysFromData(data) ?? []
 }
 
+@discardableResult
 func addApiKey(apiKey: APIKey) -> Bool {
     guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
     guard var keys = getKeysFromData(data) else { return false }
@@ -52,6 +53,7 @@ func addApiKey(apiKey: APIKey) -> Bool {
     return true
 }
 
+@discardableResult
 func deleteApiKey(apiKey: APIKey) -> Bool {
     guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
     guard var keys = getKeysFromData(data) else { return false }
@@ -63,6 +65,10 @@ func deleteApiKey(apiKey: APIKey) -> Bool {
 
 extension ApiKeyParam {
     convenience init(key: APIKey) {
-        self.init(identifier: key.privateKeyID, display: key.name)
+        self.init(identifier: key.id, display: key.name)
+    }
+
+    func toApiKey() -> APIKey? {
+        return getApiKeys().first(where: { $0.id == self.identifier })
     }
 }

@@ -19,7 +19,7 @@ struct Provider: IntentTimelineProvider {
         if context.isPreview {
             completion(.placeholder)
         } else {
-            getApiData(currency: configuration.currency)
+            getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
                 .then { data in
                     let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
@@ -39,7 +39,7 @@ struct Provider: IntentTimelineProvider {
     func getTimeline(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         var entries: [ACStatEntry] = []
 
-        getApiData(currency: configuration.currency)
+        getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
             .then { data in
                 let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
@@ -89,19 +89,14 @@ struct Provider: IntentTimelineProvider {
             }
     }
 
-    func getApiData(currency: CurrencyParam?) -> Promise<ACData> {
-        let issuerID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.issuerID) ?? ""
-        let privateKeyID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
-        let privateKey: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
-        let vendorNumber: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.vendorNumber) ?? ""
-
-        if issuerID == "" || privateKeyID == "" || privateKey == "" || vendorNumber == "" {
+    func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) -> Promise<ACData> {
+        guard let apiKey = apiKeyParam?.toApiKey() else {
             let promise = Promise<ACData>.pending()
             promise.reject(APIError.invalidCredentials)
             return promise
         }
-        let api = AppStoreConnectApi(issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber)
-        return api.getData(currency: currency)
+        let api = AppStoreConnectApi(apiKey: apiKey)
+        return api.getData(currency: currencyParam)
     }
 }
 

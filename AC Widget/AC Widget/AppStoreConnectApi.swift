@@ -28,6 +28,10 @@ class AppStoreConnectApi {
             .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
     }
 
+    convenience init(apiKey: APIKey) {
+        self.init(issuerID: apiKey.issuerID, privateKeyID: apiKey.privateKeyID, privateKey: apiKey.privateKey, vendorNumber: apiKey.vendorNumber)
+    }
+
     // swiftlint:disable:next function_body_length
     public func getData(currency: CurrencyParam? = nil) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
