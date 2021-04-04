@@ -19,7 +19,7 @@ struct Provider: IntentTimelineProvider {
         if context.isPreview {
             completion(.placeholder)
         } else {
-            getApiData()
+            getApiData(currency: configuration.currency)
                 .then { data in
                     let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
@@ -39,7 +39,7 @@ struct Provider: IntentTimelineProvider {
     func getTimeline(for configuration: SelectCurrencyIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [ACStatEntry] = []
         
-        getApiData()
+        getApiData(currency: configuration.currency)
             .then { data in
                 let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
@@ -89,7 +89,7 @@ struct Provider: IntentTimelineProvider {
             }
     }
     
-    func getApiData() -> Promise<ACData> {
+    func getApiData(currency: CurrencyParam?) -> Promise<ACData> {
         let issuerID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.issuerID) ?? ""
         let privateKeyID: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKeyID) ?? ""
         let privateKey: String = UserDefaults.shared?.string(forKey: UserDefaultsKey.privateKey) ?? ""
@@ -101,7 +101,7 @@ struct Provider: IntentTimelineProvider {
             return promise
         }
         let api = AppStoreConnectApi(issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber)
-        return api.getData()
+        return api.getData(currency: currency)
     }
 }
 

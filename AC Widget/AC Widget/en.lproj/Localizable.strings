@@ -27,6 +27,8 @@
 
 "NO_DATA" = "No Data";
 
+"SYSTEM" = "System";
+
 // MARK: ERRORS
 "ERROR_CAPS" = "ERROR";
 "ERROR_INVALID_CREDENTIALS" = "The credentials you entered are incorrect.";

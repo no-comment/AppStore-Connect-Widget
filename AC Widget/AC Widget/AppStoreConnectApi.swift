@@ -28,7 +28,7 @@ class AppStoreConnectApi {
             .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
     }
     
-    public func getData() -> Promise<ACData> {
+    public func getData(currency: CurrencyParam? = nil) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
         
         if self.privateKey.count < 20 {
@@ -42,7 +42,7 @@ class AppStoreConnectApi {
         var downloads: [(Int, Date)] = []
         var proceeds: [(Float, Date)] = []
 
-        let localCurrency: Currency = Currency(rawValue: Locale.current.currencyCode ?? "USD") ?? .USD
+        let localCurrency: Currency = currency?.toCurrency() ?? .USD
         
         let converter = CurrencyConverter.shared
         converter.updateExchangeRates()

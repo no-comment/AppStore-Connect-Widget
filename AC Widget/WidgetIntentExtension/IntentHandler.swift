@@ -14,11 +14,15 @@ class IntentHandler: INExtension, SelectCurrencyIntentHandling {
         let first = ["USD", "EUR", "GBP"]
         identifiers = identifiers.filter({ !first.contains($0) }).sorted()
         identifiers.insert(contentsOf: first, at: 0)
-        identifiers.insert("System", at: 0)
         
-        completion(
-            INObjectCollection(items: identifiers.map({ CurrencyParam(identifier: $0, display: $0) }))
-            , nil)
+        var items = identifiers.map({ CurrencyParam(identifier: $0, display: $0) })
+        items.insert(.system, at: 0)
+        let collection = INObjectCollection(items: items)
+        completion(collection, nil)
+    }
+    
+    func defaultCurrency(for intent: SelectCurrencyIntent) -> CurrencyParam? {
+        return .system
     }
     
     override func handler(for intent: INIntent) -> Any {

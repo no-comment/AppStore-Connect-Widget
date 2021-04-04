@@ -115,3 +115,14 @@ extension View {
         self.modifier(ShowAsWidget(size))
     }
 }
+
+extension CurrencyParam {
+    static let system = CurrencyParam(identifier: "System", display: NSLocalizedString("SYSTEM", comment: ""))
+    
+    func toCurrency() -> Currency? {
+        if self == .system {
+            return Currency(rawValue: Locale.current.currencyCode ?? "")
+        }
+        return Currency(rawValue: self.identifier ?? "")
+    }
+}

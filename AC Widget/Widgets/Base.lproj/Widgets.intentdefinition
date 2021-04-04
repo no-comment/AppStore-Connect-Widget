@@ -86,7 +86,7 @@
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Select Currency</string>
+			<string>Select a Currency</string>
 			<key>INIntentTitleID</key>
 			<string>gpCwrM</string>
 			<key>INIntentType</key>
