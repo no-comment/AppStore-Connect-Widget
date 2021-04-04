@@ -146,20 +146,34 @@ struct OnboardingView: View {
         if selection < 4 {
             selection += 1
         } else {
-            // TODO: Check api key
+            let apiKey = APIKey(name: name, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
 
-            let savedSuccessfully = APIKey.addApiKey(apiKey: APIKey(name: name,
-                                                             issuerID: issuerID,
-                                                             privateKeyID: keyID,
-                                                             privateKey: key,
-                                                             vendorNumber: vendor))
-
-            if !savedSuccessfully {
-                alert = .couldNotSave
+            if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
+                alert = .duplicateKey
                 return
             }
 
-            UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
+            AppStoreConnectApi(apiKey: apiKey).testApiKeys()
+                .then { worked in
+                    if !worked {
+                        alert = .invalidKey
+                        return
+                    }
+                    let savedSuccessfully = APIKey.addApiKey(apiKey: apiKey)
+
+                    if !savedSuccessfully {
+                        alert = .couldNotSave
+                        return
+                    }
+
+                    UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
+                }
+                .catch { err in
+                    let apiErr: APIError = (err as? APIError) ?? .unknown
+                    if apiErr == .invalidCredentials {
+                        alert = .invalidKey
+                    }
+                }
         }
     }
 
