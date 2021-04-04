@@ -52,6 +52,15 @@ func addApiKey(apiKey: APIKey) -> Bool {
     return true
 }
 
+func deleteApiKey(apiKey: APIKey) -> Bool {
+    guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
+    guard var keys = getKeysFromData(data) else { return false }
+    keys.removeAll(where: { $0.id == apiKey.id })
+    let newData = getDataFromKeys(keys)
+    UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
+    return true
+}
+
 extension ApiKeyParam {
     convenience init(key: APIKey) {
         self.init(identifier: key.privateKeyID, display: key.name)
