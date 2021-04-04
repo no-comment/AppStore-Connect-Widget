@@ -13,7 +13,7 @@ struct APIKeyDetailView: View {
     @State var privateKeyID: String
     @State var privateKey: String
     @State var vendorNumber: String
-    
+
     init(_ key: APIKey) {
         self.key = key
         self._issuerID = State(initialValue: key.issuerID)
@@ -21,7 +21,7 @@ struct APIKeyDetailView: View {
         self._privateKey = State(initialValue: key.privateKey)
         self._vendorNumber = State(initialValue: key.privateKey)
     }
-    
+
     var body: some View {
         Form {
             keySection
@@ -29,23 +29,23 @@ struct APIKeyDetailView: View {
         }
         .navigationTitle(key.name)
     }
-    
+
     var keySection: some View {
         Section {
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("ISSUER_ID")
                     .bold()
-                
+
                 TextField("ISSUER_ID", text: $issuerID)
             }
-            
+
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY_ID")
                     .bold()
-                
+
                 TextField("PRIVATE_KEY_ID", text: $privateKeyID)
             }
-            
+
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY")
                     .bold()
@@ -62,20 +62,20 @@ struct APIKeyDetailView: View {
                     }
                 }
             }
-            
+
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("VENDOR_NR")
                     .bold()
-                
+
                 TextField("VENDOR_NR", text: $vendorNumber)
             }
         }
         .disabled(true)
     }
-    
+
     var statusSection: some View {
         let status = key.checkKey()
-        
+
         return Section {
             if status == nil {
             } else {

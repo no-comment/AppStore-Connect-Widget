@@ -14,7 +14,7 @@ struct APIKey: Codable, Identifiable {
     let privateKeyID: String
     let privateKey: String
     let vendorNumber: String
-    
+
     func checkKey() -> APIError? {
         return nil
     }

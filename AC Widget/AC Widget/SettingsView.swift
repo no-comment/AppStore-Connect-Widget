@@ -20,7 +20,7 @@ struct SettingsView: View {
         .navigationTitle("SETTINGS")
         .sheet(isPresented: $addKeySheet, content: sheet)
     }
-    
+
     var keySection: some View {
         Section(header: Label("API_KEYS", systemImage: "key.fill"), footer: keySectionFooter) {
             ForEach(apiKeys) { key in
@@ -46,7 +46,7 @@ struct SettingsView: View {
             Button("ADD_KEY", action: { addKeySheet.toggle() })
         }
     }
-    
+
     var keySectionFooter: some View {
         Text("\(Image(systemName: "checkmark.circle")): ")
             +
@@ -66,7 +66,7 @@ struct SettingsView: View {
             Link(destination: URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget")!, label: {
                 Text("GitHub")
             })
-            
+
             Link(destination: URL(string: "https://www.apple.com")!, label: {
                 Text("Buy me a coffee")
             })
