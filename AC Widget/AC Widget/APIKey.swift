@@ -18,7 +18,7 @@ struct APIKey: Codable, Identifiable {
     func checkKey() -> APIError? {
         return nil
     }
-    
+
     static let example = APIKey(name: "Example Key",
                                 issuerID: "2345-324-12",
                                 privateKeyID: "AJDBS7K",
@@ -36,6 +36,20 @@ func getKeysFromData(_ data: Data) -> [APIKey]? {
     let decoder = JSONDecoder()
     let keys = try? decoder.decode([APIKey].self, from: data)
     return keys
+}
+
+func getApiKeys() -> [APIKey] {
+    guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return [] }
+    return getKeysFromData(data) ?? []
+}
+
+func addApiKey(apiKey: APIKey) -> Bool {
+    guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
+    guard var keys = getKeysFromData(data) else { return false }
+    keys.append(apiKey)
+    let newData = getDataFromKeys(keys)
+    UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
+    return true
 }
 
 extension ApiKeyParam {

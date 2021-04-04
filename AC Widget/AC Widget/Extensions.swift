@@ -58,6 +58,8 @@ extension UserDefaults {
 struct UserDefaultsKey {
     static let apiKeys = "apiKeys"
 
+    static let completedOnboarding = "completedOnboarding"
+
     static let issuerID = "issuerID"
     static let privateKeyID = "privateKeyID"
     static let privateKey = "privateKey"

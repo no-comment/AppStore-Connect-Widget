@@ -9,7 +9,7 @@ import SwiftUI
 import AppStoreConnect_Swift_SDK
 
 struct ContentView: View {
-    @AppStorage("completedOnboarding") var completedOnboarding: Bool = false
+    @AppStorage(UserDefaultsKey.completedOnboarding) var completedOnboarding: Bool = false
 
     var body: some View {
         if completedOnboarding {

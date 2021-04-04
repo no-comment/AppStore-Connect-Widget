@@ -9,16 +9,17 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var selection: Int
-    
+
+    @State private var name = "" // TODO: add input for name
     @State private var issuerID = ""
     @State private var keyID = ""
     @State private var key = ""
     @State private var vendor = ""
-    
+
     init(startAt: Int = 0) {
         self._selection = State(initialValue: startAt)
     }
-    
+
     var body: some View {
         TabView(selection: $selection) {
             welcomeSection
@@ -143,11 +144,11 @@ struct OnboardingView: View {
         if selection < 4 {
             selection += 1
         } else {
-            defer { UserDefaults.standard.set(true, forKey: "completedOnboarding") }
-            UserDefaults.shared?.setValue(issuerID, forKey: UserDefaultsKey.issuerID)
-            UserDefaults.shared?.setValue(keyID, forKey: UserDefaultsKey.privateKeyID)
-            UserDefaults.shared?.setValue(key, forKey: UserDefaultsKey.privateKey)
-            UserDefaults.shared?.setValue(vendor, forKey: UserDefaultsKey.vendorNumber)
+            // TODO: Check api key
+            defer { UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding) }
+
+            let savedSuccessfully = addApiKey(apiKey: APIKey(name: name, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor))
+            // TODO: Show alert
         }
     }
 

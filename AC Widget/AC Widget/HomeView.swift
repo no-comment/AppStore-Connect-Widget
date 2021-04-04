@@ -11,6 +11,7 @@ import AppStoreConnect_Swift_SDK
 struct HomeView: View {
     @State var data: ACData?
     @State var error: APIError?
+    // TODO: use new api keys
     @AppStorage(UserDefaultsKey.issuerID, store: UserDefaults.shared) var issuerID: String = ""
     @AppStorage(UserDefaultsKey.privateKeyID, store: UserDefaults.shared) var privateKeyID: String = ""
     @AppStorage(UserDefaultsKey.privateKey, store: UserDefaults.shared) var privateKey: String = ""

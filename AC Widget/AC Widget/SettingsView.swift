@@ -9,9 +9,11 @@ import SwiftUI
 import WidgetKit
 
 struct SettingsView: View {
-    var apiKeys: [APIKey] = [APIKey.example]
+    var apiKeys: [APIKey] {
+        return getApiKeys()
+    }
     @State private var addKeySheet: Bool = false
-    
+
     var body: some View {
         Form {
             keySection
@@ -42,7 +44,7 @@ struct SettingsView: View {
                                 }
                                })
             }
-            
+
             Button("ADD_KEY", action: { addKeySheet.toggle() })
         }
     }
@@ -60,7 +62,7 @@ struct SettingsView: View {
             +
             Text("PROBLEM_KEY")
     }
-    
+
     var contactSection: some View {
         Section(header: Label("Links", systemImage: "link")) {
             Link(destination: URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget")!, label: {
@@ -72,7 +74,7 @@ struct SettingsView: View {
             })
         }
     }
-    
+
     private func sheet() -> some View {
         return OnboardingView(startAt: 1)
     }
