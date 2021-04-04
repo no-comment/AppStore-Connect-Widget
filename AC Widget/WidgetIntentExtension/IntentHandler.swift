@@ -10,23 +10,13 @@ import Foundation
 
 class IntentHandler: INExtension, WidgetConfigurationIntentHandling {
     func provideApiKeyOptionsCollection(for intent: WidgetConfigurationIntent, with completion: @escaping (INObjectCollection<ApiKeyParam>?, Error?) -> Void) {
-        guard let keysData = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys),
-              let keys = APIKey.getKeysFromData(keysData) else {
-            completion(INObjectCollection(items: [ApiKeyParam]()), nil)
-            return
-        }
-
+        let keys = APIKey.getApiKeys()
         let collection = INObjectCollection(items: keys.map({ ApiKeyParam(key: $0) }))
         completion(collection, nil)
     }
 
     func defaultApiKey(for intent: WidgetConfigurationIntent) -> ApiKeyParam? {
-        guard let keysData = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys),
-              let keys = APIKey.getKeysFromData(keysData),
-              let key: APIKey = keys.first else {
-            return nil
-        }
-
+        guard let key = APIKey.getApiKeys().first else { return nil}
         return ApiKeyParam(key: key)
     }
 
