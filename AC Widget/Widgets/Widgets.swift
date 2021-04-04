@@ -12,10 +12,10 @@ import Promises
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
-        ACStatEntry(date: Date(), data: .example, configuration: SelectCurrencyIntent())
+        ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent())
     }
     
-    func getSnapshot(for configuration: SelectCurrencyIntent, in context: Context, completion: @escaping (ACStatEntry) -> ()) {
+    func getSnapshot(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (ACStatEntry) -> ()) {
         if context.isPreview {
             completion(.placeholder)
         } else {
@@ -36,7 +36,7 @@ struct Provider: IntentTimelineProvider {
         }
     }
     
-    func getTimeline(for configuration: SelectCurrencyIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    func getTimeline(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [ACStatEntry] = []
         
         getApiData(currency: configuration.currency)
@@ -109,12 +109,12 @@ struct ACStatEntry: TimelineEntry {
     let date: Date
     let data: ACData?
     var error: APIError? = nil
-    let configuration: SelectCurrencyIntent
+    let configuration: WidgetConfigurationIntent
     var relevance: TimelineEntryRelevance?
 }
 
 extension ACStatEntry {
-    static let placeholder = ACStatEntry(date: Date(), data: .example, configuration: SelectCurrencyIntent())
+    static let placeholder = ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent())
 }
 
 extension TimelineEntryRelevance {
@@ -149,7 +149,7 @@ struct Widgets: Widget {
     let kind: String = "Widgets"
     
     var body: some WidgetConfiguration {
-        IntentConfiguration(kind: kind, intent: SelectCurrencyIntent.self, provider: Provider()) { entry in
+        IntentConfiguration(kind: kind, intent: WidgetConfigurationIntent.self, provider: Provider()) { entry in
             WidgetsEntryView(entry: entry)
         }
         .configurationDisplayName("My Widget")
@@ -160,10 +160,10 @@ struct Widgets: Widget {
 
 struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: SelectCurrencyIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
         
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: SelectCurrencyIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

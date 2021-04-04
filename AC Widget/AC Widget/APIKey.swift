@@ -25,3 +25,21 @@ struct APIKey: Codable, Identifiable {
                                 privateKey: "sjgdsdjfvnjsdhvjshgs834zuegrh794zthweurhgeurh3479zhuewfheuwzrt97834ehgh34e9tn",
                                 vendorNumber: "94658")
 }
+
+func getDataFromKeys(_ keys: [APIKey]) -> Data? {
+    let encoder = JSONEncoder()
+    let data = try? encoder.encode(keys)
+    return data
+}
+
+func getKeysFromData(_ data: Data) -> [APIKey]? {
+    let decoder = JSONDecoder()
+    let keys = try? decoder.decode([APIKey].self, from: data)
+    return keys
+}
+
+extension ApiKeyParam {
+    convenience init(key: APIKey) {
+        self.init(identifier: key.privateKeyID, display: key.name)
+    }
+}

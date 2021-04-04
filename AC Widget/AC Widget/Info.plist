@@ -22,7 +22,7 @@
 	<true/>
 	<key>NSUserActivityTypes</key>
 	<array>
-		<string>SelectCurrencyIntent</string>
+		<string>WidgetConfigurationIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
