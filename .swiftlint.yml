@@ -21,10 +21,5 @@ force_unwrapping:
 trailing_comma:
   mandatory_comma: true
 
-
 file_header:
   severity: error
-#   required_pattern: |
-#                   \/\/
-#                   \/\/ Copyright \(c\) \d{4} and Confidential to MyAwesomeCompany Inc\. All rights reserved\.
-#                   \/\/
