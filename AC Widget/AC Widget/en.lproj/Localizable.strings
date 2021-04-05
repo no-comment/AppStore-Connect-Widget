@@ -4,6 +4,7 @@
 "FINISH" = "Finish";
 "ONBOARD_WELCOME" = "";
 "ONBOARD_KEY_NAME" = "";
+"ONBOARD_KEY_COLOR" = "";
 "ONBOARD_ISSUER_ID" = "";
 "ONBOARD_PRIVATE_KEY_ID" = "";
 "ONBOARD_PRIVATE_KEY" = "";
@@ -21,10 +22,12 @@
 "SETTINGS" = "Settings";
 "API_KEYS" = "API Keys";
 "KEY_NAME" = "Key Name";
+"KEY_COLOR" = "Key Color";
 "ISSUER_ID" = "Issuer ID";
 "PRIVATE_KEY_ID" = "Private Key ID";
 "PRIVATE_KEY" = "Private Key";
 "VENDOR_NR" = "Vendor Number";
+"SAVE" = "Save";
 "ADD_KEY" = "Add Key";
 "VALID_KEY" = "Valid Key";
 "INVALID_KEY" = "Invalid Key";

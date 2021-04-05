@@ -9,13 +9,17 @@ import SwiftUI
 
 struct APIKeyDetailView: View {
     let key: APIKey
-    @State var issuerID: String
-    @State var privateKeyID: String
-    @State var privateKey: String
-    @State var vendorNumber: String
+    @State private var keyName: String
+    @State private var keyColor: Color
+    @State private var issuerID: String
+    @State private var privateKeyID: String
+    @State private var privateKey: String
+    @State private var vendorNumber: String
 
     init(_ key: APIKey) {
         self.key = key
+        self._keyName = State(initialValue: key.name)
+        self._keyColor = State(initialValue: key.color)
         self._issuerID = State(initialValue: key.issuerID)
         self._privateKeyID = State(initialValue: key.privateKeyID)
         self._privateKey = State(initialValue: key.privateKey)
@@ -24,10 +28,25 @@ struct APIKeyDetailView: View {
 
     var body: some View {
         Form {
+            namingSection
             keySection
+            savingSection
             statusSection
         }
-        .navigationTitle(key.name)
+        .navigationTitle(keyName)
+    }
+
+    var namingSection: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 0.0) {
+                Text("KEY_NAME")
+                    .bold()
+
+                TextField("KEY_NAME", text: $keyName)
+            }
+
+            ColorPicker("KEY_COLOR", selection: $keyColor)
+        }
     }
 
     var keySection: some View {
@@ -70,7 +89,16 @@ struct APIKeyDetailView: View {
                 TextField("VENDOR_NR", text: $vendorNumber)
             }
         }
-        .disabled(true)
+    }
+
+    var savingSection: some View {
+        Section {
+            Button("SAVE", action: save)
+        }
+    }
+
+    private func save() {
+        // TODO: Implement saving changes
     }
 
     var statusSection: some View {

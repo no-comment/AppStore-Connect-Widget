@@ -9,9 +9,7 @@ import SwiftUI
 import WidgetKit
 
 struct SettingsView: View {
-    var apiKeys: [APIKey] {
-        return APIKey.getApiKeys()
-    }
+    var apiKeys: [APIKey] { APIKey.getApiKeys() }
     @State private var addKeySheet: Bool = false
 
     var body: some View {
@@ -36,6 +34,8 @@ struct SettingsView: View {
                 NavigationLink(destination: APIKeyDetailView(key),
                                label: {
                                 HStack {
+                                    Text("\(Image(systemName: "circle.fill"))")
+                                        .foregroundColor(key.color)
                                     Text(key.name)
                                     Spacer()
                                     if key.checkKey() == nil {

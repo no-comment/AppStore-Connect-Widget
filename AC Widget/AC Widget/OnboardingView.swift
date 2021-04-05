@@ -12,11 +12,12 @@ struct OnboardingView: View {
     @State private var selection: Int
     @State private var alert: AddAPIKeyAlert?
 
-    @State private var name = ""
-    @State private var issuerID = ""
-    @State private var keyID = ""
-    @State private var key = ""
-    @State private var vendor = ""
+    @State private var name: String = ""
+    @State private var color: Color = .accentColor
+    @State private var issuerID: String = ""
+    @State private var keyID: String = ""
+    @State private var key: String = ""
+    @State private var vendor: String = ""
 
     init(startAt: Int = 0) {
         self._selection = State(initialValue: startAt)
@@ -77,6 +78,10 @@ struct OnboardingView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Text("ONBOARD_KEY_NAME")
+
+            Text("ONBOARD_KEY_COLOR")
+
+            ColorPicker("KEY_COLOR", selection: $color)
 
             Spacer()
             nextButton
@@ -171,7 +176,7 @@ struct OnboardingView: View {
         if selection < 5 {
             selection += 1
         } else {
-            let apiKey = APIKey(name: name, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
+            let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
 
             if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
                 alert = .duplicateKey
@@ -195,7 +200,7 @@ struct OnboardingView: View {
                 }
         }
     }
-    
+
     private func finishOnboarding() {
         UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
         presentationMode.wrappedValue.dismiss()
