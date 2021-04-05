@@ -31,16 +31,16 @@ struct UnitText: View {
             HStack(alignment: .top, spacing: 0) {
                 Text(text)
 
-                if metricString != nil {
-                    Text(metricString!)
+                if let metricString = metricString {
+                    Text(metricString)
                         .font(.system(size: fontSize*0.5, weight: .semibold, design: .rounded) )
                         // .font(.system(size: fontSize*0.5))
                         .padding(.top, fontSize*0.1)
                         .hideWhenRedacted()
                 }
 
-                if metricImage != nil {
-                    Image(systemName: metricImage!)
+                if let metricImage = metricImage {
+                    Image(systemName: metricImage)
                         .font(.system(size: fontSize*0.48, weight: .semibold, design: .default) )
                         .padding(.top, fontSize*0.1)
                         .hideWhenRedacted()

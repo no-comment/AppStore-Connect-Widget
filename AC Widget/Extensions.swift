@@ -12,19 +12,19 @@ import WidgetKit
 extension Date {
     func getCETHour() -> Int {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(abbreviation: "CET")!
+        calendar.timeZone = TimeZone(abbreviation: "CET") ?? .current
         return calendar.component(.hour, from: self)
     }
 
     func getPSTHour() -> Int {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(abbreviation: "PST")!
+        calendar.timeZone = TimeZone(abbreviation: "PST") ?? .current
         return calendar.component(.hour, from: self)
     }
 
     func getJSTHour() -> Int {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "JST")!
+        calendar.timeZone = TimeZone(identifier: "JST") ?? .current
         return calendar.component(.hour, from: self)
     }
 
@@ -55,7 +55,7 @@ extension UserDefaults {
     }
 }
 
-struct UserDefaultsKey {
+enum UserDefaultsKey {
     static let apiKeys = "apiKeys"
 
     static let completedOnboarding = "completedOnboarding"

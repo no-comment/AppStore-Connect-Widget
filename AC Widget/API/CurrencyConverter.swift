@@ -111,7 +111,7 @@ class CurrencyConverter {
         .PHP: 58.553,
         .SGD: 1.5318,
         .THB: 35.955,
-        .ZAR: 15.7631
+        .ZAR: 15.7631,
     ]
 
     // Private Properties:
@@ -158,7 +158,7 @@ private class CurrencyXMLParser: NSObject, XMLParserDelegate {
     // Private Properties:
     private let xmlURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
     private var exchangeRates: [Currency: Double] = [
-        .EUR: 1.0 // Base currency
+        .EUR: 1.0, // Base currency
     ]
 
     // Public Methods:

@@ -73,13 +73,17 @@ struct SettingsView: View {
 
     var contactSection: some View {
         Section(header: Label("Links", systemImage: "link")) {
-            Link(destination: URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget")!, label: {
-                Text("GitHub")
-            })
+            if let destination = URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget") {
+                Link(destination: destination, label: {
+                    Text("GitHub")
+                })
+            }
 
-            Link(destination: URL(string: "https://www.apple.com")!, label: {
-                Text("Buy me a coffee")
-            })
+            if let destination = URL(string: "https://www.apple.com") {
+                Link(destination: destination, label: {
+                    Text("Buy me a coffee")
+                })
+            }
         }
     }
 

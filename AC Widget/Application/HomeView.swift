@@ -14,11 +14,11 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView {
-            if data != nil {
-                SummaryMedium(data: data!)
+            if let data = data {
+                SummaryMedium(data: data)
                     .showAsWidget(.systemMedium)
-            } else if error != nil {
-                ErrorWidget(error: error!)
+            } else if let error = error {
+                ErrorWidget(error: error)
                     .showAsWidget(.systemMedium)
             } else {
                 ErrorWidget(error: .unknown)

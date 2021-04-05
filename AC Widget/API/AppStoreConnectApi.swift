@@ -176,7 +176,9 @@ class AppStoreConnectApi {
                 let lastDate: Date = proceeds.count > 0 ? proceeds.map({ $0.1 }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
                 var curDate = firstDate
                 while curDate < lastDate {
-                    curDate = Calendar.current.date(byAdding: .day, value: 1, to: curDate)!
+                    if let newDate = Calendar.current.date(byAdding: .day, value: 1, to: curDate) {
+                        curDate = newDate
+                    }
                     if !proceeds.contains(where: { $0.1 == curDate }) {
                         proceeds.append((0, curDate))
                     }
@@ -225,7 +227,7 @@ class AppStoreConnectApi {
                 .reportSubType([.SUMMARY]),
                 .reportType([.SALES]),
                 .vendorNumber([vendorNumber]),
-                .reportDate([date])
+                .reportDate([date]),
             ]), completion: { result in
                 switch result {
                 case .success(let data):
@@ -260,7 +262,9 @@ extension Date {
 
         for _ in 1 ... n {
             res.append(date)
-            date = cal.date(byAdding: Calendar.Component.day, value: -1, to: date)!
+            if let nextDate = cal.date(byAdding: Calendar.Component.day, value: -1, to: date) {
+                date = nextDate
+            }
         }
         return res
     }

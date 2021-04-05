@@ -105,9 +105,9 @@ struct APIKeyDetailView: View {
         let status = key.checkKey()
 
         return Section {
-            if status == nil {
+            if let status = status {
+                ErrorWidget(error: status)
             } else {
-                ErrorWidget(error: status!)
             }
         }
         .frame(maxHeight: 250)
