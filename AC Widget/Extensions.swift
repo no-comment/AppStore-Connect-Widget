@@ -57,13 +57,7 @@ extension UserDefaults {
 
 enum UserDefaultsKey {
     static let apiKeys = "apiKeys"
-
     static let completedOnboarding = "completedOnboarding"
-
-    static let issuerID = "issuerID"
-    static let privateKeyID = "privateKeyID"
-    static let privateKey = "privateKey"
-    static let vendorNumber = "vendorNumber"
 }
 
 struct HideViewRedacted: ViewModifier {

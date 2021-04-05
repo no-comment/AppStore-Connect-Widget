@@ -21,8 +21,9 @@ struct HomeView: View {
                 ErrorWidget(error: error)
                     .showAsWidget(.systemMedium)
             } else {
-                ErrorWidget(error: .unknown)
+                SummaryMedium(data: .example)
                     .showAsWidget(.systemMedium)
+                    .redacted(reason: .placeholder)
             }
 
             HStack {

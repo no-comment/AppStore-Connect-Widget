@@ -9,8 +9,13 @@ import SwiftUI
 import WidgetKit
 
 struct SettingsView: View {
-    var apiKeys: [APIKey] { APIKey.getApiKeys() }
+    @AppStorage(UserDefaultsKey.apiKeys, store: UserDefaults.shared) var keysData: Data?
     @State private var addKeySheet: Bool = false
+
+    var apiKeys: [APIKey] {
+        guard let data = keysData else { return [] }
+        return APIKey.getKeysFromData(data) ?? []
+    }
 
     var body: some View {
         Form {
