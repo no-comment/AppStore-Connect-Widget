@@ -4,12 +4,11 @@ disabled_rules:
   - cyclomatic_complexity
 
 opt_in_rules:
-  - file_header
   - force_unwrapping
   - empty_string
   - convenience_type
 
-line_length: 
+line_length:
   warning: 250
   ignores_comments: true
   error: 500
@@ -20,6 +19,3 @@ force_unwrapping:
 
 trailing_comma:
   mandatory_comma: true
-
-file_header:
-  severity: error

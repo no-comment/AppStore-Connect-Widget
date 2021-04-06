@@ -55,6 +55,17 @@ extension UserDefaults {
     }
 }
 
+extension String {
+    func removeCharacters(from set: CharacterSet) -> String {
+        var newString = self
+        newString.removeAll { char -> Bool in
+            guard let scalar = char.unicodeScalars.first else { return false }
+            return set.contains(scalar)
+        }
+        return newString
+    }
+}
+
 enum UserDefaultsKey {
     static let apiKeys = "apiKeys"
     static let completedOnboarding = "completedOnboarding"

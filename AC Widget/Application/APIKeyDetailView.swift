@@ -98,7 +98,8 @@ struct APIKeyDetailView: View {
     }
 
     private func save() {
-        // TODO: Implement saving changes
+        // TODO: Darf privateKeyID editable sein? Dann muss erst noch alter Key gelöscht werden.
+        APIKey.addApiKey(apiKey: APIKey(name: keyName, color: keyColor, issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber))
     }
 
     var statusSection: some View {

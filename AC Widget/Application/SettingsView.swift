@@ -97,9 +97,9 @@ struct SettingsView: View {
     }
 
     private func deleteKey(at offsets: IndexSet) {
-        offsets.forEach {
-            APIKey.deleteApiKey(apiKey: apiKeys[$0])
-        }
+        let keys = offsets.map({ apiKeys[$0] })
+        APIKey.deleteApiKeys(apiKeys: keys)
+        // TODO: show onboarding, when no keys are left
     }
 }
 

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SwiftUI
+import WidgetKit
 
 struct APIKey: Codable, Identifiable {
     var id: String { privateKeyID }
@@ -49,14 +50,18 @@ extension APIKey {
         return getKeysFromData(data) ?? []
     }
 
+    /// Saves APIKey to UserDefaults; Replaces any key with same id (PrivateKeyId)
+    /// - Parameter apiKey: new or updated APIKey
     static func addApiKey(apiKey: APIKey) {
         var keys: [APIKey] = []
         if let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) {
             keys = getKeysFromData(data) ?? []
         }
+        keys.removeAll(where: { $0.id == apiKey.id })
         keys.append(apiKey)
         let newData = getDataFromKeys(keys)
         UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     @discardableResult
@@ -66,6 +71,22 @@ extension APIKey {
         keys.removeAll(where: { $0.id == apiKey.id })
         let newData = getDataFromKeys(keys)
         UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
+        WidgetCenter.shared.reloadAllTimelines()
+        return true
+    }
+
+    @discardableResult
+    static func deleteApiKeys(apiKeys: [APIKey]) -> Bool {
+        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
+        guard var keys = getKeysFromData(data) else { return false }
+        keys.removeAll(where: { del in
+            return apiKeys.contains(where: { other in
+                return del.id == other.id
+            })
+        })
+        let newData = getDataFromKeys(keys)
+        UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
+        WidgetCenter.shared.reloadAllTimelines()
         return true
     }
 }

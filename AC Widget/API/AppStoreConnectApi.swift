@@ -23,9 +23,9 @@ class AppStoreConnectApi {
         self.vendorNumber = vendorNumber
 
         self.privateKey = privateKey
-            .trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "-----BEGIN PRIVATE KEY-----", with: "")
             .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
+            .removeCharacters(from: .whitespacesAndNewlines)
     }
 
     convenience init(apiKey: APIKey) {
