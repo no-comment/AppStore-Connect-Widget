@@ -215,21 +215,20 @@ struct OnboardingView: View {
     }
 
     private func generateAlert(_ alertType: AddAPIKeyAlert) -> Alert {
-        let primaryBtn = Alert.Button.default(Text("RECHECK_INPUTS"), action: { self.selection = 1 })
-        let secondaryBtn = Alert.Button.default(Text("CONTINUE"), action: finishOnboarding)
+        let button: Alert.Button
         let title: Text
         let message: Text
         switch alertType {
         case .invalidKey:
             title = Text("INVALID_KEY")
             message = Text("INVALID_KEY_MSG")
+            button = Alert.Button.default(Text("OK"), action: { self.selection = 1 })
         case .duplicateKey:
             title = Text("DUPLICATE_KEY")
             message = Text("DUPLICATE_KEY_MSG")
-            let dismiss = Alert.Button.default(Text("OK"), action: { self.selection = 1 })
-            return Alert(title: title, message: message, dismissButton: dismiss)
+            button = Alert.Button.default(Text("RECHECK_INPUTS"), action: { self.selection = 1 })
         }
-        return Alert(title: title, message: message, primaryButton: primaryBtn, secondaryButton: secondaryBtn)
+        return Alert(title: title, message: message, dismissButton: button)
     }
 }
 

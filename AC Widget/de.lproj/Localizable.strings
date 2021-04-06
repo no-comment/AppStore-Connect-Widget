@@ -14,7 +14,7 @@
 "CONTINUE" = "Weiter";
 "OK" = "Ok";
 "INVALID_KEY" = "Invalider Key";
-"INVALID_KEY_MSG" = "Einige der Informationen sind inkorrekt. Möchtest du den Key überprüfen oder dennoch weitermachen?";
+"INVALID_KEY_MSG" = "Einige der Informationen sind inkorrekt.";
 "DUPLICATE_KEY" = "Duplizierter Key";
 "DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
 

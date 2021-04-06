@@ -11,10 +11,9 @@
 "ONBOARD_VENDOR_NR" = "";
 
 "RECHECK_INPUTS" = "Recheck Key";
-"CONTINUE" = "Continue";
 "OK" = "Ok";
 "INVALID_KEY" = "Invalid Key";
-"INVALID_KEY_MSG" = "Some parts of the information you entered is invalid. Do you want to check it again or continue anyways?";
+"INVALID_KEY_MSG" = "Some parts of the information you entered is invalid.";
 "DUPLICATE_KEY" = "Duplicate Key";
 "DUPLICATE_KEY_MSG" = "You have already added this Key. Please enter another one.";
 
