@@ -23,13 +23,14 @@ struct APIKeyDetailView: View {
         self._issuerID = State(initialValue: key.issuerID)
         self._privateKeyID = State(initialValue: key.privateKeyID)
         self._privateKey = State(initialValue: key.privateKey)
-        self._vendorNumber = State(initialValue: key.privateKey)
+        self._vendorNumber = State(initialValue: key.vendorNumber)
     }
 
     var body: some View {
         Form {
             namingSection
             keySection
+                .disableAutocorrection(true)
             savingSection
             statusSection
         }
