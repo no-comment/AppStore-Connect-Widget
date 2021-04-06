@@ -1,0 +1,52 @@
+// MARK: Onboarding
+"WELCOME" = "Willkommen";
+"NEXT" = "Weiter";
+"FINISH" = "Fertig";
+"ONBOARD_WELCOME" = "";
+"ONBOARD_KEY_NAME" = "";
+"ONBOARD_KEY_COLOR" = "";
+"ONBOARD_ISSUER_ID" = "";
+"ONBOARD_PRIVATE_KEY_ID" = "";
+"ONBOARD_PRIVATE_KEY" = "";
+"ONBOARD_VENDOR_NR" = "";
+
+"RECHECK_INPUTS" = "Key Überprüfen";
+"CONTINUE" = "Weiter";
+"OK" = "Ok";
+"INVALID_KEY" = "Invalider Key";
+"INVALID_KEY_MSG" = "Einige der Informationen sind inkorrekt.";
+"DUPLICATE_KEY" = "Duplizierter Key";
+"DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
+
+// MARK: Settings
+"SETTINGS" = "Einstellungen";
+"API_KEYS" = "API Keys";
+"KEY_NAME" = "Key Name";
+"KEY_COLOR" = "Key Farbe";
+"ISSUER_ID" = "Issuer ID";
+"PRIVATE_KEY_ID" = "Private Key ID";
+"PRIVATE_KEY" = "Private Key";
+"VENDOR_NR" = "Vendor Number";
+"SAVE" = "Speichern";
+"ADD_KEY" = "Key hinzufügen";
+"VALID_KEY" = "Valider Key";
+"INVALID_KEY" = "Invalider Key";
+"PROBLEM_KEY" = "Dieser Key hat ein anderes Problem";
+
+// MARK: Widgets
+"TODAY" = "Heute";
+"YESTERDAY" = "Gestern";
+
+"LAST_SEVEN_DAYS" = "7 Tage:";
+"LAST_THIRTY_DAYS" = "30 Tage:";
+
+"NO_DATA" = "Keine Daten";
+
+"SYSTEM" = "System";
+
+// MARK: ERRORS
+"ERROR_CAPS" = "ERROR";
+"ERROR_INVALID_CREDENTIALS" = "Die eingegeben Zugangsdaten sind inkorrekt.";
+"ERROR_WRONG_PERMISSIONS" = "Dein API-key hat nicht die erforderlichen Befugnisse.";
+"ERROR_EXCEEDED_LIMIT" = "Du hast das tägliche Limit an API Zugriffen erreicht.";
+"ERROR_UNKNOWN" = "Es ist ein unbekannter Fehler aufgetreten.";

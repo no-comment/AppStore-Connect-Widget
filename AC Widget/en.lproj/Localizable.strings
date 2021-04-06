@@ -1,0 +1,51 @@
+// MARK: Onboarding
+"WELCOME" = "Welcome";
+"NEXT" = "Next";
+"FINISH" = "Finish";
+"ONBOARD_WELCOME" = "";
+"ONBOARD_KEY_NAME" = "";
+"ONBOARD_KEY_COLOR" = "";
+"ONBOARD_ISSUER_ID" = "";
+"ONBOARD_PRIVATE_KEY_ID" = "";
+"ONBOARD_PRIVATE_KEY" = "";
+"ONBOARD_VENDOR_NR" = "";
+
+"RECHECK_INPUTS" = "Recheck Key";
+"OK" = "Ok";
+"INVALID_KEY" = "Invalid Key";
+"INVALID_KEY_MSG" = "Some parts of the information you entered is invalid.";
+"DUPLICATE_KEY" = "Duplicate Key";
+"DUPLICATE_KEY_MSG" = "You have already added this Key. Please enter another one.";
+
+// MARK: Settings
+"SETTINGS" = "Settings";
+"API_KEYS" = "API Keys";
+"KEY_NAME" = "Key Name";
+"KEY_COLOR" = "Key Color";
+"ISSUER_ID" = "Issuer ID";
+"PRIVATE_KEY_ID" = "Private Key ID";
+"PRIVATE_KEY" = "Private Key";
+"VENDOR_NR" = "Vendor Number";
+"SAVE" = "Save";
+"ADD_KEY" = "Add Key";
+"VALID_KEY" = "Valid Key";
+"INVALID_KEY" = "Invalid Key";
+"PROBLEM_KEY" = "This Key has some other problem";
+
+// MARK: Widgets
+"TODAY" = "Today";
+"YESTERDAY" = "Yesterday";
+
+"LAST_SEVEN_DAYS" = "7 days:";
+"LAST_THIRTY_DAYS" = "30 days:";
+
+"NO_DATA" = "No Data";
+
+"SYSTEM" = "System";
+
+// MARK: ERRORS
+"ERROR_CAPS" = "ERROR";
+"ERROR_INVALID_CREDENTIALS" = "The credentials you entered are incorrect.";
+"ERROR_WRONG_PERMISSIONS" = "Your API-key does not have the right permissions.";
+"ERROR_EXCEEDED_LIMIT" = "You have exceeded the daily limit of API requests.";
+"ERROR_UNKNOWN" = "An unknown error occurred. Please file a bug report.";

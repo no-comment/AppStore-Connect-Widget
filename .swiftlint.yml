@@ -1,0 +1,21 @@
+disabled_rules:
+  - identifier_name
+  - multiple_closures_with_trailing_closure
+  - cyclomatic_complexity
+
+opt_in_rules:
+  - force_unwrapping
+  - empty_string
+  - convenience_type
+
+line_length:
+  warning: 250
+  ignores_comments: true
+  error: 500
+  ignores_interpolated_strings: true
+
+force_unwrapping:
+  severity: error
+
+trailing_comma:
+  mandatory_comma: true
