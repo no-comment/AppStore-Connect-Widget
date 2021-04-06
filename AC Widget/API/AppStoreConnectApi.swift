@@ -12,6 +12,8 @@ import SwiftCSV
 import Promises
 
 class AppStoreConnectApi {
+    private let privateKeyMinLength = 100
+
     private var issuerID: String
     private var privateKeyID: String
     private var privateKey: String
@@ -36,7 +38,7 @@ class AppStoreConnectApi {
     public func testApiKeys() -> Promise<Bool> {
         let promise = Promise<Bool>.pending()
 
-        if self.privateKey.count < 20 {
+        if self.privateKey.count < privateKeyMinLength {
             promise.reject(APIError.invalidCredentials)
             return promise
         }
@@ -108,7 +110,7 @@ class AppStoreConnectApi {
     public func getData(currency: CurrencyParam? = nil) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
 
-        if self.privateKey.count < 20 {
+        if self.privateKey.count < privateKeyMinLength {
             promise.reject(APIError.invalidCredentials)
             return promise
         }
