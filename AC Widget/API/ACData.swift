@@ -148,19 +148,21 @@ struct ACData {
     static let exampleLargeSums = createMockData(35, largeValues: true)
 
     private static func createMockData(_ days: Int, largeValues: Bool = false) -> ACData {
-        // TODO: create mock data
-//        var downloads: [(Int, Date)] = []
-//        var proceeds: [(Float, Date)] = []
-//
-//        for i in 1..<days+1 {
-//            if largeValues {
-//                downloads.append((Int.random(in: 0..<1600), Date(timeIntervalSinceNow: -86400*Double(i))))
-//                proceeds.append((Float.random(in: 0..<700), Date(timeIntervalSinceNow: -86400*Double(i))))
-//            } else {
-//                downloads.append((Int.random(in: 0..<110), Date(timeIntervalSinceNow: -86400*Double(i))))
-//                proceeds.append((Float.random(in: 0..<40), Date(timeIntervalSinceNow: -86400*Double(i))))
-//            }
-//        }
-        return ACData(entries: [], currency: .USD)
+        var entries: [ACEntry] = []
+        let countries = ["US", "DE", "ES", "UK"]
+        let devices = ["Desktop", "iPhone", "iPad"]
+        Date(timeIntervalSinceNow: -86400).getLastNDates(days).forEach { day in
+            for _ in 0...(Int.random(in: 10...30) * (largeValues ? 5 : 1)) {
+                entries.append(ACEntry(appTitle: "TestApp",
+                                       appSKU: "TestApp",
+                                       units: Int.random(in: 1...10),
+                                       proceeds: Float.random(in: 0...5),
+                                       date: day, countryCode: countries.randomElement() ?? "US",
+                                       device: devices.randomElement() ?? "iPhone",
+                                       type: ACEntryType.allCases.randomElement() ?? .download))
+            }
+        }
+        
+        return ACData(entries:entries, currency: .USD)
     }
 }

@@ -71,9 +71,6 @@ struct SummaryMedium_Previews: PreviewProvider {
         Group {
             SummaryMedium(data: ACData.example)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
-
-            SummaryMedium(data: ACData.exampleLargeSums)
-                .previewContext(WidgetPreviewContext(family: .systemMedium))
         }
     }
 }

@@ -36,9 +36,6 @@ struct SummarySmall_Previews: PreviewProvider {
         Group {
             SummarySmall(data: ACData.example)
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
-
-            SummarySmall(data: ACData.exampleLargeSums)
-                .previewContext(WidgetPreviewContext(family: .systemSmall))
         }
     }
 }

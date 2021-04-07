@@ -18,7 +18,7 @@ struct ACEntry {
     let type: ACEntryType
 }
 
-enum ACEntryType {
+enum ACEntryType:  CaseIterable {
     case download
     case redownload
     case aip

@@ -59,7 +59,7 @@ struct OnboardingView: View {
             Text("WELCOME")
                 .font(.system(.largeTitle, design: .rounded))
 
-            SummaryMedium(data: ACData.exampleLargeSums)
+            SummaryMedium(data: ACData.example)
                 .showAsWidget(.systemMedium)
 
             Text("ONBOARD_WELCOME")
