@@ -100,7 +100,7 @@ struct SettingsView: View {
         let empty: Bool = offsets.count == apiKeys.count
         let keys = offsets.map({ apiKeys[$0] })
         APIKey.deleteApiKeys(apiKeys: keys)
-        
+
         if empty {
             UserDefaults.standard.set(false, forKey: UserDefaultsKey.completedOnboarding)
         }

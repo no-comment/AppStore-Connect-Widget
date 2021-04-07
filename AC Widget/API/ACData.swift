@@ -9,14 +9,12 @@ import Foundation
 import SwiftUI
 
 struct ACData {
-    private let downloads: [(Int, Date)]
-    private let proceeds: [(Float, Date)]
-    let currency: String
+    private let entries: [ACEntry]
+    let displayCurrency: Currency
 
-    init(downloads: [(Int, Date)], proceeds: [(Float, Date)], currency: String) {
-        self.downloads = downloads.sorted { $0.1 > $1.1 }
-        self.proceeds = proceeds.sorted { $0.1 > $1.1 }
-        self.currency = currency
+    init(entries: [ACEntry], currency: Currency) {
+        self.entries = entries
+        self.displayCurrency = currency
     }
 
     // MARK: Getting Numbers
@@ -81,21 +79,25 @@ struct ACData {
     }
 
     func getDownloads(_ lastNDays: Int) -> [(Int, Date)] {
-        var result: [(Int, Date)] = []
-        let range = min(downloads.count, lastNDays)
-        for i in 0..<range {
-            result.append(downloads[i])
-        }
-        return result
+        let downloadEntries = entries.filter({ $0.type == .download })
+        let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
+
+        return latestDate.getLastNDates(lastNDays)
+            .map { day -> (Int, Date) in
+                let count = downloadEntries.filter({ $0.date == day }).reduce(0, { $0 + $1.units })
+                return (count, day)
+            }
     }
 
     func getProceeds(_ lastNDays: Int) -> [(Float, Date)] {
-        var result: [(Float, Date)] = []
-        let range = min(proceeds.count, lastNDays)
-        for i in 0..<range {
-            result.append(proceeds[i])
-        }
-        return result
+        let downloadEntries = entries.filter({ $0.proceeds > 0 })
+        let latestDate: Date? = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
+
+        return (latestDate ?? Date()).getLastNDates(lastNDays)
+            .map { day -> (Float, Date) in
+                let sum = downloadEntries.filter({ $0.date == day }).reduce(Float.zero, { $0 + $1.proceeds * Float($1.units) })
+                return (sum, day)
+            }
     }
 
     private func getDownloadsSum(_ lastNDays: Int = 1) -> Int {
@@ -118,7 +120,9 @@ struct ACData {
 
     // MARK: Getting Dates
     func latestReportingDate() -> String {
-        guard let date = downloads.first?.1 else {
+        let latestDate: Date? = entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
+
+        guard let date = latestDate else {
             return NSLocalizedString("NO_DATA", comment: "")
         }
         return dateToString(date)
@@ -144,19 +148,19 @@ struct ACData {
     static let exampleLargeSums = createMockData(35, largeValues: true)
 
     private static func createMockData(_ days: Int, largeValues: Bool = false) -> ACData {
-        var downloads: [(Int, Date)] = []
-        var proceeds: [(Float, Date)] = []
-
-        for i in 1..<days+1 {
-            if largeValues {
-                downloads.append((Int.random(in: 0..<1600), Date(timeIntervalSinceNow: -86400*Double(i))))
-                proceeds.append((Float.random(in: 0..<700), Date(timeIntervalSinceNow: -86400*Double(i))))
-            } else {
-                downloads.append((Int.random(in: 0..<110), Date(timeIntervalSinceNow: -86400*Double(i))))
-                proceeds.append((Float.random(in: 0..<40), Date(timeIntervalSinceNow: -86400*Double(i))))
-            }
-        }
-
-        return ACData(downloads: downloads, proceeds: proceeds, currency: "$")
+        // TODO: create mock data
+//        var downloads: [(Int, Date)] = []
+//        var proceeds: [(Float, Date)] = []
+//
+//        for i in 1..<days+1 {
+//            if largeValues {
+//                downloads.append((Int.random(in: 0..<1600), Date(timeIntervalSinceNow: -86400*Double(i))))
+//                proceeds.append((Float.random(in: 0..<700), Date(timeIntervalSinceNow: -86400*Double(i))))
+//            } else {
+//                downloads.append((Int.random(in: 0..<110), Date(timeIntervalSinceNow: -86400*Double(i))))
+//                proceeds.append((Float.random(in: 0..<40), Date(timeIntervalSinceNow: -86400*Double(i))))
+//            }
+//        }
+        return ACData(entries: [], currency: .USD)
     }
 }

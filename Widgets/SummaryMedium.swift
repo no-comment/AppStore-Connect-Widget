@@ -54,12 +54,12 @@ struct SummaryMedium: View {
 
     var proceedsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            UnitText(data.getProceedsString(), metric: data.currency)
+            UnitText(data.getProceedsString(), metric: data.displayCurrency.symbol)
             GraphView(data.getProceeds(30))
 
             VStack(spacing: 0) {
-                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getProceedsString(7, size: .compact).appending(data.currency))
-                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getProceedsString(30, size: .compact).appending(data.currency))
+                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getProceedsString(7, size: .compact).appending(data.displayCurrency.symbol))
+                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getProceedsString(30, size: .compact).appending(data.displayCurrency.symbol))
             }
         }
     }

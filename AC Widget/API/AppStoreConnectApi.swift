@@ -118,8 +118,7 @@ class AppStoreConnectApi {
 
         let provider: APIProvider = APIProvider(configuration: configuration)
 
-        var downloads: [(Int, Date)] = []
-        var proceeds: [(Float, Date)] = []
+        var entries: [ACEntry] = []
 
         let localCurrency: Currency = currency?.toCurrency() ?? .USD
 
@@ -152,47 +151,30 @@ class AppStoreConnectApi {
                         continue
                     }
 
-                    var procForDay: Double = 0
-                    var downloadsForDay: Int = 0
                     try? tsv.enumerateAsDict { dict in
-                        let type = dict["Product Type Identifier"] ?? ""
-                        if type.contains("7") || type.contains("3") { return } // skip redownloads, updates and restoring of iap
-                        if let units = Int(dict["Units"] ?? "0"), let pro: Double = Double(dict["Developer Proceeds"] ?? "0.00") {
-                            if pro > 0 {
-                                if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
-                                    procForDay += converter.convert(Double(units) * pro, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
-                                }
-                            } else {
-                                downloadsForDay += units
-                            }
+                        let parentId: String = dict["Parent Identifier"] ?? ""
+                        let sku: String = dict["SKU"] ?? ""
+
+                        var proceeds = Double(dict["Developer Proceeds"] ?? "0.00") ?? 0
+                        if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
+                            proceeds = converter.convert(proceeds, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
+                        } else {
+                            proceeds = 0
                         }
-                    }
 
-                    if let beginDate = tsv.namedRows.first?["Begin Date"], let entryDate = Date.fromACFormat(beginDate) {
-                        proceeds.append((Float(procForDay), entryDate))
-                        downloads.append((downloadsForDay, entryDate))
+                        let newEntry = ACEntry(appTitle: dict["Title"] ?? "UNKNOWN",
+                                               appSKU: parentId.isEmpty ? sku : parentId,
+                                               units: Int(dict["Units"] ?? "0") ?? 0,
+                                               proceeds: Float(proceeds),
+                                               date: Date.fromACFormat(dict["Begin Date"] ?? "") ?? Date.distantPast,
+                                               countryCode: dict["Country Code"] ?? "UNKNOWN",
+                                               device: dict["Device"] ?? "UNKNOWN",
+                                               type: ACEntryType(dict["Product Type Identifier"]))
+                        entries.append(newEntry)
                     }
                 }
 
-                let firstDate: Date = proceeds.count > 0 ? proceeds.map({ $0.1 }).reduce(Date.distantFuture, { $0 < $1 ? $0 : $1 }) : Date()
-                let lastDate: Date = proceeds.count > 0 ? proceeds.map({ $0.1 }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
-                var curDate = firstDate
-                while curDate < lastDate {
-                    if let newDate = Calendar.current.date(byAdding: .day, value: 1, to: curDate) {
-                        curDate = newDate
-                    }
-                    if !proceeds.contains(where: { $0.1 == curDate }) {
-                        proceeds.append((0, curDate))
-                    }
-                    if !downloads.contains(where: { $0.1 == curDate }) {
-                        downloads.append((0, curDate))
-                    }
-                }
-
-                proceeds.sort(by: { $0.1.compare($1.1) == .orderedDescending })
-                downloads.sort(by: { $0.1.compare($1.1) == .orderedDescending })
-
-                promise.fulfill(ACData(downloads: downloads, proceeds: proceeds, currency: localCurrency.symbol))
+                promise.fulfill(ACData(entries: entries, currency: localCurrency))
             }
             .catch { err in
                 if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
