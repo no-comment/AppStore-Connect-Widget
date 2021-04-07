@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import WidgetKit
+import DynamicColor
 
 extension Date {
     func getCETHour() -> Int {
@@ -131,6 +132,10 @@ extension View {
 }
 
 // MARK: Color
+extension Color {
+    static let widgetBackground: Color = Color("WidgetBackground")
+}
+
 // From: http://brunowernimont.me/howtos/make-swiftui-color-codable
 extension Color {
     // swiftlint:disable:next large_tuple
@@ -178,17 +183,18 @@ extension Color: Codable {
 // From: https://stackoverflow.com/questions/42355778/how-to-compute-color-contrast-ratio-between-two-uicolor-instances/42355779
 extension Color {
     func readeable(on background: Color) -> Color {
-        let luminance1 = self.luminance()
-        let luminance2 = background.luminance()
+        let lum1 = self.luminance()
+        let lum2 = background.luminance()
 
-        let luminanceDarker = min(luminance1, luminance2)
-        let luminanceLighter = max(luminance1, luminance2)
-        
-        let contrast = (luminanceLighter + 0.05) / (luminanceDarker + 0.05)
-        // TODO: Replace the second self with adjusted color
-        return (contrast > 0.03928 ? self : self)
+        if lum1 < 0.2 && lum2 < 0.2 {
+            return Color(DynamicColor(self).darkened())
+        }
+        if lum1 > 0.8 && lum2 > 0.8 {
+            return Color(DynamicColor(self).lighter())
+        }
+        return self
     }
-    
+
     func luminance() -> CGFloat {
         func adjust(colorComponent: CGFloat) -> CGFloat {
             return (colorComponent < 0.04045) ? (colorComponent / 12.92) : pow((colorComponent + 0.055) / 1.055, 2.4)

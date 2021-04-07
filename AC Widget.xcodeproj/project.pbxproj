@@ -74,6 +74,9 @@
 		CBAB72AD261B33DF00ED0F94 /* AppStoreConnect-Swift-SDK in Frameworks */ = {isa = PBXBuildFile; productRef = CBAB72AC261B33DF00ED0F94 /* AppStoreConnect-Swift-SDK */; };
 		CBAB72B2261B340C00ED0F94 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = CBAB72B1261B340C00ED0F94 /* Gzip */; };
 		CBAB72B4261B340C00ED0F94 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = CBAB72B3261B340C00ED0F94 /* SwiftCSV */; };
+		CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA496261E52F200719CC1 /* DynamicColor */; };
+		CBDFA49F261E55EE00719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA49E261E55EE00719CC1 /* DynamicColor */; };
+		CBDFA4A1261E55F500719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA4A0261E55F500719CC1 /* DynamicColor */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45E8C4C0261268D4007F9B0E /* SwiftCSV in Frameworks */,
+				CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */,
 				45E8C4BD261267FB007F9B0E /* Gzip in Frameworks */,
 				45CAC1092615CB8100FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */,
 				455B4AA02613BAA80061785A /* Promises in Frameworks */,
@@ -170,6 +174,7 @@
 				45E8C4992612531D007F9B0E /* SwiftUI.framework in Frameworks */,
 				45CAC10F2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */,
 				45CAC1112615CBD000FF63E7 /* Promises in Frameworks */,
+				CBDFA49F261E55EE00719CC1 /* DynamicColor in Frameworks */,
 				45CAC10D2615CBC700FF63E7 /* SwiftCSV in Frameworks */,
 				45E8C4972612531D007F9B0E /* WidgetKit.framework in Frameworks */,
 				45CAC10B2615CBC200FF63E7 /* Gzip in Frameworks */,
@@ -181,6 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CBAB72AD261B33DF00ED0F94 /* AppStoreConnect-Swift-SDK in Frameworks */,
+				CBDFA4A1261E55F500719CC1 /* DynamicColor in Frameworks */,
 				CBAB72B4261B340C00ED0F94 /* SwiftCSV in Frameworks */,
 				45C1A3DD26191997006C1650 /* Promises in Frameworks */,
 				CBAB72B2261B340C00ED0F94 /* Gzip in Frameworks */,
@@ -330,6 +336,7 @@
 				45E8C4BF261268D4007F9B0E /* SwiftCSV */,
 				455B4A9F2613BAA80061785A /* Promises */,
 				45CAC1082615CB8100FF63E7 /* AppStoreConnect-Swift-SDK */,
+				CBDFA496261E52F200719CC1 /* DynamicColor */,
 			);
 			productName = "AC Widget";
 			productReference = 45E8C47D2612512E007F9B0E /* AC Widget.app */;
@@ -353,6 +360,7 @@
 				45CAC10C2615CBC700FF63E7 /* SwiftCSV */,
 				45CAC10E2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK */,
 				45CAC1102615CBD000FF63E7 /* Promises */,
+				CBDFA49E261E55EE00719CC1 /* DynamicColor */,
 			);
 			productName = WidgetsExtension;
 			productReference = 45E8C4942612531D007F9B0E /* WidgetsExtension.appex */;
@@ -376,6 +384,7 @@
 				CBAB72AC261B33DF00ED0F94 /* AppStoreConnect-Swift-SDK */,
 				CBAB72B1261B340C00ED0F94 /* Gzip */,
 				CBAB72B3261B340C00ED0F94 /* SwiftCSV */,
+				CBDFA4A0261E55F500719CC1 /* DynamicColor */,
 			);
 			productName = WidgetIntentExtension;
 			productReference = 45FD5191261915F200603D8A /* WidgetIntentExtension.appex */;
@@ -416,6 +425,7 @@
 				45E8C4BE261268D4007F9B0E /* XCRemoteSwiftPackageReference "SwiftCSV" */,
 				455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */,
 				45CAC1072615CB8100FF63E7 /* XCRemoteSwiftPackageReference "appstoreconnect-swift-sdk" */,
+				CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */,
 			);
 			productRefGroup = 45E8C47E2612512E007F9B0E /* Products */;
 			projectDirPath = "";
@@ -926,6 +936,14 @@
 				minimumVersion = 0.6.0;
 			};
 		};
+		CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yannickl/DynamicColor";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -988,6 +1006,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45E8C4BE261268D4007F9B0E /* XCRemoteSwiftPackageReference "SwiftCSV" */;
 			productName = SwiftCSV;
+		};
+		CBDFA496261E52F200719CC1 /* DynamicColor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */;
+			productName = DynamicColor;
+		};
+		CBDFA49E261E55EE00719CC1 /* DynamicColor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */;
+			productName = DynamicColor;
+		};
+		CBDFA4A0261E55F500719CC1 /* DynamicColor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */;
+			productName = DynamicColor;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

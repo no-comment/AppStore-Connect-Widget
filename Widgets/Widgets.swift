@@ -152,7 +152,7 @@ struct Widgets: Widget {
         IntentConfiguration(kind: kind, intent: WidgetConfigurationIntent.self, provider: Provider()) { entry in
             WidgetsEntryView(entry: entry)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color("WidgetBackground"))
+                .background(Color.widgetBackground)
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")

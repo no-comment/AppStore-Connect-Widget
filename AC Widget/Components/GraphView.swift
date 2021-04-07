@@ -16,7 +16,7 @@ struct GraphView: View {
         let copy = data.map { $0.0 }
         let max: Float = copy.max() ?? 1
         self.data = copy.map { CGFloat($0 / max) }.reversed()
-        self.color = .accentColor
+        self.color = color
     }
 
     init(_ data: [(Int, Date)], color: Color = .accentColor) {
