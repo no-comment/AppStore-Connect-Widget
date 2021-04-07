@@ -21,17 +21,19 @@
 // MARK: Settings
 "SETTINGS" = "Einstellungen";
 "API_KEYS" = "API Keys";
+"ADD_KEY" = "Key hinzufügen";
+"VALID_KEY" = "Valider Key";
+"INVALID_KEY" = "Invalider Key";
+"PROBLEM_KEY" = "Dieser Key hat ein anderes Problem";
+
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Farbe";
 "ISSUER_ID" = "Issuer ID";
 "PRIVATE_KEY_ID" = "Private Key ID";
 "PRIVATE_KEY" = "Private Key";
 "VENDOR_NR" = "Vendor Number";
+"KEY_DETAIL_FOOTER" = "Keys können nicht bearbeitet werden. Solltest du Änderungen vornehmen wollen, erstelle bitte einen neuen Key.";
 "SAVE" = "Speichern";
-"ADD_KEY" = "Key hinzufügen";
-"VALID_KEY" = "Valider Key";
-"INVALID_KEY" = "Invalider Key";
-"PROBLEM_KEY" = "Dieser Key hat ein anderes Problem";
 
 // MARK: Widgets
 "TODAY" = "Heute";
