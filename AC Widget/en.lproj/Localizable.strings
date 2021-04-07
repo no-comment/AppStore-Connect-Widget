@@ -51,3 +51,4 @@
 "ERROR_WRONG_PERMISSIONS" = "Your API-key does not have the right permissions.";
 "ERROR_EXCEEDED_LIMIT" = "You have exceeded the daily limit of API requests.";
 "ERROR_UNKNOWN" = "An unknown error occurred. Please file a bug report.";
+"ERROR_NO_DATA_AVAILABLE" = "Data is not yet available.";

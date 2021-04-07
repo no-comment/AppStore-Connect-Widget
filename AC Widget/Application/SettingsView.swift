@@ -43,16 +43,7 @@ struct SettingsView: View {
                                         .foregroundColor(key.color)
                                     Text(key.name)
                                     Spacer()
-                                    if key.checkKey() == nil {
-                                        Image(systemName: "checkmark.circle")
-                                            .foregroundColor(.green)
-                                    } else if key.checkKey() == .invalidCredentials {
-                                        Image(systemName: "xmark.circle")
-                                            .foregroundColor(.red)
-                                    } else {
-                                        Image(systemName: "exclamationmark.circle")
-                                            .foregroundColor(.orange)
-                                    }
+                                    ApiKeyCheckIndicator(key: key)
                                 }
                                })
             }
@@ -112,5 +103,40 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView()
         }
+    }
+}
+
+// MARK: - ApiKeyCheckIndicator
+
+struct ApiKeyCheckIndicator: View {
+    let key: APIKey
+    @State var status: APIError?
+    @State var loading = true
+
+    var body: some View {
+        Group {
+            if loading {
+                Image(systemName: "circle")
+                    .foregroundColor(.gray)
+            } else if status == nil {
+                Image(systemName: "checkmark.circle")
+                    .foregroundColor(.green)
+            } else if status == .invalidCredentials {
+                Image(systemName: "xmark.circle")
+                    .foregroundColor(.red)
+            } else {
+                Image(systemName: "exclamationmark.circle")
+                    .foregroundColor(.orange)
+            }
+        }
+        .onAppear(perform: {
+            key.checkKey()
+                .catch { err in
+                    status = (err as? APIError) ?? .unknown
+                }
+                .always {
+                    loading = false
+                }
+        })
     }
 }

@@ -183,12 +183,8 @@ struct OnboardingView: View {
                 return
             }
 
-            AppStoreConnectApi(apiKey: apiKey).testApiKeys()
-                .then { worked in
-                    if !worked {
-                        alert = .invalidKey
-                        return
-                    }
+            apiKey.checkKey()
+                .then {
                     APIKey.addApiKey(apiKey: apiKey)
                     finishOnboarding()
                 }

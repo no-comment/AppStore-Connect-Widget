@@ -35,79 +35,7 @@ class AppStoreConnectApi {
     }
 
     // swiftlint:disable:next function_body_length
-    public func testApiKeys() -> Promise<Bool> {
-        let promise = Promise<Bool>.pending()
-
-        if self.privateKey.count < privateKeyMinLength {
-            promise.reject(APIError.invalidCredentials)
-            return promise
-        }
-        let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
-
-        let provider: APIProvider = APIProvider(configuration: configuration)
-
-        any(Date().getLastNDates(10)
-                .map({ $0.acApiFormat() })
-                .map({ self.apiWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
-            .then { results in
-                var success = false
-                for result in results {
-                    guard let resultValue = result.value else {
-                        print("ERROR: \(result.error?.localizedDescription ?? "")")
-                        continue
-                    }
-                    guard let decompressedData = try? resultValue.gunzipped() else {
-                        #if DEBUG
-                        fatalError()
-                        #endif
-                        continue
-                    }
-
-                    let str = String(decoding: decompressedData, as: UTF8.self)
-
-                    guard let _: CSV = try? CSV(string: str, delimiter: "\t") else {
-                        #if DEBUG
-                        fatalError()
-                        #endif
-                        continue
-                    }
-
-                    success = true
-                    break
-                }
-
-                promise.fulfill(success)
-            }
-            .catch { err in
-                if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
-                    switch apiError {
-                    case .requestFailure(let statusCode, _):
-                        print(statusCode)
-                        switch statusCode {
-                        case 401:
-                            promise.reject(APIError.invalidCredentials)
-                        case 429:
-                            promise.reject(APIError.exceededLimit)
-                        case 403:
-                            promise.reject(APIError.wrongPermissions)
-                        default:
-                            promise.reject(APIError.unknown)
-                        }
-                    case .requestGeneration:
-                        promise.reject(APIError.invalidCredentials)
-                    default:
-                        promise.reject(APIError.unknown)
-                    }
-                } else {
-                    promise.reject(APIError.unknown)
-                }
-            }
-
-        return promise
-    }
-
-    // swiftlint:disable:next function_body_length
-    public func getData(currency: CurrencyParam? = nil) -> Promise<ACData> {
+    public func getData(currency: CurrencyParam? = nil, numOfDays: Int = 35) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
 
         if self.privateKey.count < privateKeyMinLength {
@@ -125,7 +53,7 @@ class AppStoreConnectApi {
         let converter = CurrencyConverter.shared
         converter.updateExchangeRates()
             .then { _ in
-                any(Date().getLastNDates(35)
+                any(Date().getLastNDates(numOfDays)
                         .map({ $0.acApiFormat() })
                         .map({ self.apiWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
             }
@@ -179,7 +107,7 @@ class AppStoreConnectApi {
             .catch { err in
                 if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
                     switch apiError {
-                    case .requestFailure(let statusCode, _):
+                    case .requestFailure(let statusCode, let errData):
                         print(statusCode)
                         switch statusCode {
                         case 401:
@@ -188,6 +116,17 @@ class AppStoreConnectApi {
                             promise.reject(APIError.exceededLimit)
                         case 403:
                             promise.reject(APIError.wrongPermissions)
+                        case 404:
+                            guard let errData = errData else {                            promise.reject(APIError.unknown)
+                                break
+                            }
+
+                            let resp = String(decoding: errData, as: UTF8.self)
+                            if resp.contains("The request expected results but none were found") {
+                                promise.reject(APIError.noDataAvailable)
+                            } else {
+                                promise.reject(APIError.unknown)
+                            }
                         default:
                             promise.reject(APIError.unknown)
                         }

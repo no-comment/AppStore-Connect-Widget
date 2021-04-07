@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 import WidgetKit
+import Promises
 
 struct APIKey: Codable, Identifiable {
     var id: String { privateKeyID }
@@ -21,9 +22,27 @@ struct APIKey: Codable, Identifiable {
 }
 
 extension APIKey {
-    func checkKey() -> APIError? {
-        // TODO: Check API Key
-        return nil
+    func checkKey() -> Promise<Void> {
+        let promise = Promise<Void>.pending()
+
+        let api = AppStoreConnectApi(apiKey: self)
+        api.getData(currency: .system, numOfDays: 1)
+            .then { _ in
+                promise.fulfill(())
+            }
+            .catch { error in
+                if let error = error as? APIError {
+                    if error == .noDataAvailable {
+                        promise.fulfill(())
+                    } else {
+                        promise.reject(error)
+                    }
+                } else {
+                    promise.reject(APIError.unknown)
+                }
+            }
+
+        return promise
     }
 
     static let example = APIKey(name: "Example Key",

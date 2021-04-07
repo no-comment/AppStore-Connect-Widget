@@ -16,6 +16,8 @@ struct APIKeyDetailView: View {
     private var privateKey: String
     private var vendorNumber: String
 
+    @State private var status: APIError?
+
     init(_ key: APIKey) {
         self.key = key
         self._keyName = State(initialValue: key.name)
@@ -33,6 +35,11 @@ struct APIKeyDetailView: View {
             savingSection
             statusSection
         }
+        .onAppear(perform: {
+            key.checkKey().catch { err in
+                status = (err as? APIError) ?? .unknown
+            }
+        })
         .navigationTitle(keyName)
     }
 
@@ -97,8 +104,6 @@ struct APIKeyDetailView: View {
     }
 
     var statusSection: some View {
-        let status = key.checkKey()
-
         return Section {
             if let status = status {
                 ErrorWidget(error: status)
