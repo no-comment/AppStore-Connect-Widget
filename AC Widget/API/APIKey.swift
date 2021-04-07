@@ -99,6 +99,10 @@ extension ApiKeyParam {
     func toApiKey() -> APIKey? {
         return APIKey.getApiKeys().first(where: { $0.id == self.identifier })
     }
+
+    func getColor() -> Color? {
+        return self.toApiKey()?.color
+    }
 }
 
 // MARK: Codable Color Extension

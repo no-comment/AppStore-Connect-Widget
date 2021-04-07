@@ -12,7 +12,7 @@ import Promises
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
-        ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent())
+        ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent())
     }
 
     func getSnapshot(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (ACStatEntry) -> Void) {
@@ -26,11 +26,11 @@ struct Provider: IntentTimelineProvider {
                             Calendar.current.isDateInYesterday(proceed.1)
                     }
 
-                    let entry = ACStatEntry(date: Date(), data: data, configuration: configuration, relevance: isNewData ? .high : .medium)
+                    let entry = ACStatEntry(date: Date(), data: data, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: isNewData ? .high : .medium)
                     completion(entry)
                 }
                 .catch { err in
-                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration, relevance: .low)
+                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: .low)
                     completion(entry)
                 }
         }
@@ -46,7 +46,11 @@ struct Provider: IntentTimelineProvider {
                         Calendar.current.isDateInYesterday(proceed.1)
                 }
 
-                let entry = ACStatEntry(date: Date(), data: data, configuration: configuration, relevance: isNewData ? .high : .medium)
+                let entry = ACStatEntry(date: Date(),
+                                        data: data,
+                                        color: configuration.apiKey?.getColor() ?? .accentColor,
+                                        configuration: configuration,
+                                        relevance: isNewData ? .high : .medium)
                 entries.append(entry)
 
                 // Report is not available yet. Daily reports for the Americas are available by 5 am Pacific Time; Japan, Australia, and New Zealand by 5 am Japan Standard Time; and 5 am Central European Time for all other territories.
@@ -73,7 +77,7 @@ struct Provider: IntentTimelineProvider {
                 completion(timeline)
             }
             .catch { err in
-                let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration)
+                let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, color: .accentColor, configuration: configuration)
                 entries.append(entry)
 
                 var nextUpdateDate = Date()
@@ -104,12 +108,13 @@ struct ACStatEntry: TimelineEntry {
     let date: Date
     let data: ACData?
     var error: APIError?
+    let color: Color
     let configuration: WidgetConfigurationIntent
     var relevance: TimelineEntryRelevance?
 }
 
 extension ACStatEntry {
-    static let placeholder = ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent())
+    static let placeholder = ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent())
 }
 
 extension TimelineEntryRelevance {
@@ -127,9 +132,9 @@ struct WidgetsEntryView: View {
         if let data = entry.data {
             switch size {
             case .systemSmall:
-                SummarySmall(data: data)
+                SummarySmall(data: data, color: entry.color)
             case .systemMedium:
-                SummaryMedium(data: data)
+                SummaryMedium(data: data, color: entry.color)
             default:
                 ErrorWidget(error: .unknown)
             }
@@ -155,10 +160,10 @@ struct Widgets: Widget {
 
 struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
 
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

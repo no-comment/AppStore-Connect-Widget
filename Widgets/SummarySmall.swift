@@ -10,6 +10,7 @@ import WidgetKit
 
 struct SummarySmall: View {
     let data: ACData
+    var color: Color = .accentColor
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

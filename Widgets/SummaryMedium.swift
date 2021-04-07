@@ -10,6 +10,7 @@ import WidgetKit
 
 struct SummaryMedium: View {
     let data: ACData
+    var color: Color = .accentColor
 
     var body: some View {
         HStack(spacing: 0) {
