@@ -11,26 +11,25 @@ struct APIKeyDetailView: View {
     let key: APIKey
     @State private var keyName: String
     @State private var keyColor: Color
-    @State private var issuerID: String
-    @State private var privateKeyID: String
-    @State private var privateKey: String
-    @State private var vendorNumber: String
+    private var issuerID: String
+    private var privateKeyID: String
+    private var privateKey: String
+    private var vendorNumber: String
 
     init(_ key: APIKey) {
         self.key = key
         self._keyName = State(initialValue: key.name)
         self._keyColor = State(initialValue: key.color)
-        self._issuerID = State(initialValue: key.issuerID)
-        self._privateKeyID = State(initialValue: key.privateKeyID)
-        self._privateKey = State(initialValue: key.privateKey)
-        self._vendorNumber = State(initialValue: key.vendorNumber)
+        self.issuerID = key.issuerID
+        self.privateKeyID = key.privateKeyID
+        self.privateKey = key.privateKey
+        self.vendorNumber = key.vendorNumber
     }
 
     var body: some View {
         Form {
             namingSection
             keySection
-                .disableAutocorrection(true)
             savingSection
             statusSection
         }
@@ -51,43 +50,33 @@ struct APIKeyDetailView: View {
     }
 
     var keySection: some View {
-        Section {
+        Section(footer: Text("KEY_DETAIL_FOOTER")) {
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("ISSUER_ID")
                     .bold()
 
-                TextField("ISSUER_ID", text: $issuerID)
+                TextField("ISSUER_ID", text: .constant(issuerID))
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY_ID")
                     .bold()
 
-                TextField("PRIVATE_KEY_ID", text: $privateKeyID)
+                TextField("PRIVATE_KEY_ID", text: .constant(privateKeyID))
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY")
                     .bold()
-                ZStack {
-                    TextEditor(text: $privateKey)
-                    if privateKey.isEmpty {
-                        VStack {
-                            HStack {
-                                Text("PRIVATE_KEY")
-                                    .foregroundColor(Color(UIColor.placeholderText))
-                                Spacer()
-                            }
-                        }
-                    }
-                }
+
+                TextEditor(text: .constant(privateKey))
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("VENDOR_NR")
                     .bold()
 
-                TextField("VENDOR_NR", text: $vendorNumber)
+                TextField("VENDOR_NR", text: .constant(vendorNumber))
             }
         }
     }
@@ -99,8 +88,12 @@ struct APIKeyDetailView: View {
     }
 
     private func save() {
-        // TODO: Darf privateKeyID editable sein? Dann muss erst noch alter Key gelöscht werden.
-        APIKey.addApiKey(apiKey: APIKey(name: keyName, color: keyColor, issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber))
+        APIKey.addApiKey(apiKey: APIKey(name: keyName,
+                                        color: keyColor,
+                                        issuerID: issuerID,
+                                        privateKeyID: privateKeyID,
+                                        privateKey: privateKey,
+                                        vendorNumber: vendorNumber))
     }
 
     var statusSection: some View {
