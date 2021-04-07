@@ -52,7 +52,7 @@ struct APIKeyDetailView: View {
                 TextField("KEY_NAME", text: $keyName)
             }
 
-            ColorPicker("KEY_COLOR", selection: $keyColor)
+            ColorPicker("KEY_COLOR", selection: $keyColor, supportsOpacity: false)
         }
     }
 

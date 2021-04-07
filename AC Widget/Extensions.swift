@@ -49,12 +49,19 @@ extension Date {
     }
 }
 
+// MARK: User Defaults
 extension UserDefaults {
     static var shared: UserDefaults? {
         UserDefaults(suiteName: "group.dev.kruschel.ACWidget")
     }
 }
 
+enum UserDefaultsKey {
+    static let apiKeys = "apiKeys"
+    static let completedOnboarding = "completedOnboarding"
+}
+
+// MARK: Editing Strings
 extension String {
     func removeCharacters(from set: CharacterSet) -> String {
         var newString = self
@@ -66,17 +73,8 @@ extension String {
     }
 }
 
-extension Collection {
-    func count(where test: (Element) throws -> Bool) rethrows -> Int {
-        return try self.filter(test).count
-    }
-}
-
-enum UserDefaultsKey {
-    static let apiKeys = "apiKeys"
-    static let completedOnboarding = "completedOnboarding"
-}
-
+// MARK: View Modifier
+// Hide Redacted
 struct HideViewRedacted: ViewModifier {
     @Environment(\.redactionReasons) private var reasons
 
@@ -96,6 +94,7 @@ extension View {
     }
 }
 
+// Show As Widget
 struct ShowAsWidget: ViewModifier {
     let width: CGFloat
     let height: CGFloat
@@ -128,6 +127,80 @@ struct ShowAsWidget: ViewModifier {
 extension View {
     func showAsWidget(_ size: WidgetFamily) -> some View {
         self.modifier(ShowAsWidget(size))
+    }
+}
+
+// MARK: Color
+// From: http://brunowernimont.me/howtos/make-swiftui-color-codable
+extension Color {
+    // swiftlint:disable:next large_tuple
+    var colorComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)? {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+
+        guard UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a) else {
+            return nil
+        }
+
+        return (r, g, b, a)
+    }
+}
+
+extension Color: Codable {
+    enum CodingKeys: String, CodingKey {
+        case red, green, blue
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let r = try container.decode(Double.self, forKey: .red)
+        let g = try container.decode(Double.self, forKey: .green)
+        let b = try container.decode(Double.self, forKey: .blue)
+
+        self.init(red: r, green: g, blue: b)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        guard let colorComponents = self.colorComponents else {
+            return
+        }
+
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(colorComponents.red, forKey: .red)
+        try container.encode(colorComponents.green, forKey: .green)
+        try container.encode(colorComponents.blue, forKey: .blue)
+    }
+}
+
+// From: https://stackoverflow.com/questions/42355778/how-to-compute-color-contrast-ratio-between-two-uicolor-instances/42355779
+extension Color {
+    func readeable(on background: Color) -> Color {
+        let luminance1 = self.luminance()
+        let luminance2 = background.luminance()
+
+        let luminanceDarker = min(luminance1, luminance2)
+        let luminanceLighter = max(luminance1, luminance2)
+        
+        let contrast = (luminanceLighter + 0.05) / (luminanceDarker + 0.05)
+        // TODO: Replace the second self with adjusted color
+        return (contrast > 0.03928 ? self : self)
+    }
+    
+    func luminance() -> CGFloat {
+        func adjust(colorComponent: CGFloat) -> CGFloat {
+            return (colorComponent < 0.04045) ? (colorComponent / 12.92) : pow((colorComponent + 0.055) / 1.055, 2.4)
+        }
+        return 0.2126 * adjust(colorComponent: self.colorComponents?.red ?? 0) + 0.7152 * adjust(colorComponent: self.colorComponents?.green ?? 0) + 0.0722 * adjust(colorComponent: self.colorComponents?.blue ?? 0)
+    }
+}
+
+// MARK: Other
+extension Collection {
+    func count(where test: (Element) throws -> Bool) rethrows -> Int {
+        return try self.filter(test).count
     }
 }
 

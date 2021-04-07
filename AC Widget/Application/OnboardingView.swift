@@ -81,7 +81,7 @@ struct OnboardingView: View {
 
             Text("ONBOARD_KEY_COLOR")
 
-            ColorPicker("KEY_COLOR", selection: $color)
+            ColorPicker("KEY_COLOR", selection: $color, supportsOpacity: false)
 
             Spacer()
             nextButton
