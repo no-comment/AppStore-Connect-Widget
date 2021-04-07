@@ -10,17 +10,20 @@ import WidgetKit
 
 struct GraphView: View {
     let data: [CGFloat]
+    let color: Color
 
-    init(_ data: [(Float, Date)]) {
+    init(_ data: [(Float, Date)], color: Color = .accentColor) {
         let copy = data.map { $0.0 }
         let max: Float = copy.max() ?? 1
         self.data = copy.map { CGFloat($0 / max) }.reversed()
+        self.color = .accentColor
     }
 
-    init(_ data: [(Int, Date)]) {
+    init(_ data: [(Int, Date)], color: Color = .accentColor) {
         let copy = data.map { Float($0.0) }
         let max: Float = copy.max() ?? 1
         self.data = copy.map { CGFloat($0 / max) }.reversed()
+        self.color = color
     }
 
     var body: some View {
@@ -58,7 +61,7 @@ struct GraphView: View {
 
     private func getColor(_ i: Int) -> Color {
         if i < data.count && data[i] > 0 {
-            return .accentColor
+            return color
         }
         if i < data.count && data[i] < 0 {
             return .red

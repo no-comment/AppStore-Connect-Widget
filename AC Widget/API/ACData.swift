@@ -151,7 +151,7 @@ struct ACData {
         var entries: [ACEntry] = []
         let countries = ["US", "DE", "ES", "UK"]
         let devices = ["Desktop", "iPhone", "iPad"]
-        
+
         Date(timeIntervalSinceNow: -86400).getLastNDates(days).forEach { day in
             for _ in 0...(Int.random(in: 10...30) * (largeValues ? 5 : 1)) {
                 entries.append(ACEntry(appTitle: "TestApp",
