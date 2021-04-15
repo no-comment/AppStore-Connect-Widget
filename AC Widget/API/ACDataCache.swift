@@ -90,6 +90,15 @@ class ACDataCache {
         return nil
     }
 
+    public static func numberOfEntriesCached(apiKey: APIKey? = nil) -> Int {
+        let cacheObjects: [CacheObject] = getCollection()?.objects ?? []
+        let data = cacheObjects.filter({
+            guard let keyId = apiKey?.id else { return true }
+            return $0.apiKeyId == keyId
+        }).compactMap({ $0.data })
+        return data.count
+    }
+
     public static func clearCache(apiKey: APIKey) {
         var cacheObjects: [CacheObject] = getCollection()?.objects ?? []
         cacheObjects.removeAll(where: { $0.apiKeyId == apiKey.id })
