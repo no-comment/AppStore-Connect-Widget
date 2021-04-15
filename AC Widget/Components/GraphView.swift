@@ -73,7 +73,7 @@ struct GraphView: View {
 struct GraphView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            GraphView(ACData.example.getDownloads(30))
+            GraphView(ACData.example.getDownloads(30), color: .pink)
                 .padding()
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
 

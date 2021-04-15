@@ -15,13 +15,13 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             if let data = data {
-                SummaryMedium(data: data, color: .black)
+                SummaryMedium(data: data, color: APIKey.getApiKeys().first?.color ?? .accentColor)
                     .showAsWidget(.systemMedium)
             } else if let error = error {
                 ErrorWidget(error: error)
                     .showAsWidget(.systemMedium)
             } else {
-                SummaryMedium(data: .example, color: .black)
+                SummaryMedium(data: .example, color: APIKey.getApiKeys().first?.color ?? .accentColor)
                     .showAsWidget(.systemMedium)
                     .redacted(reason: .placeholder)
             }

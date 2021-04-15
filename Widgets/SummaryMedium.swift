@@ -9,6 +9,8 @@ import SwiftUI
 import WidgetKit
 
 struct SummaryMedium: View {
+    @Environment(\.colorScheme) var colorScheme
+
     let data: ACData
     var color: Color = .accentColor
 
@@ -44,7 +46,7 @@ struct SummaryMedium: View {
     var downloadsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
             UnitText(data.getDownloadsString(), metricSymbol: "square.and.arrow.down")
-            GraphView(data.getDownloads(30), color: color.readeable(on: .widgetBackground))
+            GraphView(data.getDownloads(30), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getDownloadsString(7, size: .compact))
@@ -56,7 +58,7 @@ struct SummaryMedium: View {
     var proceedsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
             UnitText(data.getProceedsString(), metric: data.displayCurrency.symbol)
-            GraphView(data.getProceeds(30), color: color.readeable(on: .widgetBackground))
+            GraphView(data.getProceeds(30), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getProceedsString(7, size: .compact).appending(data.displayCurrency.symbol))
@@ -69,7 +71,17 @@ struct SummaryMedium: View {
 struct SummaryMedium_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryMedium(data: ACData.example)
+            SummaryMedium(data: ACData.example, color: Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)))
+                .previewContext(WidgetPreviewContext(family: .systemMedium))
+
+            SummaryMedium(data: ACData.example, color: Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                .background(Color.widgetBackground)
+                .preferredColorScheme(.dark)
+                .previewContext(WidgetPreviewContext(family: .systemMedium))
+
+            SummaryMedium(data: ACData.example, color: Color(#colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)))
+                .background(Color.widgetBackground)
+                .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
         }
     }

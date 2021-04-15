@@ -188,16 +188,26 @@ extension Color: Codable {
 
 // From: https://stackoverflow.com/questions/42355778/how-to-compute-color-contrast-ratio-between-two-uicolor-instances/42355779
 extension Color {
-    func readeable(on background: Color) -> Color {
-        let lum1 = self.luminance()
-        let lum2 = background.luminance()
+    func readable(colorScheme: ColorScheme) -> Color {
+        let lum = self.luminance()
 
-        if lum1 < 0.2 && lum2 < 0.2 {
-            return Color(DynamicColor(self).darkened())
+        switch colorScheme {
+        case .light:
+            if lum > 0.99 {
+                return .black
+            } else if lum > 0.7 {
+                return Color(DynamicColor(self).darkened())
+            }
+        case .dark:
+            if lum < 0.01 {
+                return .white
+            } else if lum < 0.2 {
+                return Color(DynamicColor(self).lighter())
+            }
+        @unknown default:
+            return self
         }
-        if lum1 > 0.8 && lum2 > 0.8 {
-            return Color(DynamicColor(self).lighter())
-        }
+
         return self
     }
 
