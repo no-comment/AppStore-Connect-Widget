@@ -26,7 +26,7 @@ struct SummaryMedium: View {
             .rotationEffect(.degrees(-90))
             .fixedSize()
             .frame(maxWidth: 30, maxHeight: .infinity)
-            .background(Color(UIColor.systemGray6))
+            .background(Color.widgetSecondary)
     }
 
     var informationSection: some View {
@@ -44,7 +44,7 @@ struct SummaryMedium: View {
     var downloadsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
             UnitText(data.getDownloadsString(), metricSymbol: "square.and.arrow.down")
-            GraphView(data.getDownloads(30), color: color.readeable(on: Color("WidgetBackground")))
+            GraphView(data.getDownloads(30), color: color.readeable(on: .widgetBackground))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getDownloadsString(7, size: .compact))
@@ -56,7 +56,7 @@ struct SummaryMedium: View {
     var proceedsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
             UnitText(data.getProceedsString(), metric: data.displayCurrency.symbol)
-            GraphView(data.getProceeds(30), color: color.readeable(on: Color("WidgetBackground")))
+            GraphView(data.getProceeds(30), color: color.readeable(on: .widgetBackground))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getProceedsString(7, size: .compact).appending(data.displayCurrency.symbol))

@@ -139,6 +139,7 @@ extension View {
 // MARK: Color
 extension Color {
     static let widgetBackground: Color = Color("WidgetBackground")
+    static let widgetSecondary: Color = Color("WidgetSecondary")
 }
 
 // From: http://brunowernimont.me/howtos/make-swiftui-color-codable
