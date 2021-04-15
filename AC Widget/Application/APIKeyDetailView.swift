@@ -56,7 +56,7 @@ struct APIKeyDetailView: View {
             ColorPicker("KEY_COLOR", selection: $keyColor, supportsOpacity: false)
         }
     }
-    
+
     var statusSection: some View {
         return Section {
             if let status = status {

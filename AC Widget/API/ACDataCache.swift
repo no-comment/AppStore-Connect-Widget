@@ -60,10 +60,6 @@ class ACDataCache {
             validDays.contains(entry.date.acApiFormat())
         })
 
-        // TODO: show in settings the number of days cached
-
-        // TODO: delete key -> delete cache object
-
         if !entries.isEmpty {
             let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency))
             cacheObjects.append(newObj)

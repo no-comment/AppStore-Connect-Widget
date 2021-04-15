@@ -57,18 +57,9 @@ struct Provider: IntentTimelineProvider {
 
                 var nextUpdate = Date()
 
-                if nextUpdate.getPSTHour() == 5 || nextUpdate.getJSTHour() == 5 || nextUpdate.getCETHour() == 5 {
-                    let minutes = nextUpdate.getMinutes()
-
-                    if minutes < 15 {
-                        nextUpdate = nextUpdate.nextDateWithMinute(15)
-                    } else if minutes < 30 {
-                        nextUpdate = nextUpdate.nextDateWithMinute(30)
-                    } else if minutes < 45 {
-                        nextUpdate = nextUpdate.nextDateWithMinute(45)
-                    } else {
-                        nextUpdate = nextUpdate.nextFullHour()
-                    }
+                if nextUpdate.getCETHour() <= 12 {
+                    // every 15 minutes
+                    nextUpdate = nextUpdate.advanced(by: 15 * 60)
                 } else {
                     nextUpdate = nextUpdate.nextFullHour()
                 }
@@ -82,15 +73,11 @@ struct Provider: IntentTimelineProvider {
 
                 var nextUpdateDate = Date()
                 if err as? APIError == .invalidCredentials {
-                    nextUpdateDate = nextUpdateDate.advanced(by: 60 * 60 * 24)
+                    nextUpdateDate = nextUpdateDate.advanced(by: 24 * 60)
                 } else {
                     // wenn api down, update in 5 min erneut
                     nextUpdateDate = nextUpdateDate.advanced(by: 5 * 60)
                 }
-
-                // TODO: increase widget update time
-
-                // TODO: refresh at midnight
 
                 let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
                 completion(timeline)
