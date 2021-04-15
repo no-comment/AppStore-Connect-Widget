@@ -25,6 +25,10 @@ struct SettingsView: View {
                 Button("Force Refresh Widget") {
                     WidgetCenter.shared.reloadAllTimelines()
                 }
+
+                Button("Clear cache") {
+                    ACDataCache.clearCache()
+                }
             }
 
             contactSection

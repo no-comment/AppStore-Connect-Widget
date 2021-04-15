@@ -1,0 +1,87 @@
+//
+//  ACDataCache.swift
+//  AC Widget
+//
+//  Created by Miká Kruschel on 08.04.21.
+//
+
+import Foundation
+
+class ACDataCache {
+    private init() {}
+
+    private struct CacheObjectCollection: Codable {
+        let objects: [CacheObject]
+    }
+
+    private struct CacheObject: Codable {
+        let apiKeyId: String
+        let data: ACData
+    }
+
+    public static func getData(apiKey: APIKey) -> ACData? {
+        guard let collection = getCollection() else { return nil }
+        return collection.objects.first(where: { $0.apiKeyId == apiKey.id })?.data
+    }
+
+    public static func saveData(data: ACData, apiKey: APIKey) {
+        var cacheObjects: [CacheObject] = getCollection()?.objects ?? []
+
+        // find existing data for apiKey and remove matching data temporarily from array
+        var oldData: ACData?
+        cacheObjects.removeAll(where: {
+            let matching = $0.apiKeyId == apiKey.id
+            if matching { oldData = $0.data }
+            return matching
+        })
+
+        // Convert currency from oldData to data.displayCurrency
+        var oldEntries: [ACEntry] = []
+        if let oldData = oldData {
+            oldEntries = oldData.changeCurrency(to: data.displayCurrency).entries
+        }
+
+        // merge items
+        let oldDataFiltered = oldEntries.filter { oldEntry in
+            return !data.entries.contains(where: { $0.date == oldEntry.date })
+        }
+        let entries: [ACEntry] = data.entries + oldDataFiltered
+
+        let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency))
+        cacheObjects.append(newObj)
+
+        // TODO: show in settings the number of days cached
+
+        // TODO: increase widget update time
+
+        // TODO: limit number of entries saved
+
+        // TODO: delete entries from all object that are to old
+
+        // TODO: delete objects if no data left
+
+        let collection = CacheObjectCollection(objects: cacheObjects)
+        saveCollection(collection)
+    }
+
+    private static func saveCollection(_ collection: CacheObjectCollection) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(collection) {
+            UserDefaults.shared?.setValue(encoded, forKey: UserDefaultsKey.dataCache)
+        }
+    }
+
+    private static func getCollection() -> CacheObjectCollection? {
+        if let savedData: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.dataCache) {
+            let decoder = JSONDecoder()
+            let loadedData = try? decoder.decode(CacheObjectCollection.self, from: savedData)
+            return loadedData
+        }
+
+        return nil
+    }
+
+    public static func clearCache() {
+        UserDefaults.shared?.removeObject(forKey: UserDefaultsKey.dataCache)
+    }
+}

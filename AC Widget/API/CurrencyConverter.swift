@@ -14,7 +14,7 @@ import Promises
 //
 
 // Global Enumerations:
-enum Currency: String, CaseIterable {
+enum Currency: String, CaseIterable, Codable {
     case AUD; case INR; case TRY
     case BGN; case ISK; case USD
     case BRL; case JPY; case ZAR

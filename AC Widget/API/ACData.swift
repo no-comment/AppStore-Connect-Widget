@@ -8,15 +8,37 @@
 import Foundation
 import SwiftUI
 
-struct ACData {
-    private let entries: [ACEntry]
+struct ACData: Codable {
+    let entries: [ACEntry]
     let displayCurrency: Currency
 
     init(entries: [ACEntry], currency: Currency) {
         self.entries = entries
         self.displayCurrency = currency
     }
+}
 
+extension ACData {
+    func changeCurrency(to outputCurrency: Currency) -> ACData {
+        let newEntries: [ACEntry] = self.entries.map({ entry -> ACEntry in
+            let proceeds = CurrencyConverter.shared.convert(Double(entry.proceeds),
+                                                            valueCurrency: self.displayCurrency,
+                                                            outputCurrency: outputCurrency) ?? 0
+            return ACEntry(appTitle: entry.appTitle,
+                           appSKU: entry.appSKU,
+                           units: entry.units,
+                           proceeds: Float(proceeds),
+                           date: entry.date,
+                           countryCode: entry.countryCode,
+                           device: entry.device,
+                           type: entry.type)
+        })
+
+        return ACData(entries: newEntries, currency: outputCurrency)
+    }
+}
+
+extension ACData {
     // MARK: Getting Numbers
     func getDownloadsString(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
         let num: Int = getDownloadsSum(lastNDays)

@@ -49,7 +49,6 @@ struct HomeView: View {
         api.getData().then { (data) in
             self.data = data
         }.catch { (err) in
-            print(err)
             guard let apiErr = err as? APIError else {
                 return
             }

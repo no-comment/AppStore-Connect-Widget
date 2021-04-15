@@ -14,28 +14,19 @@ import Promises
 class AppStoreConnectApi {
     private let privateKeyMinLength = 100
 
-    private var issuerID: String
-    private var privateKeyID: String
-    private var privateKey: String
-    private var vendorNumber: String
+    private var apiKey: APIKey
 
-    init(issuerID: String, privateKeyID: String, privateKey: String, vendorNumber: String) {
-        self.issuerID = issuerID
-        self.privateKeyID = privateKeyID
-        self.vendorNumber = vendorNumber
-
-        self.privateKey = privateKey
-            .replacingOccurrences(of: "-----BEGIN PRIVATE KEY-----", with: "")
-            .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
-            .removeCharacters(from: .whitespacesAndNewlines)
+    init(apiKey: APIKey) {
+        self.apiKey = apiKey
     }
 
-    convenience init(apiKey: APIKey) {
-        self.init(issuerID: apiKey.issuerID, privateKeyID: apiKey.privateKeyID, privateKey: apiKey.privateKey, vendorNumber: apiKey.vendorNumber)
-    }
+    private var issuerID: String { apiKey.issuerID }
+    private var privateKeyID: String { apiKey.privateKeyID }
+    private var privateKey: String { apiKey.privateKey }
+    private var vendorNumber: String { apiKey.vendorNumber }
 
     // swiftlint:disable:next function_body_length
-    public func getData(currency: CurrencyParam? = nil, numOfDays: Int = 35) -> Promise<ACData> {
+    public func getData(currency: CurrencyParam? = nil, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()
 
         if self.privateKey.count < privateKeyMinLength {
@@ -51,12 +42,23 @@ class AppStoreConnectApi {
         let localCurrency: Currency = currency?.toCurrency() ?? .USD
 
         let converter = CurrencyConverter.shared
+
         converter.updateExchangeRates()
-            .then { _ in
-                any(Date().getLastNDates(numOfDays)
-                        .map({ $0.acApiFormat() })
-                        .map({ self.apiWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
-            }
+            .then({ _ ->  Promise<[Maybe<Data>]> in
+                // TODO: does it really make sense to include today?
+                let dates = Date().getLastNDates(numOfDays).map({ $0.acApiFormat() })
+
+                if useCache {
+                    let cachedData = ACDataCache.getData(apiKey: self.apiKey)?.changeCurrency(to: localCurrency)
+                    let cachedEntries: [ACEntry] = cachedData?.entries ?? []
+
+                    entries.append(contentsOf: cachedEntries)
+                }
+                let entriesDates = entries.map({ $0.date.acApiFormat() })
+                let missingDates = dates.filter({ !entriesDates.contains($0) })
+
+                return any(missingDates.map({ self.apiWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
+            })
             .then { results in
                 for result in results {
                     guard let resultValue = result.value else {
@@ -80,8 +82,8 @@ class AppStoreConnectApi {
                     }
 
                     try? tsv.enumerateAsDict { dict in
-                        let parentId: String = dict["Parent Identifier"] ?? ""
-                        let sku: String = dict["SKU"] ?? ""
+                        let parentId: String = dict["Parent Identifier"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                        let sku: String = dict["SKU"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
                         var proceeds = Double(dict["Developer Proceeds"] ?? "0.00") ?? 0
                         if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
@@ -102,13 +104,14 @@ class AppStoreConnectApi {
                     }
                 }
 
-                promise.fulfill(ACData(entries: entries, currency: localCurrency))
+                let newData = ACData(entries: entries, currency: localCurrency)
+                ACDataCache.saveData(data: newData, apiKey: self.apiKey)
+                promise.fulfill(newData)
             }
             .catch { err in
                 if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
                     switch apiError {
                     case .requestFailure(let statusCode, let errData):
-                        print(statusCode)
                         switch statusCode {
                         case 401:
                             promise.reject(APIError.invalidCredentials)
@@ -123,11 +126,16 @@ class AppStoreConnectApi {
 
                             let resp = String(decoding: errData, as: UTF8.self)
                             if resp.contains("The request expected results but none were found") {
-                                promise.reject(APIError.noDataAvailable)
+                                if entries.isEmpty {
+                                    promise.reject(APIError.noDataAvailable)
+                                } else {
+                                    promise.fulfill(ACData(entries: entries, currency: localCurrency))
+                                }
                             } else {
                                 promise.reject(APIError.unknown)
                             }
                         default:
+                            print(statusCode)
                             promise.reject(APIError.unknown)
                         }
                     case .requestGeneration:
@@ -144,6 +152,9 @@ class AppStoreConnectApi {
     }
 
     private func apiWrapped(provider: APIProvider, vendorNumber: String, date: String) -> Promise<Data> {
+        print("Call api for \(date)")
+        // TODO: build in security that api won't be called to often in short time period -> swiftui render weird
+
         return Promise<Data> { fulfill, reject in
             provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
                 .frequency([.DAILY]),

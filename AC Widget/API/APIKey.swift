@@ -19,6 +19,19 @@ struct APIKey: Codable, Identifiable {
     let privateKeyID: String
     let privateKey: String
     let vendorNumber: String
+
+    init(name: String, color: Color, issuerID: String, privateKeyID: String, privateKey: String, vendorNumber: String) {
+        self.name = name
+        self.color = color
+        self.issuerID = issuerID
+        self.privateKeyID = privateKeyID
+        self.vendorNumber = vendorNumber
+
+        self.privateKey = privateKey
+            .replacingOccurrences(of: "-----BEGIN PRIVATE KEY-----", with: "")
+            .replacingOccurrences(of: "-----END PRIVATE KEY-----", with: "")
+            .removeCharacters(from: .whitespacesAndNewlines)
+    }
 }
 
 extension APIKey {
@@ -26,7 +39,7 @@ extension APIKey {
         let promise = Promise<Void>.pending()
 
         let api = AppStoreConnectApi(apiKey: self)
-        api.getData(currency: .system, numOfDays: 1)
+        api.getData(currency: .system, numOfDays: 1, useCache: false)
             .then { _ in
                 promise.fulfill(())
             }

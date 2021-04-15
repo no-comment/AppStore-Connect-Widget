@@ -7,18 +7,18 @@
 
 import Foundation
 
-struct ACEntry {
+struct ACEntry: Codable {
     let appTitle: String
     let appSKU: String
     let units: Int
-    let proceeds: Float
+    let proceeds: Float // TODO: Maybe use Decimal or change encodable for float to save space (1.9408223628997803)
     let date: Date
     let countryCode: String
     let device: String
     let type: ACEntryType
 }
 
-enum ACEntryType: CaseIterable {
+enum ACEntryType: String, CaseIterable, Codable {
     case download
     case redownload
     case aip
