@@ -45,8 +45,7 @@ class AppStoreConnectApi {
 
         converter.updateExchangeRates()
             .then({ _ ->  Promise<[Maybe<Data>]> in
-                // TODO: does it really make sense to include today?
-                let dates = Date().getLastNDates(numOfDays).map({ $0.acApiFormat() })
+                let dates = Date().dayBefore.getLastNDates(numOfDays-1).map({ $0.acApiFormat() })
 
                 if useCache {
                     let cachedData = ACDataCache.getData(apiKey: self.apiKey)?.changeCurrency(to: localCurrency)
@@ -192,7 +191,7 @@ extension Date {
 
         var res: [Date] = []
 
-        for _ in 1 ... n {
+        for _ in 1 ... max(1, n) {
             res.append(date)
             if let nextDate = cal.date(byAdding: Calendar.Component.day, value: -1, to: date) {
                 date = nextDate

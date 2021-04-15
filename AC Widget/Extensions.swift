@@ -11,6 +11,10 @@ import WidgetKit
 import DynamicColor
 
 extension Date {
+    var dayBefore: Date {
+        return Calendar.current.date(byAdding: .day, value: -1, to: self) ?? self
+    }
+
     func getCETHour() -> Int {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(abbreviation: "CET") ?? .current
