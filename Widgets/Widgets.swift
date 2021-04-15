@@ -88,6 +88,10 @@ struct Provider: IntentTimelineProvider {
                     nextUpdateDate = nextUpdateDate.advanced(by: 5 * 60)
                 }
 
+                // TODO: increase widget update time
+
+                // TODO: refresh at midnight
+
                 let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
                 completion(timeline)
             }

@@ -45,20 +45,29 @@ class ACDataCache {
         let oldDataFiltered = oldEntries.filter { oldEntry in
             return !data.entries.contains(where: { $0.date == oldEntry.date })
         }
-        let entries: [ACEntry] = data.entries + oldDataFiltered
 
-        let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency))
-        cacheObjects.append(newObj)
+        var entries: [ACEntry] = data.entries + oldDataFiltered
+
+        // delete entries from all object that are to old
+        let latest: ACEntry? = entries.sorted { a, b in
+            a.date.compare(b.date) == .orderedDescending
+        }.first
+
+        let latestDate = latest?.date ?? Date()
+        let validDays = latestDate.getLastNDates(35).map({ $0.acApiFormat() })
+
+        entries = entries.filter({ entry in
+            validDays.contains(entry.date.acApiFormat())
+        })
 
         // TODO: show in settings the number of days cached
 
-        // TODO: increase widget update time
+        // TODO: delete key -> delete cache object
 
-        // TODO: limit number of entries saved
-
-        // TODO: delete entries from all object that are to old
-
-        // TODO: delete objects if no data left
+        if !entries.isEmpty {
+            let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency))
+            cacheObjects.append(newObj)
+        }
 
         let collection = CacheObjectCollection(objects: cacheObjects)
         saveCollection(collection)
@@ -79,6 +88,13 @@ class ACDataCache {
         }
 
         return nil
+    }
+
+    public static func clearCache(apiKey: APIKey) {
+        var cacheObjects: [CacheObject] = getCollection()?.objects ?? []
+        cacheObjects.removeAll(where: { $0.apiKeyId == apiKey.id })
+        let collection = CacheObjectCollection(objects: cacheObjects)
+        saveCollection(collection)
     }
 
     public static func clearCache() {

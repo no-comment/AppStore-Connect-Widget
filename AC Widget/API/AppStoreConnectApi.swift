@@ -153,8 +153,6 @@ class AppStoreConnectApi {
 
     private func apiWrapped(provider: APIProvider, vendorNumber: String, date: String) -> Promise<Data> {
         print("Call api for \(date)")
-        // TODO: build in security that api won't be called to often in short time period -> swiftui render weird
-
         return Promise<Data> { fulfill, reject in
             provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
                 .frequency([.DAILY]),
