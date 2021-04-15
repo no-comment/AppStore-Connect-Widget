@@ -88,10 +88,10 @@ class ACDataCache {
 
     public static func numberOfEntriesCached(apiKey: APIKey? = nil) -> Int {
         let cacheObjects: [CacheObject] = getCollection()?.objects ?? []
-        let data = cacheObjects.filter({
+        let data: [ACEntry] = cacheObjects.filter({
             guard let keyId = apiKey?.id else { return true }
             return $0.apiKeyId == keyId
-        }).compactMap({ $0.data })
+        }).flatMap({ $0.data.entries })
         return data.count
     }
 
