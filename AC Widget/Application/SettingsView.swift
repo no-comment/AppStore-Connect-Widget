@@ -20,17 +20,8 @@ struct SettingsView: View {
     var body: some View {
         Form {
             keySection
-
-            Section {
-                Button("Force Refresh Widget") {
-                    WidgetCenter.shared.reloadAllTimelines()
-                }
-
-                Button("Clear cache") {
-                    ACDataCache.clearCache()
-                }
-            }
-
+            widgetSection
+            storageSection
             contactSection
         }
         .navigationTitle("SETTINGS")
@@ -71,6 +62,35 @@ struct SettingsView: View {
             Text("PROBLEM_KEY")
     }
 
+    var widgetSection: some View {
+        Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
+            Button("FORCE_REFRESH_WIDGET") {
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+
+//            VStack(alignment: .leading) {
+//                HStack {
+//                    Text("Refresh frequency")
+//                    Spacer()
+//                    Text("\(Int(slider))min")
+//                }
+//
+//                Slider(value: $slider, in: 5...60, step: 5)
+//            }
+        }
+    }
+
+    var storageSection: some View {
+        Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
+            Text("ALL_CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached())")
+
+            Button("CLEAR_ALL_CHACHE") {
+                ACDataCache.clearCache()
+            }
+            .foregroundColor(.orange)
+        }
+    }
+
     var contactSection: some View {
         Section(header: Label("Links", systemImage: "link")) {
             if let destination = URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget") {
@@ -94,6 +114,7 @@ struct SettingsView: View {
     private func deleteKey(at offsets: IndexSet) {
         let empty: Bool = offsets.count == apiKeys.count
         let keys = offsets.map({ apiKeys[$0] })
+        keys.forEach { ACDataCache.clearCache(apiKey: $0) }
         APIKey.deleteApiKeys(apiKeys: keys)
 
         if empty {

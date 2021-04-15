@@ -31,9 +31,10 @@ struct APIKeyDetailView: View {
     var body: some View {
         Form {
             namingSection
+            statusSection
             keySection
             savingSection
-            statusSection
+            storageSection
         }
         .onAppear(perform: {
             key.checkKey().catch { err in
@@ -54,6 +55,16 @@ struct APIKeyDetailView: View {
 
             ColorPicker("KEY_COLOR", selection: $keyColor, supportsOpacity: false)
         }
+    }
+    
+    var statusSection: some View {
+        return Section {
+            if let status = status {
+                ErrorWidget(error: status)
+            } else {
+            }
+        }
+        .frame(maxHeight: 250)
     }
 
     var keySection: some View {
@@ -103,14 +114,15 @@ struct APIKeyDetailView: View {
                                         vendorNumber: vendorNumber))
     }
 
-    var statusSection: some View {
-        return Section {
-            if let status = status {
-                ErrorWidget(error: status)
-            } else {
+    var storageSection: some View {
+        Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
+            Text("CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached(apiKey: key))")
+
+            Button("CLEAR_CHACHE") {
+                ACDataCache.clearCache(apiKey: key)
             }
+            .foregroundColor(.orange)
         }
-        .frame(maxHeight: 250)
     }
 }
 
