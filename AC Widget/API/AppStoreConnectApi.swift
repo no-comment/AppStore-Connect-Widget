@@ -25,8 +25,20 @@ class AppStoreConnectApi {
     private var privateKey: String { apiKey.privateKey }
     private var vendorNumber: String { apiKey.vendorNumber }
 
+    static private var lastData: [(key: APIKey, date: Date, result: Promise<ACData>)] = []
+
     // swiftlint:disable:next function_body_length
     public func getData(currency: CurrencyParam? = nil, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
+        if useCache {
+            if let last = AppStoreConnectApi.lastData.first(where: { $0.key.id == self.apiKey.id }) {
+                if last.date.timeIntervalSinceNow > -60 * 5 {
+                    return last.result
+                } else {
+                    AppStoreConnectApi.lastData.removeAll(where: { $0.key.id == self.apiKey.id })
+                }
+            }
+        }
+
         let promise = Promise<ACData>.pending()
 
         if self.privateKey.count < privateKeyMinLength {
@@ -146,6 +158,8 @@ class AppStoreConnectApi {
                     promise.reject(APIError.unknown)
                 }
             }
+
+        AppStoreConnectApi.lastData.append((key: self.apiKey, date: Date(), result: promise))
 
         return promise
     }
