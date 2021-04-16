@@ -53,25 +53,7 @@ extension ACData {
 
     private func getDownloadsString(_ lastNDays: Int, size: NumberLength) -> String {
         let num: Float = getDownloadsSum(lastNDays)
-        if num < 1000 {
-            return "\(Int(num))"
-        }
-
-        let fNum: NSNumber = NSNumber(value: num/1000)
-        let nf = NumberFormatter()
-
-        switch size {
-        case .compact:
-            if num <  10000 {
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 1
-            }
-        case .standard:
-            nf.numberStyle = .decimal
-            nf.maximumFractionDigits = 2
-        }
-
-        return (nf.string(from: fNum) ?? "0").appending("K")
+        return formatNumberLength(num: num, size: size)
     }
 
     private func getProceedsString(_ lastNDays: Int, size: NumberLength) -> String {
@@ -113,6 +95,10 @@ extension ACData {
 
     private func getUpdatesString(_ lastNDays: Int, size: NumberLength) -> String {
         let num: Float = getUpdatesSum(lastNDays)
+        return formatNumberLength(num: num, size: size)
+    }
+
+    private func formatNumberLength(num: Float, size: NumberLength) -> String {
         if num < 1000 {
             return "\(Int(num))"
         }
