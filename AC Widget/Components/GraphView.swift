@@ -19,13 +19,6 @@ struct GraphView: View {
         self.color = color
     }
 
-    init(_ data: [(Int, Date)], color: Color = .accentColor) {
-        let copy = data.map { Float($0.0) }
-        let max: Float = copy.max() ?? 1
-        self.data = copy.map { CGFloat($0 / max) }.reversed()
-        self.color = color
-    }
-
     var body: some View {
         if !data.isEmpty {
             GeometryReader { reading in
@@ -73,11 +66,11 @@ struct GraphView: View {
 struct GraphView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            GraphView(ACData.example.getDownloads(30), color: .pink)
+            GraphView(ACData.example.getRawData(.downloads, lastNDays: 30), color: .pink)
                 .padding()
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
 
-            GraphView(ACData.example.getProceeds(30))
+            GraphView(ACData.example.getRawData(.proceeds, lastNDays: 30))
                 .padding()
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
 

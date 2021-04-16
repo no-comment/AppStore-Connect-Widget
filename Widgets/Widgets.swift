@@ -21,7 +21,7 @@ struct Provider: IntentTimelineProvider {
         } else {
             getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
                 .then { data in
-                    let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
+                    let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
                             Calendar.current.isDateInYesterday(proceed.1)
                     }
@@ -41,7 +41,7 @@ struct Provider: IntentTimelineProvider {
 
         getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
             .then { data in
-                let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
+                let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
                         Calendar.current.isDateInYesterday(proceed.1)
                 }

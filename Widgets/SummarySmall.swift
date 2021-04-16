@@ -18,14 +18,16 @@ struct SummarySmall: View {
                 .font(.subheadline)
                 .foregroundColor(.gray)
 
-            UnitText(data.getDownloadsString(), metricSymbol: "square.and.arrow.down")
-            UnitText(data.getProceedsString(), metric: data.displayCurrency.symbol)
+            UnitText(data.getAsString(.downloads, lastNDays: 1), metricSymbol: "square.and.arrow.down")
+            UnitText(data.getAsString(.proceeds, lastNDays: 1), metric: data.displayCurrency.symbol)
 
             Spacer()
                 .frame(minHeight: 0)
 
-            DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getProceedsString(7, size: .compact).appending(data.displayCurrency.symbol))
-            DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getProceedsString(30, size: .compact).appending(data.displayCurrency.symbol))
+            DescribedValueView(description: "LAST_SEVEN_DAYS",
+                               value: data.getAsString(.proceeds, lastNDays: 7, size: .compact).appending(data.displayCurrency.symbol))
+            DescribedValueView(description: "LAST_THIRTY_DAYS",
+                               value: data.getAsString(.proceeds, lastNDays: 30, size: .compact).appending(data.displayCurrency.symbol))
         }
         .padding()
     }

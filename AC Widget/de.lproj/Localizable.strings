@@ -17,6 +17,10 @@
 "DUPLICATE_KEY" = "Duplizierter Key";
 "DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
 
+// MARK: Home
+"PROCEEDS" = "Gewinn";
+"PROCEEDS" = "Downloads";
+
 // MARK: Settings
 "SETTINGS" = "Einstellungen";
 "API_KEYS" = "API Keys";

@@ -39,14 +39,25 @@ extension ACData {
 }
 
 extension ACData {
-    // MARK: Getting Numbers
-    func getDownloadsString(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
-        let num: Int = getDownloadsSum(lastNDays)
+    // MARK: Get String
+    func getAsString(_ type: InfoType, lastNDays: Int, size: NumberLength = .standard) -> String {
+        switch type {
+        case .downloads:
+            return getDownloadsString(lastNDays, size: size)
+        case .proceeds:
+            return getProceedsString(lastNDays, size: size)
+        case .updates:
+            return getUpdatesString(lastNDays, size: size)
+        }
+    }
+
+    private func getDownloadsString(_ lastNDays: Int, size: NumberLength) -> String {
+        let num: Float = getDownloadsSum(lastNDays)
         if num < 1000 {
-            return "\(num)"
+            return "\(Int(num))"
         }
 
-        let fNum: NSNumber = NSNumber(value: Float(num)/1000)
+        let fNum: NSNumber = NSNumber(value: num/1000)
         let nf = NumberFormatter()
 
         switch size {
@@ -63,7 +74,7 @@ extension ACData {
         return (nf.string(from: fNum) ?? "0").appending("K")
     }
 
-    func getProceedsString(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
+    private func getProceedsString(_ lastNDays: Int, size: NumberLength) -> String {
         let num: Float = getProceedsSum(lastNDays)
         var fNum: NSNumber = NSNumber(value: num)
         let nf = NumberFormatter()
@@ -100,18 +111,37 @@ extension ACData {
         return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
     }
 
-    func getDownloads(_ lastNDays: Int) -> [(Int, Date)] {
+    private func getUpdatesString(_ lastNDays: Int, size: NumberLength) -> String {
+        // TODO: Implement Updates String
+        return "Not Implemented"
+    }
+
+    enum NumberLength { case compact, standard }
+
+    // MARK: Get Raw Data
+    func getRawData(_ type: InfoType, lastNDays: Int) -> [(Float, Date)] {
+        switch type {
+        case .downloads:
+            return getRawDownloads(lastNDays)
+        case .proceeds:
+            return getRawProceeds(lastNDays)
+        case .updates:
+            return getRawUpdates(lastNDays)
+        }
+    }
+
+    private func getRawDownloads(_ lastNDays: Int) -> [(Float, Date)] {
         let downloadEntries = entries.filter({ $0.type == .download })
         let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
 
         return latestDate.getLastNDates(lastNDays)
-            .map { day -> (Int, Date) in
+            .map { day -> (Float, Date) in
                 let count = downloadEntries.filter({ $0.date == day }).reduce(0, { $0 + $1.units })
-                return (count, day)
+                return (Float(count), day)
             }
     }
 
-    func getProceeds(_ lastNDays: Int) -> [(Float, Date)] {
+    private func getRawProceeds(_ lastNDays: Int) -> [(Float, Date)] {
         let downloadEntries = entries.filter({ $0.proceeds > 0 })
         let latestDate: Date? = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
 
@@ -122,23 +152,42 @@ extension ACData {
             }
     }
 
-    private func getDownloadsSum(_ lastNDays: Int = 1) -> Int {
-        var result: Int = 0
-        for download in getDownloads(lastNDays) {
+    private func getRawUpdates(_ lastNDays: Int) -> [(Float, Date)] {
+        // TODO: Implement Raw Updates
+        return []
+    }
+
+    // MARK: Get Sum
+    func getSum(_ type: InfoType, lastNDays: Int) -> Float {
+        switch type {
+        case .downloads:
+            return getDownloadsSum(lastNDays)
+        case .proceeds:
+            return getProceedsSum(lastNDays)
+        case .updates:
+            return getUpdatesSum(lastNDays)
+        }
+    }
+
+    private func getDownloadsSum(_ lastNDays: Int) -> Float {
+        var result: Float = 0
+        for download in getRawDownloads(lastNDays) {
             result += download.0
         }
         return result
     }
 
-    private func getProceedsSum(_ lastNDays: Int = 1) -> Float {
+    private func getProceedsSum(_ lastNDays: Int) -> Float {
         var result: Float = 0
-        for proceed in getProceeds(lastNDays) {
+        for proceed in getRawProceeds(lastNDays) {
             result += proceed.0
         }
         return result
     }
 
-    enum NumberLength { case compact, standard }
+    private func getUpdatesSum(_ lastNDays: Int) -> Float {
+        return -1
+    }
 
     // MARK: Getting Dates
     func latestReportingDate() -> String {
@@ -188,4 +237,8 @@ extension ACData {
 
         return ACData(entries: entries, currency: .USD)
     }
+}
+
+enum InfoType {
+    case proceeds, downloads, updates
 }

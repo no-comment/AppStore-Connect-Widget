@@ -16,7 +16,7 @@ struct Card<Content: View>: View {
 
     init(alignment: HorizontalAlignment = .center,
          spacing: CGFloat? = nil,
-         innerPadding: CGFloat = 14,
+         innerPadding: CGFloat = 17,
          color: Color = Color(.systemGray5),
          @ViewBuilder content: () -> Content) {
         self.content = content()

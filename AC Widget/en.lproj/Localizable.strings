@@ -17,6 +17,10 @@
 "DUPLICATE_KEY" = "Duplicate Key";
 "DUPLICATE_KEY_MSG" = "You have already added this Key. Please enter another one.";
 
+// MARK: Home
+"PROCEEDS" = "Proceeds";
+"PROCEEDS" = "Downloads";
+
 // MARK: Settings
 "SETTINGS" = "Settings";
 "API_KEYS" = "API Keys";
