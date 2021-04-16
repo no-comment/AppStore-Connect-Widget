@@ -21,6 +21,7 @@ struct OnboardingView: View {
 
     init(startAt: Int = 0) {
         self._selection = State(initialValue: startAt)
+        UITextView.appearance().backgroundColor = .clear
     }
 
     var body: some View {
@@ -130,8 +131,11 @@ struct OnboardingView: View {
 
             TextEditor(text: $key)
                 .frame(maxHeight: 250)
-                .border(Color.gray)
                 .disableAutocorrection(true)
+                .background(Color.systemWhite.cornerRadius(5))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5).stroke(Color(.systemGray4), lineWidth: 0.3)
+                )
 
             Text("ONBOARD_PRIVATE_KEY")
 

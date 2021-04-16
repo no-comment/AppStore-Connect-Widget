@@ -140,6 +140,7 @@ extension View {
 extension Color {
     static let widgetBackground: Color = Color("WidgetBackground")
     static let widgetSecondary: Color = Color("WidgetSecondary")
+    static let systemWhite: Color = Color("systemWhite")
 }
 
 // From: http://brunowernimont.me/howtos/make-swiftui-color-codable

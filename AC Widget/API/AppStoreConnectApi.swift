@@ -25,6 +25,7 @@ class AppStoreConnectApi {
     private var privateKey: String { apiKey.privateKey }
     private var vendorNumber: String { apiKey.vendorNumber }
 
+    // swiftlint:disable:next large_tuple
     static private var lastData: [(key: APIKey, date: Date, result: Promise<ACData>)] = []
 
     // swiftlint:disable:next function_body_length
