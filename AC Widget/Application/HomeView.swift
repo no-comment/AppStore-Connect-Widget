@@ -15,19 +15,14 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             if let data = data {
-                SummaryMedium(data: data, color: APIKey.getApiKeys().first?.color ?? .accentColor)
-                    .showAsWidget(.systemMedium)
-            } else if let error = error {
-                ErrorWidget(error: error)
-                    .showAsWidget(.systemMedium)
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
+                    InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
+                    InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
+                    InfoTile(description: "UPDATES", data: data, type: .updates)
+                }
+                .padding()
             } else {
-                SummaryMedium(data: .example, color: APIKey.getApiKeys().first?.color ?? .accentColor)
-                    .showAsWidget(.systemMedium)
-                    .redacted(reason: .placeholder)
-            }
-
-            HStack {
-                Spacer()
+                Text("TODO (maybe loading...)")
             }
         }
         .navigationTitle("Home")
@@ -36,10 +31,18 @@ struct HomeView: View {
     }
 
     func toolbar() -> some ToolbarContent {
-        ToolbarItem {
-            NavigationLink(destination: SettingsView(),
-                           label: { Image(systemName: "gear") }
-            )
+        Group {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {}, label: {
+                    Image(systemName: "key")
+                })
+            }
+
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: SettingsView(),
+                               label: { Image(systemName: "gear") }
+                )
+            }
         }
     }
 
@@ -59,8 +62,15 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            HomeView(data: ACData.example)
+        Group {
+            NavigationView {
+                HomeView(data: ACData.example)
+            }
+
+            NavigationView {
+                HomeView(data: ACData.example)
+            }
+            .preferredColorScheme(.dark)
         }
     }
 }

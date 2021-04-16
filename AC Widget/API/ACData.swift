@@ -67,7 +67,7 @@ extension ACData {
     }
 
     // swiftlint:disable:next function_body_length
-    public static func formatNumberLength(num: Float, size: NumberLength, type: InfoType) -> String {
+    public static func formatNumberLength(num: Float, size: NumberLength = .standard, type: InfoType) -> String {
         switch type {
         case .downloads, .updates:
             if num < 1000 { return "\(Int(num))" }

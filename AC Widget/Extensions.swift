@@ -52,7 +52,7 @@ extension Date {
 
         return self
     }
-    
+
     func toString() -> String {
         if Calendar.current.isDateInToday(self) {
             return NSLocalizedString("TODAY", comment: "")

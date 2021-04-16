@@ -60,6 +60,7 @@
 		CB436DEC2618E80200A432B1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB436DEE2618E80200A432B1 /* Localizable.strings */; };
 		CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */; };
 		CB9C4CAB262A136A007E38F1 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9C4CAA262A136A007E38F1 /* Card.swift */; };
+		CB9C4CB3262A2391007E38F1 /* InfoTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9C4CB2262A2391007E38F1 /* InfoTile.swift */; };
 		CBAB7297261B338600ED0F94 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4583A842261A3E3700368001 /* APIKey.swift */; };
 		CBAB7298261B338600ED0F94 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AED32615D1FA00B48215 /* APIError.swift */; };
 		CBAB7299261B338600ED0F94 /* AppStoreConnectApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CAC1142615CDBE00FF63E7 /* AppStoreConnectApi.swift */; };
@@ -158,6 +159,7 @@
 		CB436DF12618E80600A432B1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyDetailView.swift; sourceTree = "<group>"; };
 		CB9C4CAA262A136A007E38F1 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		CB9C4CB2262A2391007E38F1 /* InfoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,6 +289,7 @@
 			isa = PBXGroup;
 			children = (
 				CB436DDE261870D400A432B1 /* HomeView.swift */,
+				CB9C4CB2262A2391007E38F1 /* InfoTile.swift */,
 				CB28AF002616163600B48215 /* SettingsView.swift */,
 				CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */,
 				CB436DDA26186B0C00A432B1 /* OnboardingView.swift */,
@@ -513,6 +516,7 @@
 				CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */,
 				CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
+				CB9C4CB3262A2391007E38F1 /* InfoTile.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AF0926161D5E00B48215 /* DescribedValueView.swift in Sources */,
 				CB28AEFC2615F5E700B48215 /* GraphView.swift in Sources */,
