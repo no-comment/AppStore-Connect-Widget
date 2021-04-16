@@ -52,6 +52,21 @@ extension Date {
 
         return self
     }
+    
+    func toString() -> String {
+        if Calendar.current.isDateInToday(self) {
+            return NSLocalizedString("TODAY", comment: "")
+        }
+        if Calendar.current.isDateInYesterday(self) {
+            return NSLocalizedString("YESTERDAY", comment: "")
+        }
+        let df = DateFormatter()
+        if Calendar.current.isDate(self, inSameDayAs: self.advanced(by: -86400*6)) || self > self.advanced(by: -86400*6) {
+            return df.weekdaySymbols[Calendar.current.component(.weekday, from: self) - 1]
+        }
+        df.dateFormat = "dd. MMM."
+        return df.string(from: self)
+    }
 }
 
 // MARK: User Defaults

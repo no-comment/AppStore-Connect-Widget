@@ -206,22 +206,7 @@ extension ACData {
         guard let date = latestDate else {
             return NSLocalizedString("NO_DATA", comment: "")
         }
-        return dateToString(date)
-    }
-
-    private func dateToString(_ date: Date) -> String {
-        if Calendar.current.isDateInToday(date) {
-            return NSLocalizedString("TODAY", comment: "")
-        }
-        if Calendar.current.isDateInYesterday(date) {
-            return NSLocalizedString("YESTERDAY", comment: "")
-        }
-        let df = DateFormatter()
-        if Calendar.current.isDate(date, inSameDayAs: date.advanced(by: -86400*6)) || date > date.advanced(by: -86400*6) {
-            return df.weekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
-        }
-        df.dateFormat = "dd. MMM."
-        return df.string(from: date)
+        return date.toString()
     }
 
     // MARK: Mock Data
