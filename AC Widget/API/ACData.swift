@@ -53,71 +53,74 @@ extension ACData {
 
     private func getDownloadsString(_ lastNDays: Int, size: NumberLength) -> String {
         let num: Float = getDownloadsSum(lastNDays)
-        return formatNumberLength(num: num, size: size)
+        return ACData.formatNumberLength(num: num, size: size, type: .downloads)
     }
 
     private func getProceedsString(_ lastNDays: Int, size: NumberLength) -> String {
         let num: Float = getProceedsSum(lastNDays)
-        var fNum: NSNumber = NSNumber(value: num)
-        let nf = NumberFormatter()
-        var addK = false
-
-        switch size {
-        case .compact:
-            if num <  10 {
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 2
-            } else if num < 100 {
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 1
-            } else if num < 1000 {
-            } else if num < 10000 {
-                fNum = NSNumber(value: num/1000)
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 1
-                addK = true
-            } else if num < 100000 {
-                fNum = NSNumber(value: num/1000)
-                addK = true
-            }
-        case .standard:
-            if num >= 1000 {
-                fNum = NSNumber(value: num/1000)
-                addK = true
-            }
-
-            nf.numberStyle = .decimal
-            nf.maximumFractionDigits = (num >= 1000 && num/1000 < 10) || num < 10 ? 2 : 1
-        }
-
-        return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
+        return ACData.formatNumberLength(num: num, size: size, type: .proceeds)
     }
 
     private func getUpdatesString(_ lastNDays: Int, size: NumberLength) -> String {
         let num: Float = getUpdatesSum(lastNDays)
-        return formatNumberLength(num: num, size: size)
+        return ACData.formatNumberLength(num: num, size: size, type: .updates)
     }
 
-    private func formatNumberLength(num: Float, size: NumberLength) -> String {
-        if num < 1000 {
-            return "\(Int(num))"
-        }
+    // swiftlint:disable:next function_body_length
+    public static func formatNumberLength(num: Float, size: NumberLength, type: InfoType) -> String {
+        switch type {
+        case .downloads, .updates:
+            if num < 1000 { return "\(Int(num))" }
 
-        let fNum: NSNumber = NSNumber(value: num/1000)
-        let nf = NumberFormatter()
+            let fNum: NSNumber = NSNumber(value: num/1000)
+            let nf = NumberFormatter()
 
-        switch size {
-        case .compact:
-            if num <  10000 {
+            switch size {
+            case .compact:
+                if num <  10000 {
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 1
+                }
+            case .standard:
                 nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 1
+                nf.maximumFractionDigits = 2
             }
-        case .standard:
-            nf.numberStyle = .decimal
-            nf.maximumFractionDigits = 2
-        }
 
-        return (nf.string(from: fNum) ?? "0").appending("K")
+            return (nf.string(from: fNum) ?? "0").appending("K")
+        case .proceeds:
+            var fNum: NSNumber = NSNumber(value: num)
+            let nf = NumberFormatter()
+            var addK = false
+
+            switch size {
+            case .compact:
+                if num <  10 {
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 2
+                } else if num < 100 {
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 1
+                } else if num < 1000 {
+                } else if num < 10000 {
+                    fNum = NSNumber(value: num/1000)
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 1
+                    addK = true
+                } else if num < 100000 {
+                    fNum = NSNumber(value: num/1000)
+                    addK = true
+                }
+            case .standard:
+                if num >= 1000 {
+                    fNum = NSNumber(value: num/1000)
+                    addK = true
+                }
+                nf.numberStyle = .decimal
+                nf.maximumFractionDigits = (num >= 1000 && num/1000 < 10) || num < 10 ? 2 : 1
+            }
+
+            return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
+        }
     }
 
     enum NumberLength { case compact, standard }
