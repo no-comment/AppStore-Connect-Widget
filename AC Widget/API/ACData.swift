@@ -112,8 +112,26 @@ extension ACData {
     }
 
     private func getUpdatesString(_ lastNDays: Int, size: NumberLength) -> String {
-        // TODO: Implement Updates String
-        return "Not Implemented"
+        let num: Float = getUpdatesSum(lastNDays)
+        if num < 1000 {
+            return "\(Int(num))"
+        }
+
+        let fNum: NSNumber = NSNumber(value: num/1000)
+        let nf = NumberFormatter()
+
+        switch size {
+        case .compact:
+            if num <  10000 {
+                nf.numberStyle = .decimal
+                nf.maximumFractionDigits = 1
+            }
+        case .standard:
+            nf.numberStyle = .decimal
+            nf.maximumFractionDigits = 2
+        }
+
+        return (nf.string(from: fNum) ?? "0").appending("K")
     }
 
     enum NumberLength { case compact, standard }
@@ -153,8 +171,14 @@ extension ACData {
     }
 
     private func getRawUpdates(_ lastNDays: Int) -> [(Float, Date)] {
-        // TODO: Implement Raw Updates
-        return []
+        let downloadEntries = entries.filter({ $0.type == .update })
+        let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
+
+        return latestDate.getLastNDates(lastNDays)
+            .map { day -> (Float, Date) in
+                let count = downloadEntries.filter({ $0.date == day }).reduce(0, { $0 + $1.units })
+                return (Float(count), day)
+            }
     }
 
     // MARK: Get Sum
