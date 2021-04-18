@@ -23,6 +23,12 @@
 "DOWNLOADS" = "Downloads";
 "UPDATES" = "Updates";
 
+// Key Selection Sheet
+"DONE" = "Done";
+"SELECT_KEY" = "Select API Key";
+"API_KEY" = "API Key";
+"APPLICATIONS" = "Applications";
+
 // MARK: Settings
 "SETTINGS" = "Settings";
 "API_KEYS" = "API Keys";

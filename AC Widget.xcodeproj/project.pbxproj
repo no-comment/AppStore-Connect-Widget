@@ -85,6 +85,7 @@
 		CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA496261E52F200719CC1 /* DynamicColor */; };
 		CBDFA49F261E55EE00719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA49E261E55EE00719CC1 /* DynamicColor */; };
 		CBDFA4A1261E55F500719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA4A0261E55F500719CC1 /* DynamicColor */; };
+		CBEA7348262CD5B90095C39D /* KeySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEA7347262CD5B90095C39D /* KeySelectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -164,6 +165,7 @@
 		CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyDetailView.swift; sourceTree = "<group>"; };
 		CB9C4CAA262A136A007E38F1 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		CB9C4CB2262A2391007E38F1 /* InfoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTile.swift; sourceTree = "<group>"; };
+		CBEA7347262CD5B90095C39D /* KeySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeySelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -293,7 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				CB436DDE261870D400A432B1 /* HomeView.swift */,
-				CB9C4CB2262A2391007E38F1 /* InfoTile.swift */,
+				CBEA7347262CD5B90095C39D /* KeySelectionView.swift */,
 				CB28AF002616163600B48215 /* SettingsView.swift */,
 				CB436E12261A3F6E00A432B1 /* APIKeyDetailView.swift */,
 				CB436DDA26186B0C00A432B1 /* OnboardingView.swift */,
@@ -321,6 +323,7 @@
 			children = (
 				CB9C4CAA262A136A007E38F1 /* Card.swift */,
 				CB28AEFB2615F5E700B48215 /* GraphView.swift */,
+				CB9C4CB2262A2391007E38F1 /* InfoTile.swift */,
 				CB28AEDF2615D24400B48215 /* UnitText.swift */,
 				CB28AF0826161D5D00B48215 /* DescribedValueView.swift */,
 			);
@@ -513,6 +516,7 @@
 				45E8C4832612512E007F9B0E /* ContentView.swift in Sources */,
 				CB28AEE52615D28F00B48215 /* SummarySmall.swift in Sources */,
 				45C1A3F32619AC28006C1650 /* Widgets.intentdefinition in Sources */,
+				CBEA7348262CD5B90095C39D /* KeySelectionView.swift in Sources */,
 				CB436DDF261870D400A432B1 /* HomeView.swift in Sources */,
 				4570D39A261EE1FC006F50AA /* ACDataCache.swift in Sources */,
 				CBAB729C261B338600ED0F94 /* APIKey.swift in Sources */,

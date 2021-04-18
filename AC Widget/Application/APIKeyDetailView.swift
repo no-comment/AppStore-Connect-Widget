@@ -31,9 +31,14 @@ struct APIKeyDetailView: View {
     var body: some View {
         Form {
             namingSection
-            statusSection
-            keySection
+            if let status = status {
+                Section {
+                    ErrorWidget(error: status)
+                }
+                .frame(maxHeight: 250)
+            }
             savingSection
+            keySection
             storageSection
         }
         .onAppear(perform: {
@@ -55,16 +60,6 @@ struct APIKeyDetailView: View {
 
             ColorPicker("KEY_COLOR", selection: $keyColor, supportsOpacity: false)
         }
-    }
-
-    var statusSection: some View {
-        return Section {
-            if let status = status {
-                ErrorWidget(error: status)
-            } else {
-            }
-        }
-        .frame(maxHeight: 250)
     }
 
     var keySection: some View {

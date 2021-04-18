@@ -11,6 +11,7 @@ import AppStoreConnect_Swift_SDK
 struct HomeView: View {
     @State var data: ACData?
     @State var error: APIError?
+    @State var showingSheet: Bool = false
 
     var body: some View {
         ScrollView {
@@ -27,6 +28,7 @@ struct HomeView: View {
         }
         .navigationTitle("Home")
         .toolbar(content: toolbar)
+        .sheet(isPresented: $showingSheet, content: sheet)
         .onAppear(perform: onAppear)
     }
 
@@ -34,7 +36,7 @@ struct HomeView: View {
         HStack(spacing: 10) {
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle())
-            
+
             Text("LOADING_DATA")
                 .foregroundColor(.gray)
                 .italic()
@@ -45,7 +47,7 @@ struct HomeView: View {
     func toolbar() -> some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {}, label: {
+                Button(action: { showingSheet.toggle() }, label: {
                     Image(systemName: "key")
                 })
             }
@@ -55,6 +57,17 @@ struct HomeView: View {
                                label: { Image(systemName: "gear") }
                 )
             }
+        }
+    }
+
+    func sheet() -> some View {
+        NavigationView {
+            KeySelectionView()
+                .toolbar {
+                    ToolbarItem {
+                        Button("DONE", action: { showingSheet = false })
+                    }
+                }
         }
     }
 
