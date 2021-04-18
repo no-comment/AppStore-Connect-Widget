@@ -18,8 +18,10 @@
 "DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
 
 // MARK: Home
+"LOADING_DATA" = "Daten werden geladen";
 "PROCEEDS" = "Gewinn";
-"PROCEEDS" = "Downloads";
+"DOWNLOADS" = "Downloads";
+"UPDATES" = "Updates";
 
 // MARK: Settings
 "SETTINGS" = "Einstellungen";

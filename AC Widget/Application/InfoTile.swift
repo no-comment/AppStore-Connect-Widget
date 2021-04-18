@@ -101,21 +101,20 @@ struct InfoTile: View {
                             }
                         }
                     }
+                    .contentShape(Rectangle())
                     .gesture(DragGesture()
                                 .onChanged({ value in
                                     let newIndex = Int((value.location.x/reading.size.width) * CGFloat(graphData.count))
-                                    if newIndex != currentIndex {
+                                    if newIndex != currentIndex && newIndex < rawData.count && newIndex >= 0 {
                                         currentIndex = newIndex
                                         UISelectionFeedbackGenerator()
                                             .selectionChanged()
                                     }
                                 })
                                 .onEnded({ _ in
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        withAnimation(Animation.easeOut(duration: 1)) {
+                                    withAnimation(Animation.easeOut(duration: 0.2)) {
                                             currentIndex = nil
                                         }
-                                    }
                                 })
                     )
                 }

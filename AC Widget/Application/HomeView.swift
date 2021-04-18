@@ -22,12 +22,24 @@ struct HomeView: View {
                 }
                 .padding()
             } else {
-                Text("TODO (maybe loading...)")
+                loadingIndicator
             }
         }
         .navigationTitle("Home")
         .toolbar(content: toolbar)
         .onAppear(perform: onAppear)
+    }
+
+    var loadingIndicator: some View {
+        HStack(spacing: 10) {
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle())
+            
+            Text("LOADING_DATA")
+                .foregroundColor(.gray)
+                .italic()
+        }
+        .padding(.top, 25)
     }
 
     func toolbar() -> some ToolbarContent {

@@ -64,7 +64,7 @@ extension Date {
             return ""
         }
         let df = DateFormatter()
-        if Calendar.current.isDate(self, inSameDayAs: self.advanced(by: -86400*6)) || self > self.advanced(by: -86400*6) {
+        if Calendar.current.isDate(self, inSameDayAs: Date().advanced(by: -86400*6)) || self > Date().advanced(by: -86400*6) {
             return df.weekdaySymbols[Calendar.current.component(.weekday, from: self) - 1]
         }
         df.dateFormat = "dd. MMM."
