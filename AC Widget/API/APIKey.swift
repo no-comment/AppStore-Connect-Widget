@@ -94,6 +94,12 @@ extension APIKey {
         return getKeysFromData(data) ?? []
     }
 
+    static func getApiKey(apiKeyId: String) -> APIKey? {
+        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return nil }
+        let keys = getKeysFromData(data) ?? []
+        return keys.first(where: { $0.id == apiKeyId })
+    }
+
     /// Saves APIKey to UserDefaults; Replaces any key with same id (PrivateKeyId)
     /// - Parameter apiKey: new or updated APIKey
     static func addApiKey(apiKey: APIKey) {
