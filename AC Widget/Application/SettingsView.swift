@@ -155,7 +155,6 @@ struct ApiKeyCheckIndicator: View {
             }
         }
         .onAppear(perform: {
-            // FIXME: onAppear get called multiple times
             key.checkKey()
                 .catch { err in
                     status = (err as? APIError) ?? .unknown

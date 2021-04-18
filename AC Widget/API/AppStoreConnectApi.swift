@@ -69,7 +69,7 @@ class AppStoreConnectApi {
                 let entriesDates = entries.map({ $0.date.acApiFormat() })
                 let missingDates = dates.filter({ !entriesDates.contains($0) })
 
-                return any(missingDates.map({ self.apiWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
+                return any(missingDates.map({ self.apiSalesAndTrendsWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
             })
             .then { results in
                 for result in results {
@@ -116,9 +116,17 @@ class AppStoreConnectApi {
                     }
                 }
 
-                let newData = ACData(entries: entries, currency: localCurrency)
-                ACDataCache.saveData(data: newData, apiKey: self.apiKey)
-                promise.fulfill(newData)
+                self.getApps()
+                    .then { apps in
+                        let newData = ACData(entries: entries, currency: localCurrency, apps: apps)
+                        ACDataCache.saveData(data: newData, apiKey: self.apiKey)
+                        promise.fulfill(newData)
+                    }
+                    .catch { _ in
+                        let newData = ACData(entries: entries, currency: localCurrency, apps: [])
+                        ACDataCache.saveData(data: newData, apiKey: self.apiKey)
+                        promise.fulfill(newData)
+                    }
             }
             .catch { err in
                 if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
@@ -141,7 +149,7 @@ class AppStoreConnectApi {
                                 if entries.isEmpty {
                                     promise.reject(APIError.noDataAvailable)
                                 } else {
-                                    promise.fulfill(ACData(entries: entries, currency: localCurrency))
+                                    promise.fulfill(ACData(entries: entries, currency: localCurrency, apps: []))
                                 }
                             } else {
                                 promise.reject(APIError.unknown)
@@ -165,7 +173,25 @@ class AppStoreConnectApi {
         return promise
     }
 
-    private func apiWrapped(provider: APIProvider, vendorNumber: String, date: String) -> Promise<Data> {
+    private func getApps() -> Promise<[ACApp]> {
+        let promise = Promise<[ACApp]>.pending()
+        let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
+
+        let provider: APIProvider = APIProvider(configuration: configuration)
+
+        apiAppsWrapped(provider: provider)
+            .then { resp in
+                any(resp.data.map({ self.iTunesLookup(app: $0) }))
+                    .then { data in
+                        promise.fulfill(data.compactMap({ $0.value }))
+                    }
+            }.catch { err in
+                promise.reject(err)
+            }
+        return promise
+    }
+
+    private func apiSalesAndTrendsWrapped(provider: APIProvider, vendorNumber: String, date: String) -> Promise<Data> {
         print("Call api for \(date)")
         return Promise<Data> { fulfill, reject in
             provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
@@ -182,6 +208,64 @@ class AppStoreConnectApi {
                     reject(reason)
                 }
             })
+        }
+    }
+
+    private struct ITunesResponse: Codable {
+        let resultCount: Int
+        let results: [ITunesAppData]
+    }
+
+    private struct ITunesAppData: Codable {
+        let artworkUrl60: String
+        let artworkUrl100: String
+        let currentVersionReleaseDate: String
+        let version: String
+    }
+
+    private func iTunesLookup(app: App) -> Promise<ACApp> {
+        let appId: String = app.id
+        let promise = Promise<ACApp>.pending()
+        guard let url = URL(string: "http://itunes.apple.com/lookup?id=" + appId) else {
+            promise.reject(APIError.unknown)
+            return promise
+        }
+
+        if let data = try? Data(contentsOf: url) {
+            let decoder = JSONDecoder()
+            let result = try? decoder.decode(ITunesResponse.self, from: data)
+            guard let appData = result?.results.first else {
+                promise.reject(APIError.notPublic)
+                return promise
+            }
+            promise.fulfill(
+                ACApp(id: app.id,
+                      name: app.attributes?.name ?? "",
+                      sku: app.attributes?.sku ?? "",
+                      version: appData.version,
+                      currentVersionReleaseDate: appData.currentVersionReleaseDate,
+                      artworkUrl60: appData.artworkUrl60,
+                      artworkUrl100: appData.artworkUrl100)
+            )
+        } else {
+            promise.reject(APIError.unknown)
+        }
+
+        return promise
+    }
+
+    private func apiAppsWrapped(provider: APIProvider) -> Promise<AppsResponse> {
+        return Promise<AppsResponse> { fulfill, reject in
+            provider.request(APIEndpoint.apps(select: [.apps([.name, .sku])]),
+                             completion: { result in
+                                switch result {
+                                case .success(let data):
+                                    fulfill(data)
+                                case .failure(let reason):
+                                    print("Something went wrong fetching the apps: \(reason)")
+                                    reject(reason)
+                                }
+                             })
         }
     }
 }

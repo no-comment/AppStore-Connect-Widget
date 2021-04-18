@@ -9,12 +9,14 @@ import Foundation
 import SwiftUI
 
 struct ACData: Codable {
+    let apps: [ACApp]
     let entries: [ACEntry]
     let displayCurrency: Currency
 
-    init(entries: [ACEntry], currency: Currency) {
+    init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
         self.entries = entries
         self.displayCurrency = currency
+        self.apps = apps
     }
 }
 
@@ -34,7 +36,7 @@ extension ACData {
                            type: entry.type)
         })
 
-        return ACData(entries: newEntries, currency: outputCurrency)
+        return ACData(entries: newEntries, currency: outputCurrency, apps: self.apps)
     }
 }
 
@@ -236,8 +238,8 @@ extension ACData {
                                        type: ACEntryType.allCases.randomElement() ?? .download))
             }
         }
-
-        return ACData(entries: entries, currency: .USD)
+        // TODO: create mock ACApp
+        return ACData(entries: entries, currency: .USD, apps: [])
     }
 }
 

@@ -11,7 +11,7 @@ struct ACEntry: Codable {
     let appTitle: String
     let appSKU: String
     let units: Int
-    let proceeds: Float // TODO: Maybe use Decimal or change encodable for float to save space (1.9408223628997803)
+    let proceeds: Float
     let date: Date
     let countryCode: String
     let device: String
@@ -21,7 +21,7 @@ struct ACEntry: Codable {
 enum ACEntryType: String, CaseIterable, Codable {
     case download
     case redownload
-    case aip
+    case iap
     case restoredIap
     case update
     case unknown
@@ -33,7 +33,7 @@ enum ACEntryType: String, CaseIterable, Codable {
         case "3", "3F":
             self = .redownload
         case "FI1", "IA1", "IA1-M", "IA9", "IA9-M", "IAY", "IAY-M":
-            self = .aip
+            self = .iap
         case "IA3":
             self = .restoredIap
         case "7", "7F", "7T", "F7":

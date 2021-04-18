@@ -29,6 +29,9 @@
 		45CAC10F2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC10E2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK */; };
 		45CAC1112615CBD000FF63E7 /* Promises in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC1102615CBD000FF63E7 /* Promises */; };
 		45CFAAAC261A6E2100E0E285 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FD5195261915F200603D8A /* IntentHandler.swift */; };
+		45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
+		45D2041E262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
+		45D2041F262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
 		45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8C4802612512E007F9B0E /* AC_WidgetApp.swift */; };
 		45E8C4832612512E007F9B0E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8C4822612512E007F9B0E /* ContentView.swift */; };
 		45E8C4852612512F007F9B0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45E8C4842612512F007F9B0E /* Assets.xcassets */; };
@@ -126,6 +129,7 @@
 		4583A883261A44E800368001 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Widgets.strings; sourceTree = "<group>"; };
 		45C1A3F62619AC28006C1650 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Widgets.intentdefinition; sourceTree = "<group>"; };
 		45CAC1142615CDBE00FF63E7 /* AppStoreConnectApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreConnectApi.swift; sourceTree = "<group>"; };
+		45D2041C262CBEB000D0E889 /* ACApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACApp.swift; sourceTree = "<group>"; };
 		45E8C47D2612512E007F9B0E /* AC Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AC Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45E8C4802612512E007F9B0E /* AC_WidgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AC_WidgetApp.swift; sourceTree = "<group>"; };
 		45E8C4822612512E007F9B0E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -307,6 +311,7 @@
 				45E8C4C126126B34007F9B0E /* CurrencyConverter.swift */,
 				4552EE9D261CF3FF006C30B9 /* ACEntry.swift */,
 				4570D399261EE1FC006F50AA /* ACDataCache.swift */,
+				45D2041C262CBEB000D0E889 /* ACApp.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -516,6 +521,7 @@
 				CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */,
 				CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
+				45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */,
 				CB9C4CB3262A2391007E38F1 /* InfoTile.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AF0926161D5E00B48215 /* DescribedValueView.swift in Sources */,
@@ -540,6 +546,7 @@
 				CB28AEFD2615F5E700B48215 /* GraphView.swift in Sources */,
 				CB28AEEB2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
 				CB28AEE12615D24400B48215 /* UnitText.swift in Sources */,
+				45D2041E262CBEB000D0E889 /* ACApp.swift in Sources */,
 				CB28AEE62615D28F00B48215 /* SummarySmall.swift in Sources */,
 				CBAB7298261B338600ED0F94 /* APIError.swift in Sources */,
 				CBAB729B261B338600ED0F94 /* CurrencyConverter.swift in Sources */,
@@ -568,6 +575,7 @@
 				4542D60226276F8100B79E10 /* ACDataCache.swift in Sources */,
 				45C1A3FF2619B402006C1650 /* Extensions.swift in Sources */,
 				4552EEA0261CFB99006C30B9 /* ACEntry.swift in Sources */,
+				45D2041F262CBEB000D0E889 /* ACApp.swift in Sources */,
 				CBAB72A3261B338700ED0F94 /* AppStoreConnectApi.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

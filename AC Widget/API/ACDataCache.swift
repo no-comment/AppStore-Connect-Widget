@@ -61,7 +61,8 @@ class ACDataCache {
         })
 
         if !entries.isEmpty {
-            let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency))
+            // TODO: merge old ACApps with new one
+            let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency, apps: data.apps))
             cacheObjects.append(newObj)
         }
 

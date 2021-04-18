@@ -16,7 +16,7 @@ class IntentHandler: INExtension, WidgetConfigurationIntentHandling {
     }
 
     func defaultApiKey(for intent: WidgetConfigurationIntent) -> ApiKeyParam? {
-        guard let key = APIKey.getApiKeys().first else { return nil}
+        guard let key = APIKey.getApiKeys().first else { return nil }
         return ApiKeyParam(key: key)
     }
 
