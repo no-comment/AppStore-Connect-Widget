@@ -199,7 +199,11 @@ extension ACData {
     }
 
     private func getUpdatesSum(_ lastNDays: Int) -> Float {
-        return -1
+        var result: Float = 0
+        for update in getRawUpdates(lastNDays) {
+            result += update.0
+        }
+        return result
     }
 
     // MARK: Getting Dates
