@@ -6,27 +6,37 @@
 //
 
 import SwiftUI
+import DynamicColor
 
 struct InfoTile: View {
     private var description: LocalizedStringKey
     private var data: ACData
     private var type: InfoType
     private var color: Color
-    
+
     @State private var currentIndex: Int?
     private var graphData: [CGFloat] {
         let copy = data.getRawData(type, lastNDays: 30).map { $0.0 }
         let max: Float = copy.max() ?? 1
         return copy.map { CGFloat($0 / max) }.reversed()
     }
-    
+
+    private var currencySymbol: String {
+        switch type {
+        case .proceeds:
+            return data.displayCurrency.symbol
+        default:
+            return ""
+        }
+    }
+
     init(description: LocalizedStringKey, data: ACData, type: InfoType, color: Color = .accentColor) {
         self.description = description
         self.data = data
         self.type = type
         self.color = color
     }
-    
+
     var body: some View {
         Card {
             topSection
@@ -36,24 +46,45 @@ struct InfoTile: View {
         }
         .frame(height: 220)
     }
-    
+
+    // MARK: Top
     var topSection: some View {
         HStack(alignment: .top) {
             if let index = currentIndex {
-                let foo = data.getRawData(type, lastNDays: 30)[index]
-                Text(foo.1.toString())
+                Text(getGraphDataPoint(index).1.toString())
                     .font(.system(size: 20))
                 Spacer()
-                UnitText(ACData.formatNumberLength(num: foo.0, type: type), metric: "$")
+                if currencySymbol.isEmpty {
+                    UnitText(ACData.formatNumberLength(num: getGraphDataPoint(index).0, type: type), metricSymbol: type.systemImage)
+                } else {
+                    UnitText(ACData.formatNumberLength(num: getGraphDataPoint(index).0, type: type), metric: currencySymbol)
+                }
             } else {
                 Text(description)
                     .font(.system(size: 20))
                 Spacer()
-                UnitText(data.getAsString(type, lastNDays: 1), metric: "$")
+                if currencySymbol.isEmpty {
+                    UnitText(data.getAsString(type, lastNDays: 1), metricSymbol: type.systemImage)
+                } else {
+                    UnitText(data.getAsString(type, lastNDays: 1), metric: currencySymbol)
+                }
             }
         }
     }
-    
+
+    private func getGraphDataPoint(_ index: Int) -> (Float, Date) {
+        var rawData = data.getRawData(type, lastNDays: 30)
+        if index >= rawData.count {
+            return rawData.first ?? (0, Date(timeIntervalSince1970: 0))
+        }
+        if index < 0 {
+            return rawData.last ?? (0, Date(timeIntervalSince1970: 0))
+        }
+        rawData.reverse()
+        return rawData[index]
+    }
+
+    // MARK: Graph
     var graphSection: some View {
         Group {
             if !graphData.isEmpty {
@@ -62,14 +93,27 @@ struct InfoTile: View {
                         ForEach(graphData.indices) { i in
                             Capsule()
                                 .frame(width: (reading.size.width/CGFloat(graphData.count))*0.7, height: reading.size.height * getGraphHeight(i))
-                                .foregroundColor(getGraphColor(i))
-                            
+                                .foregroundColor(getGraphColor(i, isSelected: currentIndex == i))
+
                             if i != graphData.count-1 {
                                 Spacer()
                                     .frame(minWidth: 0)
                             }
                         }
                     }
+                    .gesture(DragGesture()
+                                    .onChanged({ value in
+                                        let newIndex = Int((value.location.x/reading.size.width) * CGFloat(graphData.count))
+                                        if newIndex != currentIndex {
+                                            currentIndex = newIndex
+                                            UISelectionFeedbackGenerator()
+                                                .selectionChanged()
+                                        }
+                                    })
+                                    .onEnded({ _ in
+                                        currentIndex = nil
+                                    })
+                    )
                 }
             } else {
                 Text("NO_DATA")
@@ -78,7 +122,7 @@ struct InfoTile: View {
             }
         }
     }
-    
+
     private func getGraphHeight(_ i: Int) -> CGFloat {
         if i < graphData.count && graphData[i] > 0 {
             return graphData[i]
@@ -88,23 +132,27 @@ struct InfoTile: View {
         }
         return 0.01
     }
-    
-    private func getGraphColor(_ i: Int) -> Color {
+
+    private func getGraphColor(_ i: Int, isSelected: Bool) -> Color {
+        var result: Color = .gray
         if i < graphData.count && graphData[i] > 0 {
-            return color
+            result = color
+        } else if i < graphData.count && graphData[i] < 0 {
+            result = .red
         }
-        if i < graphData.count && graphData[i] < 0 {
-            return .red
+        if isSelected {
+            result = Color(DynamicColor(result).lighter())
         }
-        return .gray
+        return result
     }
-    
+
+    // MARK: Bottom
     var bottomSection: some View {
         HStack(alignment: .bottom) {
-            DescribedValueView(description: "LAST_SEVEN_DAYS", value: ("123$"))
+            DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(type, lastNDays: 7, size: .compact).appending(currencySymbol))
             Spacer()
                 .frame(width: 40)
-            DescribedValueView(description: "LAST_THIRTY_DAYS", value: "400$")
+            DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(type, lastNDays: 30, size: .compact).appending(currencySymbol))
         }
     }
 }

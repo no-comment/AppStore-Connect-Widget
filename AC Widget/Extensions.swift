@@ -60,6 +60,9 @@ extension Date {
         if Calendar.current.isDateInYesterday(self) {
             return NSLocalizedString("YESTERDAY", comment: "")
         }
+        if self == Date(timeIntervalSince1970: 0) {
+            return ""
+        }
         let df = DateFormatter()
         if Calendar.current.isDate(self, inSameDayAs: self.advanced(by: -86400*6)) || self > self.advanced(by: -86400*6) {
             return df.weekdaySymbols[Calendar.current.component(.weekday, from: self) - 1]

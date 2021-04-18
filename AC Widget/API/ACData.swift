@@ -239,4 +239,15 @@ extension ACData {
 
 enum InfoType {
     case proceeds, downloads, updates
+
+    var systemImage: String {
+        switch self {
+        case .proceeds:
+            return "dollarsign.circle"
+        case .downloads:
+            return "square.and.arrow.down"
+        case .updates:
+            return "arrow.triangle.2.circlepath"
+        }
+    }
 }
