@@ -6,19 +6,19 @@
 //
 
 import SwiftUI
-import DynamicColor
 
 struct InfoTile: View {
     private var description: LocalizedStringKey
     private var data: ACData
+    private var rawData: [(Float, Date)]
     private var type: InfoType
     private var color: Color
 
     @State private var currentIndex: Int?
     private var graphData: [CGFloat] {
-        let copy = data.getRawData(type, lastNDays: 30).map { $0.0 }
+        let copy = rawData.map { $0.0 }
         let max: Float = copy.max() ?? 1
-        return copy.map { CGFloat($0 / max) }.reversed()
+        return copy.map { CGFloat($0 / max) }
     }
 
     private var currencySymbol: String {
@@ -33,6 +33,7 @@ struct InfoTile: View {
     init(description: LocalizedStringKey, data: ACData, type: InfoType, color: Color = .accentColor) {
         self.description = description
         self.data = data
+        self.rawData = data.getRawData(type, lastNDays: 30).reversed()
         self.type = type
         self.color = color
     }
@@ -73,14 +74,12 @@ struct InfoTile: View {
     }
 
     private func getGraphDataPoint(_ index: Int) -> (Float, Date) {
-        var rawData = data.getRawData(type, lastNDays: 30)
         if index >= rawData.count {
-            return rawData.first ?? (0, Date(timeIntervalSince1970: 0))
-        }
-        if index < 0 {
             return rawData.last ?? (0, Date(timeIntervalSince1970: 0))
         }
-        rawData.reverse()
+        if index < 0 {
+            return rawData.first ?? (0, Date(timeIntervalSince1970: 0))
+        }
         return rawData[index]
     }
 
@@ -93,7 +92,8 @@ struct InfoTile: View {
                         ForEach(graphData.indices) { i in
                             Capsule()
                                 .frame(width: (reading.size.width/CGFloat(graphData.count))*0.7, height: reading.size.height * getGraphHeight(i))
-                                .foregroundColor(getGraphColor(i, isSelected: currentIndex == i))
+                                .foregroundColor(getGraphColor(i))
+                                .opacity(currentIndex == i ? 0.7 : 1)
 
                             if i != graphData.count-1 {
                                 Spacer()
@@ -102,17 +102,21 @@ struct InfoTile: View {
                         }
                     }
                     .gesture(DragGesture()
-                                    .onChanged({ value in
-                                        let newIndex = Int((value.location.x/reading.size.width) * CGFloat(graphData.count))
-                                        if newIndex != currentIndex {
-                                            currentIndex = newIndex
-                                            UISelectionFeedbackGenerator()
-                                                .selectionChanged()
+                                .onChanged({ value in
+                                    let newIndex = Int((value.location.x/reading.size.width) * CGFloat(graphData.count))
+                                    if newIndex != currentIndex {
+                                        currentIndex = newIndex
+                                        UISelectionFeedbackGenerator()
+                                            .selectionChanged()
+                                    }
+                                })
+                                .onEnded({ _ in
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        withAnimation(Animation.easeOut(duration: 1)) {
+                                            currentIndex = nil
                                         }
-                                    })
-                                    .onEnded({ _ in
-                                        currentIndex = nil
-                                    })
+                                    }
+                                })
                     )
                 }
             } else {
@@ -133,15 +137,12 @@ struct InfoTile: View {
         return 0.01
     }
 
-    private func getGraphColor(_ i: Int, isSelected: Bool) -> Color {
+    private func getGraphColor(_ i: Int) -> Color {
         var result: Color = .gray
         if i < graphData.count && graphData[i] > 0 {
             result = color
         } else if i < graphData.count && graphData[i] < 0 {
             result = .red
-        }
-        if isSelected {
-            result = Color(DynamicColor(result).lighter())
         }
         return result
     }
