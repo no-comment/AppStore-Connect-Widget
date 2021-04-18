@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct KeySelectionView: View {
-    @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String?
+    @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     private var selectedKey: APIKey? {
-        guard let key = keyID else { return nil }
-        return APIKey.getApiKey(apiKeyId: key)
+        return APIKey.getApiKey(apiKeyId: keyID)
     }
 
     var body: some View {

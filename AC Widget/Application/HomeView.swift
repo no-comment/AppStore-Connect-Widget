@@ -13,6 +13,11 @@ struct HomeView: View {
     @State var error: APIError?
     @State var showingSheet: Bool = false
 
+    @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
+    private var selectedKey: APIKey? {
+        return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
+    }
+
     var body: some View {
         ScrollView {
             if let data = data {
@@ -29,6 +34,7 @@ struct HomeView: View {
         .navigationTitle("Home")
         .toolbar(content: toolbar)
         .sheet(isPresented: $showingSheet, content: sheet)
+        .onChange(of: keyID, perform: { _ in onAppear() })
         .onAppear(perform: onAppear)
     }
 
@@ -72,7 +78,7 @@ struct HomeView: View {
     }
 
     private func onAppear() {
-        guard let apiKey = APIKey.getApiKeys().first else { return }
+        guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
         api.getData().then { (data) in
             self.data = data

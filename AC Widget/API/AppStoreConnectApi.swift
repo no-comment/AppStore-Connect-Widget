@@ -168,7 +168,9 @@ class AppStoreConnectApi {
                 }
             }
 
-        AppStoreConnectApi.lastData.append((key: self.apiKey, date: Date(), result: promise))
+        if useCache {
+            AppStoreConnectApi.lastData.append((key: self.apiKey, date: Date(), result: promise))
+        }
 
         return promise
     }
