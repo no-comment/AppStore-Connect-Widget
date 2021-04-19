@@ -35,11 +35,17 @@ struct APIKey: Codable, Identifiable {
 }
 
 extension APIKey {
+    func equalsKeyDetails(other key: APIKey) -> Bool {
+        return self.issuerID == key.issuerID && self.privateKeyID == key.privateKeyID && self.privateKey == key.privateKey && self.privateKeyID == key.privateKeyID
+    }
+}
+
+extension APIKey {
     // swiftlint:disable:next large_tuple
     static private var lastChecks: [(key: APIKey, date: Date, result: Promise<Void>)] = []
     func checkKey() -> Promise<Void> {
-        if let last = APIKey.lastChecks.first(where: { $0.key.id == self.id }) {
-            if last.date.timeIntervalSinceNow > -60 * 5 {
+        if let last = APIKey.lastChecks.first(where: { self.equalsKeyDetails(other: $0.key) }) {
+            if last.date.timeIntervalSinceNow > -30 {
                 return last.result
             } else {
                 APIKey.lastChecks.removeAll(where: { $0.key.id == self.id })
