@@ -30,17 +30,21 @@ class AppStoreConnectApi {
 
     // swiftlint:disable:next function_body_length
     public func getData(currency: CurrencyParam? = nil, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
+        let promise = Promise<ACData>.pending()
+        let localCurrency: Currency = currency?.toCurrency() ?? .USD
+
         if useCache {
             if let last = AppStoreConnectApi.lastData.first(where: { $0.key.id == self.apiKey.id }) {
                 if last.date.timeIntervalSinceNow > -60 * 5 {
-                    return last.result
+                    last.result
+                        .then { promise.fulfill($0.changeCurrency(to: localCurrency)) }
+                        .catch { promise.reject($0) }
+                    return promise
                 } else {
                     AppStoreConnectApi.lastData.removeAll(where: { $0.key.id == self.apiKey.id })
                 }
             }
         }
-
-        let promise = Promise<ACData>.pending()
 
         if self.privateKey.count < privateKeyMinLength {
             promise.reject(APIError.invalidCredentials)
@@ -51,8 +55,6 @@ class AppStoreConnectApi {
         let provider: APIProvider = APIProvider(configuration: configuration)
 
         var entries: [ACEntry] = []
-
-        let localCurrency: Currency = currency?.toCurrency() ?? .USD
 
         let converter = CurrencyConverter.shared
 
