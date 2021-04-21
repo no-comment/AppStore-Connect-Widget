@@ -2,13 +2,17 @@
 "WELCOME" = "Welcome";
 "NEXT" = "Next";
 "FINISH" = "Finish";
-"ONBOARD_WELCOME" = "";
-"ONBOARD_KEY_NAME" = "";
-"ONBOARD_KEY_COLOR" = "";
-"ONBOARD_ISSUER_ID" = "";
-"ONBOARD_PRIVATE_KEY_ID" = "";
-"ONBOARD_PRIVATE_KEY" = "";
-"ONBOARD_VENDOR_NR" = "";
+"ONBOARD_WELCOME" = "Welcome to AC Widget!
+To start, you first need to enter an API Key for AppStoreConnect.
+In the following steps, we will guide you through the process and help you to getting started.";
+"ONBOARD_KEY_NAME" = "In order to differentiate your keys, give it a name, so that you can later match it to its Apple Developer account.";
+"ONBOARD_KEY_COLOR" = "You can also give it a color that will be used on the widget.";
+"ONBOARD_ISSUER_ID" = "Now comes creating the key.
+Log in to AppStoreConnect and go to 'Users and Access'. There you will have the submenu option 'Keys'. To create a new one, click on the + icon and make sure to save your key, since you cannot redownload it later on.
+On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. Copy it into the textfield up top.";
+"ONBOARD_PRIVATE_KEY_ID" = "On the same page copy the ID of your newly created key (Key ID), and paste it into the textfield.";
+"ONBOARD_PRIVATE_KEY" = "Now insert the content of your actual key you just downloaded here.";
+"ONBOARD_VENDOR_NR" = "Lastly, the Vendor number is needed. You can find it on AppStoreConnect in your 'Reports' tab. In the top left it should state your 'Vendor #'.";
 
 "RECHECK_INPUTS" = "Recheck Key";
 "OK" = "Ok";

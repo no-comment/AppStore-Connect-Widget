@@ -48,6 +48,7 @@ struct OnboardingView: View {
                 .padding()
                 .tag(5)
         }
+        .multilineTextAlignment(.center)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .alert(item: $alert, content: { generateAlert($0) })
     }
@@ -58,7 +59,7 @@ struct OnboardingView: View {
             Text("WELCOME")
                 .font(.system(.largeTitle, design: .rounded))
 
-            SummaryMedium(data: ACData.example)
+            SummaryMedium(data: ACData.example, color: color)
                 .showAsWidget(.systemMedium)
 
             Text("ONBOARD_WELCOME")
@@ -77,7 +78,7 @@ struct OnboardingView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Text("ONBOARD_KEY_NAME")
-
+            Divider()
             Text("ONBOARD_KEY_COLOR")
 
             ColorPicker("KEY_COLOR", selection: $color, supportsOpacity: false)
