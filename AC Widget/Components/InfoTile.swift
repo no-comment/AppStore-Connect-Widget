@@ -100,7 +100,7 @@ struct InfoTile: View {
                         }
                     }
                     .contentShape(Rectangle())
-                    .gesture(DragGesture()
+                    .highPriorityGesture(DragGesture(minimumDistance: 20)
                                 .onChanged({ value in
                                     let newIndex = Int((value.location.x/reading.size.width) * CGFloat(graphData.count))
                                     if newIndex != currentIndex && newIndex < rawData.count && newIndex >= 0 {
