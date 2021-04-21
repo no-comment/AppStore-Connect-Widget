@@ -72,7 +72,7 @@ struct SettingsView: View {
         Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
             Text("ALL_CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached())")
 
-            Button("CLEAR_ALL_CHACHE") {
+            Button("CLEAR_ALL_CACHE") {
                 ACDataCache.clearCache()
             }
             .foregroundColor(.orange)

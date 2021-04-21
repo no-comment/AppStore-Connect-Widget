@@ -39,8 +39,8 @@
 "WIDGET" = "Widget";
 "FORCE_REFRESH_WIDGET" = "Force refresh widget";
 "STORAGE" = "Storage";
-"ALL_CACHED_ENTRIES:%lld" = "You have chached %lld entries";
-"CLEAR_ALL_CHACHE" = "Clear the cache of all keys";
+"ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
+"CLEAR_ALL_CACHE" = "Clear the cache of all keys";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Color";
@@ -50,8 +50,8 @@
 "VENDOR_NR" = "Vendor Number";
 "KEY_DETAIL_FOOTER" = "Keys cannot be edited. If you want to make changes, please add them as a new key.";
 "SAVE" = "Save";
-"CACHED_ENTRIES:%lld" = "You have chached %lld entries";
-"CLEAR_CHACHE" = "Clear the cache";
+"CACHED_ENTRIES:%lld" = "You have cached %lld entries";
+"CLEAR_CACHE" = "Clear the cache";
 
 // MARK: Widgets
 "TODAY" = "Today";

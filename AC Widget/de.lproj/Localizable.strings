@@ -40,7 +40,7 @@
 "FORCE_REFRESH_WIDGET" = "Widget aktualisieren";
 "STORAGE" = "Speicher";
 "ALL_CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
-"CLEAR_ALL_CHACHE" = "Gesamten Cache löschen";
+"CLEAR_ALL_CACHE" = "Gesamten Cache löschen";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Farbe";
@@ -51,7 +51,7 @@
 "KEY_DETAIL_FOOTER" = "Keys können nicht bearbeitet werden. Solltest du Änderungen vornehmen wollen, erstelle bitte einen neuen Key.";
 "SAVE" = "Speichern";
 "CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
-"CLEAR_CHACHE" = "Cache löschen";
+"CLEAR_CACHE" = "Cache löschen";
 
 // MARK: Widgets
 "TODAY" = "Heute";

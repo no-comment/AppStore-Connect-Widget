@@ -111,7 +111,7 @@ struct APIKeyDetailView: View {
         Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
             Text("CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached(apiKey: key))")
 
-            Button("CLEAR_CHACHE") {
+            Button("CLEAR_CACHE") {
                 ACDataCache.clearCache(apiKey: key)
             }
             .foregroundColor(.orange)
