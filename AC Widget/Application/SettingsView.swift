@@ -67,16 +67,6 @@ struct SettingsView: View {
             Button("FORCE_REFRESH_WIDGET") {
                 WidgetCenter.shared.reloadAllTimelines()
             }
-
-//            VStack(alignment: .leading) {
-//                HStack {
-//                    Text("Refresh frequency")
-//                    Spacer()
-//                    Text("\(Int(slider))min")
-//                }
-//
-//                Slider(value: $slider, in: 5...60, step: 5)
-//            }
         }
     }
 
@@ -93,13 +83,13 @@ struct SettingsView: View {
 
     var contactSection: some View {
         Section(header: Label("Links", systemImage: "link")) {
-            if let destination = URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget") {
+            if let destination = URL(string: "https://github.com/no-comment/AppStore-Connect-Widget") {
                 Link(destination: destination, label: {
                     Text("GitHub")
                 })
             }
 
-            if let destination = URL(string: "https://www.apple.com") {
+            if let destination = URL(string: "https://www.buymeacoffee.com/no-comment") {
                 Link(destination: destination, label: {
                     Text("Buy me a coffee")
                 })
