@@ -7,6 +7,7 @@ import SwiftUI
 
 struct KeySelectionView: View {
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
+    @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
         return APIKey.getApiKey(apiKeyId: keyID)
     }
@@ -15,6 +16,7 @@ struct KeySelectionView: View {
         Form {
             keySelection
             appSelection
+            currencySelection
         }
         .navigationTitle("SELECT_KEY")
     }
@@ -41,6 +43,16 @@ struct KeySelectionView: View {
     var appSelection: some View {
         Section(header: Label("APPLICATIONS", systemImage: "app.fill")) {
             Text("TODO")
+        }
+    }
+
+    var currencySelection: some View {
+        Section(header: Label("CURRENCY", systemImage: "dollarsign.circle.fill")) {
+            Picker("App Currency", selection: $currency) {
+                ForEach(Currency.sortedAllCases, id: \.rawValue) { currency in
+                    Text(currency.rawValue)
+                }
+            }
         }
     }
 }

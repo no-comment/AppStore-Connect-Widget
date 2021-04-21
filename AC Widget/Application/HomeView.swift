@@ -12,6 +12,7 @@ struct HomeView: View {
     @State var showingSheet: Bool = false
 
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
+    @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
         return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
     }
@@ -78,7 +79,7 @@ struct HomeView: View {
     private func onAppear() {
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
-        api.getData().then { (data) in
+        api.getData(currency: Currency(rawValue: currency)).then { (data) in
             self.data = data
         }.catch { (err) in
             guard let apiErr = err as? APIError else {

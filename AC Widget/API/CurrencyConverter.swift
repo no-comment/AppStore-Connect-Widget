@@ -33,6 +33,14 @@ enum Currency: String, CaseIterable, Codable {
         return getSymbolForCurrencyCode(code: self.rawValue)
     }
 
+    static var sortedAllCases: [Currency] {
+        var identifiers: [Currency] = Currency.allCases
+        let first: [Currency] = [.USD, .EUR, .GBP]
+        identifiers = identifiers.filter({ !first.contains($0) }).sorted { $0.rawValue < $1.rawValue }
+        identifiers.insert(contentsOf: first, at: 0)
+        return identifiers
+    }
+
     func getSymbolForCurrencyCode(code: String) -> String {
         var candidates: [String] = []
         let locales: [String] = NSLocale.availableLocaleIdentifiers
