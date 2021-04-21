@@ -7,7 +7,7 @@ import SwiftUI
 
 struct KeySelectionView: View {
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
-    @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
+    @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = Currency.USD.rawValue
     private var selectedKey: APIKey? {
         return APIKey.getApiKey(apiKeyId: keyID)
     }

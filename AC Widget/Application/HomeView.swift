@@ -34,6 +34,7 @@ struct HomeView: View {
         .toolbar(content: toolbar)
         .sheet(isPresented: $showingSheet, content: sheet)
         .onChange(of: keyID, perform: { _ in onAppear() })
+        .onChange(of: currency, perform: { _ in onAppear() })
         .onAppear(perform: onAppear)
     }
 
