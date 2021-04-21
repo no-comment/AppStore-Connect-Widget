@@ -30,10 +30,14 @@ class AppStoreConnectApi {
         lastData = []
     }
 
+    public func getData(currency: CurrencyParam?, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
+        return getData(currency: currency?.toCurrency(), numOfDays: numOfDays, useCache: useCache)
+    }
+
     // swiftlint:disable:next function_body_length
-    public func getData(currency: CurrencyParam? = nil, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
+    public func getData(currency: Currency? = nil, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
+        let localCurrency: Currency = currency ?? .USD
         let promise = Promise<ACData>.pending()
-        let localCurrency: Currency = currency?.toCurrency() ?? .USD
 
         if useCache {
             if let last = AppStoreConnectApi.lastData.first(where: { $0.key.id == self.apiKey.id }) {
