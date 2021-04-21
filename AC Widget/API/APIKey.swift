@@ -41,6 +41,11 @@ extension APIKey {
 extension APIKey {
     // swiftlint:disable:next large_tuple
     static private var lastChecks: [(key: APIKey, date: Date, result: Promise<Void>)] = []
+
+    static func clearInMemoryCache() {
+        lastChecks = []
+    }
+
     func checkKey() -> Promise<Void> {
         if let last = APIKey.lastChecks.first(where: { self.equalsKeyDetails(other: $0.key) }) {
             if last.date.timeIntervalSinceNow > -30 {

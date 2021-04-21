@@ -26,6 +26,10 @@ class AppStoreConnectApi {
     // swiftlint:disable:next large_tuple
     static private var lastData: [(key: APIKey, date: Date, result: Promise<ACData>)] = []
 
+    static func clearInMemoryCache() {
+        lastData = []
+    }
+
     // swiftlint:disable:next function_body_length
     public func getData(currency: CurrencyParam? = nil, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
         let promise = Promise<ACData>.pending()

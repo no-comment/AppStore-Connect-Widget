@@ -63,6 +63,7 @@ struct SettingsView: View {
     var widgetSection: some View {
         Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
             Button("FORCE_REFRESH_WIDGET") {
+                AppStoreConnectApi.clearInMemoryCache()
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
@@ -73,6 +74,8 @@ struct SettingsView: View {
             Text("ALL_CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached())")
 
             Button("CLEAR_ALL_CACHE") {
+                AppStoreConnectApi.clearInMemoryCache()
+                APIKey.clearInMemoryCache()
                 ACDataCache.clearCache()
             }
             .foregroundColor(.orange)

@@ -112,6 +112,8 @@ struct APIKeyDetailView: View {
             Text("CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached(apiKey: key))")
 
             Button("CLEAR_CACHE") {
+                AppStoreConnectApi.clearInMemoryCache()
+                APIKey.clearInMemoryCache()
                 ACDataCache.clearCache(apiKey: key)
             }
             .foregroundColor(.orange)
