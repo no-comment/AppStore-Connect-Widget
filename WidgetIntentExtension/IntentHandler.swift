@@ -1,8 +1,6 @@
 //
 //  IntentHandler.swift
-//  WidgetIntentExtension
-//
-//  Created by Miká Kruschel on 04.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import Intents

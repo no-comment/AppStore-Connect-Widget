@@ -1,8 +1,6 @@
 //
 //  OnboardingView.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 03.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI

@@ -1,8 +1,6 @@
 //
 //  CurrencyConverter.swift
-//  AC Widget
-//
-//  Created by Miká Kruschel on 29.03.21.
+//  AC Widget by NO-COMMENT
 //
 
 import Foundation

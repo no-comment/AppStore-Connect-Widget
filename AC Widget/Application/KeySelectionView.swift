@@ -1,8 +1,6 @@
 //
 //  KeySelectionView.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 18.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI

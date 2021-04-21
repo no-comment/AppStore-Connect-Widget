@@ -1,8 +1,6 @@
 //
 //  ACEntry.swift
-//  AC Widget
-//
-//  Created by Miká Kruschel on 06.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import Foundation
