@@ -40,29 +40,29 @@ extension ACData {
 
 extension ACData {
     // MARK: Get String
-    func getAsString(_ type: InfoType, lastNDays: Int, size: NumberLength = .standard) -> String {
+    func getAsString(_ type: InfoType, lastNDays: Int, size: NumberLength = .standard, filteredApps: [ACApp] = []) -> String {
         switch type {
         case .downloads:
-            return getDownloadsString(lastNDays, size: size)
+            return getDownloadsString(lastNDays, size: size, filteredApps: filteredApps)
         case .proceeds:
-            return getProceedsString(lastNDays, size: size)
+            return getProceedsString(lastNDays, size: size, filteredApps: filteredApps)
         case .updates:
-            return getUpdatesString(lastNDays, size: size)
+            return getUpdatesString(lastNDays, size: size, filteredApps: filteredApps)
         }
     }
 
-    private func getDownloadsString(_ lastNDays: Int, size: NumberLength) -> String {
-        let num: Float = getDownloadsSum(lastNDays)
+    private func getDownloadsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getDownloadsSum(lastNDays, filteredApps: filteredApps)
         return ACData.formatNumberLength(num: num, size: size, type: .downloads)
     }
 
-    private func getProceedsString(_ lastNDays: Int, size: NumberLength) -> String {
-        let num: Float = getProceedsSum(lastNDays)
+    private func getProceedsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getProceedsSum(lastNDays, filteredApps: filteredApps)
         return ACData.formatNumberLength(num: num, size: size, type: .proceeds)
     }
 
-    private func getUpdatesString(_ lastNDays: Int, size: NumberLength) -> String {
-        let num: Float = getUpdatesSum(lastNDays)
+    private func getUpdatesString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getUpdatesSum(lastNDays, filteredApps: filteredApps)
         return ACData.formatNumberLength(num: num, size: size, type: .updates)
     }
 
@@ -126,19 +126,19 @@ extension ACData {
     enum NumberLength { case compact, standard }
 
     // MARK: Get Raw Data
-    func getRawData(_ type: InfoType, lastNDays: Int) -> [(Float, Date)] {
+    func getRawData(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
         switch type {
         case .downloads:
-            return getRawDownloads(lastNDays)
+            return getRawDownloads(lastNDays, filteredApps: filteredApps)
         case .proceeds:
-            return getRawProceeds(lastNDays)
+            return getRawProceeds(lastNDays, filteredApps: filteredApps)
         case .updates:
-            return getRawUpdates(lastNDays)
+            return getRawUpdates(lastNDays, filteredApps: filteredApps)
         }
     }
 
-    private func getRawDownloads(_ lastNDays: Int) -> [(Float, Date)] {
-        let downloadEntries = entries.filter({ $0.type == .download })
+    private func getRawDownloads(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        let downloadEntries = entries.filter({ $0.type == .download && $0.belongsToApp(apps: filteredApps) })
         let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
 
         return latestDate.getLastNDates(lastNDays)
@@ -148,8 +148,8 @@ extension ACData {
             }
     }
 
-    private func getRawProceeds(_ lastNDays: Int) -> [(Float, Date)] {
-        let downloadEntries = entries.filter({ $0.proceeds > 0 })
+    private func getRawProceeds(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        let downloadEntries = entries.filter({ $0.proceeds > 0 && $0.belongsToApp(apps: filteredApps) })
         let latestDate: Date? = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
 
         return (latestDate ?? Date()).getLastNDates(lastNDays)
@@ -159,8 +159,8 @@ extension ACData {
             }
     }
 
-    private func getRawUpdates(_ lastNDays: Int) -> [(Float, Date)] {
-        let downloadEntries = entries.filter({ $0.type == .update })
+    private func getRawUpdates(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        let downloadEntries = entries.filter({ $0.type == .update && $0.belongsToApp(apps: filteredApps) })
         let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
 
         return latestDate.getLastNDates(lastNDays)
@@ -171,36 +171,36 @@ extension ACData {
     }
 
     // MARK: Get Sum
-    func getSum(_ type: InfoType, lastNDays: Int) -> Float {
+    func getSum(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
         switch type {
         case .downloads:
-            return getDownloadsSum(lastNDays)
+            return getDownloadsSum(lastNDays, filteredApps: filteredApps)
         case .proceeds:
-            return getProceedsSum(lastNDays)
+            return getProceedsSum(lastNDays, filteredApps: filteredApps)
         case .updates:
-            return getUpdatesSum(lastNDays)
+            return getUpdatesSum(lastNDays, filteredApps: filteredApps)
         }
     }
 
-    private func getDownloadsSum(_ lastNDays: Int) -> Float {
+    private func getDownloadsSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
         var result: Float = 0
-        for download in getRawDownloads(lastNDays) {
+        for download in getRawDownloads(lastNDays, filteredApps: filteredApps) {
             result += download.0
         }
         return result
     }
 
-    private func getProceedsSum(_ lastNDays: Int) -> Float {
+    private func getProceedsSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
         var result: Float = 0
-        for proceed in getRawProceeds(lastNDays) {
+        for proceed in getRawProceeds(lastNDays, filteredApps: filteredApps) {
             result += proceed.0
         }
         return result
     }
 
-    private func getUpdatesSum(_ lastNDays: Int) -> Float {
+    private func getUpdatesSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
         var result: Float = 0
-        for update in getRawUpdates(lastNDays) {
+        for update in getRawUpdates(lastNDays, filteredApps: filteredApps) {
             result += update.0
         }
         return result

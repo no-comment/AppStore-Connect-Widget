@@ -83,6 +83,7 @@ enum UserDefaultsKey {
     static let dataCache = "dataCache"
     static let homeSelectedKey = "homeSelectedKey"
     static let homeCurrency = "homeCurrency"
+    static let homeApps = "homeApps"
 }
 
 // MARK: Editing Strings

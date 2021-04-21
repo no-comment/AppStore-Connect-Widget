@@ -7,10 +7,12 @@ import SwiftUI
 
 struct KeySelectionView: View {
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
+    @AppStorage(UserDefaultsKey.homeApps, store: UserDefaults.shared) private var homeApps: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = Currency.USD.rawValue
     private var selectedKey: APIKey? {
         return APIKey.getApiKey(apiKeyId: keyID)
     }
+    @State var apps: [ACApp] = []
 
     var body: some View {
         Form {
@@ -18,6 +20,8 @@ struct KeySelectionView: View {
             appSelection
             currencySelection
         }
+        .onChange(of: keyID, perform: { _ in loadApps() })
+        .onAppear(perform: loadApps)
         .navigationTitle("SELECT_KEY")
     }
 
@@ -42,7 +46,24 @@ struct KeySelectionView: View {
 
     var appSelection: some View {
         Section(header: Label("APPLICATIONS", systemImage: "app.fill")) {
-            Text("TODO")
+            ForEach(apps, id: \.id) { (app: ACApp) in
+                Button(action: {
+                    if homeApps.contains(app.id) {
+                        homeApps = homeApps.split(separator: ",").filter({ $0 != app.id }).joined(separator: ",")
+                    } else {
+                        homeApps.append(",\(app.id)")
+                    }
+                }, label: {
+                    HStack {
+                        Text(app.name)
+                        Spacer()
+                        if homeApps.contains(app.id) {
+                            Image(systemName: "checkmark.circle")
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                })
+            }
         }
     }
 
@@ -54,6 +75,15 @@ struct KeySelectionView: View {
                 }
             }
         }
+    }
+
+    func loadApps() {
+        apps = []
+        guard let key = selectedKey else { return }
+        AppStoreConnectApi(apiKey: key).getData()
+            .then { data in
+                apps = data.apps
+            }
     }
 }
 

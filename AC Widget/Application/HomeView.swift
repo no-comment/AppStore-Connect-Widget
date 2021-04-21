@@ -12,18 +12,21 @@ struct HomeView: View {
     @State var showingSheet: Bool = false
 
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
+    @AppStorage(UserDefaultsKey.homeApps, store: UserDefaults.shared) private var homeApps: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
         return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
     }
 
+    @State var filteredApps: [ACApp] = []
+
     var body: some View {
         ScrollView {
             if let data = data {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
-                    InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
-                    InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
-                    InfoTile(description: "UPDATES", data: data, type: .updates)
+                    InfoTile(description: "DOWNLOADS", data: data, type: .downloads, filteredApps: filteredApps)
+                    InfoTile(description: "PROCEEDS", data: data, type: .proceeds, filteredApps: filteredApps)
+                    InfoTile(description: "UPDATES", data: data, type: .updates, filteredApps: filteredApps)
                 }
                 .padding(.horizontal)
             } else {
@@ -36,6 +39,7 @@ struct HomeView: View {
         .sheet(isPresented: $showingSheet, content: sheet)
         .onChange(of: keyID, perform: { _ in onAppear() })
         .onChange(of: currency, perform: { _ in onAppear() })
+        .onChange(of: homeApps, perform: { _ in onAppear() })
         .onAppear(perform: onAppear)
     }
 
@@ -117,6 +121,7 @@ struct HomeView: View {
         let api = AppStoreConnectApi(apiKey: apiKey)
         api.getData(currency: Currency(rawValue: currency)).then { (data) in
             self.data = data
+            filteredApps = data.apps.filter({ homeApps.contains($0.id) })
         }.catch { (err) in
             guard let apiErr = err as? APIError else {
                 return

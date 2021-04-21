@@ -16,6 +16,15 @@ struct ACEntry: Codable {
     let type: ACEntryType
 }
 
+extension ACEntry {
+    func belongsToApp(apps: [ACApp]) -> Bool {
+        if apps.count == 0 { return true }
+        return apps.contains(where: { app in
+            app.sku == self.appSKU
+        })
+    }
+}
+
 enum ACEntryType: String, CaseIterable, Codable {
     case download
     case redownload

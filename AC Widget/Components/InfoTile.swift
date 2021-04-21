@@ -11,6 +11,7 @@ struct InfoTile: View {
     private var rawData: [(Float, Date)]
     private var type: InfoType
     private var color: Color
+    private var filteredApps: [ACApp]
 
     @State private var currentIndex: Int?
     private var graphData: [CGFloat] {
@@ -28,12 +29,13 @@ struct InfoTile: View {
         }
     }
 
-    init(description: LocalizedStringKey, data: ACData, type: InfoType, color: Color = .accentColor) {
+    init(description: LocalizedStringKey, data: ACData, type: InfoType, color: Color = .accentColor, filteredApps: [ACApp]) {
         self.description = description
         self.data = data
-        self.rawData = data.getRawData(type, lastNDays: 30).reversed()
+        self.rawData = data.getRawData(type, lastNDays: 30, filteredApps: filteredApps).reversed()
         self.type = type
         self.color = color
+        self.filteredApps = filteredApps
     }
 
     var body: some View {
@@ -63,9 +65,9 @@ struct InfoTile: View {
                     .font(.system(size: 20))
                 Spacer()
                 if currencySymbol.isEmpty {
-                    UnitText(data.getAsString(type, lastNDays: 1), metricSymbol: type.systemImage)
+                    UnitText(data.getAsString(type, lastNDays: 1, filteredApps: filteredApps), metricSymbol: type.systemImage)
                 } else {
-                    UnitText(data.getAsString(type, lastNDays: 1), metric: currencySymbol)
+                    UnitText(data.getAsString(type, lastNDays: 1, filteredApps: filteredApps), metric: currencySymbol)
                 }
             }
         }
@@ -147,10 +149,10 @@ struct InfoTile: View {
     // MARK: Bottom
     var bottomSection: some View {
         HStack(alignment: .bottom) {
-            DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(type, lastNDays: 7, size: .compact).appending(currencySymbol))
+            DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(type, lastNDays: 7, size: .compact, filteredApps: filteredApps).appending(currencySymbol))
             Spacer()
                 .frame(width: 40)
-            DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(type, lastNDays: 30, size: .compact).appending(currencySymbol))
+            DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(type, lastNDays: 30, size: .compact, filteredApps: filteredApps).appending(currencySymbol))
         }
     }
 }
@@ -158,8 +160,8 @@ struct InfoTile: View {
 struct InfoTile_Previews: PreviewProvider {
     static var previews: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
-            InfoTile(description: "DOWNLOADS", data: ACData.example, type: .downloads)
-            InfoTile(description: "PROCEEDS", data: ACData.example, type: .proceeds)
+            InfoTile(description: "DOWNLOADS", data: ACData.example, type: .downloads, filteredApps: [])
+            InfoTile(description: "PROCEEDS", data: ACData.example, type: .proceeds, filteredApps: [])
         }.padding()
     }
 }
