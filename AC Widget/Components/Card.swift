@@ -15,7 +15,7 @@ struct Card<Content: View>: View {
     init(alignment: HorizontalAlignment = .center,
          spacing: CGFloat? = nil,
          innerPadding: CGFloat = 17,
-         color: Color = Color.widgetSecondary,
+         color: Color = .cardColor,
          @ViewBuilder content: () -> Content) {
         self.content = content()
         self.alignment = alignment
