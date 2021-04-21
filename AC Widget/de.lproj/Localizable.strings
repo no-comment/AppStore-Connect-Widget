@@ -23,6 +23,12 @@
 "DOWNLOADS" = "Downloads";
 "UPDATES" = "Updates";
 
+"LAST_UPDATED:%@" = "Stand: %@";
+"CURRENCY:%@" = "Währung: %@";
+"API_KEY:%@" = "API Key: %@";
+"APP:%@" = "App: %@";
+"REFRESH_DATA" = "Daten aktualisieren";
+
 // Key Selection Sheet
 "DONE" = "Fertig";
 "SELECT_KEY" = "API Key auswählen";

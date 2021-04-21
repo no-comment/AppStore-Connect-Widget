@@ -25,10 +25,11 @@ struct HomeView: View {
                     InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
                     InfoTile(description: "UPDATES", data: data, type: .updates)
                 }
-                .padding()
+                .padding(.horizontal)
             } else {
                 loadingIndicator
             }
+            additionalInformation
         }
         .navigationTitle("Home")
         .toolbar(content: toolbar)
@@ -48,6 +49,40 @@ struct HomeView: View {
                 .italic()
         }
         .padding(.top, 25)
+    }
+
+    var additionalInformation: some View {
+        VStack(spacing: 20) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 8) {
+                Text("LAST_UPDATED:\(data?.latestReportingDate() ?? "-")")
+                    .font(.system(size: 12))
+                    .italic()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Text("CURRENCY:\(data?.displayCurrency.rawValue ?? "-")")
+                    .font(.system(size: 12))
+                    .italic()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Text("API_KEY:\(APIKey.getApiKey(apiKeyId: keyID)?.name ?? "-")")
+                    .font(.system(size: 12))
+                    .italic()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Text("APP:\("App Name")")
+                    .font(.system(size: 12))
+                    .italic()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            Button("REFRESH_DATA", action: onAppear)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 20)
+                .background(Color.cardColor)
+                .clipShape(Capsule())
+        }
+        .foregroundColor(.gray)
+        .padding()
     }
 
     func toolbar() -> some ToolbarContent {
