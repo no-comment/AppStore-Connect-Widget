@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4523E3022630D8620062A82E /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4523E3012630D8620062A82E /* URLImage */; };
 		452A37F126161C97005CD1DA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452A37F026161C97005CD1DA /* Extensions.swift */; };
 		452A37F226161C97005CD1DA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452A37F026161C97005CD1DA /* Extensions.swift */; };
 		4542C451261B912E00799E4B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4542C450261B912E00799E4B /* Preview Assets.xcassets */; };
@@ -177,6 +178,7 @@
 				CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */,
 				45E8C4BD261267FB007F9B0E /* Gzip in Frameworks */,
 				45CAC1092615CB8100FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */,
+				4523E3022630D8620062A82E /* URLImage in Frameworks */,
 				455B4AA02613BAA80061785A /* Promises in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,6 +358,7 @@
 				455B4A9F2613BAA80061785A /* Promises */,
 				45CAC1082615CB8100FF63E7 /* AppStoreConnect-Swift-SDK */,
 				CBDFA496261E52F200719CC1 /* DynamicColor */,
+				4523E3012630D8620062A82E /* URLImage */,
 			);
 			productName = "AC Widget";
 			productReference = 45E8C47D2612512E007F9B0E /* AC Widget.app */;
@@ -445,6 +448,7 @@
 				455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */,
 				45CAC1072615CB8100FF63E7 /* XCRemoteSwiftPackageReference "appstoreconnect-swift-sdk" */,
 				CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */,
+				4523E3002630D8620062A82E /* XCRemoteSwiftPackageReference "url-image" */,
 			);
 			productRefGroup = 45E8C47E2612512E007F9B0E /* Products */;
 			projectDirPath = "";
@@ -932,6 +936,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4523E3002630D8620062A82E /* XCRemoteSwiftPackageReference "url-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmytro-anokhin/url-image.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.4;
+			};
+		};
 		455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/promises";
@@ -975,6 +987,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4523E3012630D8620062A82E /* URLImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4523E3002630D8620062A82E /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImage;
+		};
 		455B4A9F2613BAA80061785A /* Promises */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */;

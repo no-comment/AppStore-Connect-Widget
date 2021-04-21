@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct KeySelectionView: View {
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
@@ -55,6 +56,16 @@ struct KeySelectionView: View {
                     }
                 }, label: {
                     HStack {
+                        if let imgUrl = URL(string: app.artworkUrl60) {
+                            URLImage(url: imgUrl) { image in
+                                // TODO: Adjust height and cornerRadius
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 20)
+                                    .cornerRadius(3)
+                            }
+                        }
                         Text(app.name)
                         Spacer()
                         if homeApps.contains(app.id) {

@@ -157,7 +157,17 @@ class AppStoreConnectApi {
                                 if entries.isEmpty {
                                     promise.reject(APIError.noDataAvailable)
                                 } else {
-                                    promise.fulfill(ACData(entries: entries, currency: localCurrency, apps: []))
+                                    self.getApps()
+                                        .then { apps in
+                                            let newData = ACData(entries: entries, currency: localCurrency, apps: apps)
+                                            ACDataCache.saveData(data: newData, apiKey: self.apiKey)
+                                            promise.fulfill(newData)
+                                        }
+                                        .catch { _ in
+                                            let newData = ACData(entries: entries, currency: localCurrency, apps: [])
+                                            ACDataCache.saveData(data: newData, apiKey: self.apiKey)
+                                            promise.fulfill(newData)
+                                        }
                                 }
                             } else {
                                 promise.reject(APIError.unknown)
