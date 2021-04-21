@@ -73,6 +73,7 @@ struct HomeView: View {
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
 
+                // TODO: list homeApps
                 Text("APP:\("App Name")")
                     .font(.system(size: 12))
                     .italic()

@@ -8,11 +8,11 @@ In den nächsten Schritten, werden wir dich durch den Prozess führen.";
 "ONBOARD_KEY_NAME" = "Um deine Keys besser auseinanderzuhalten, kannst du deinem Key einen Namen geben.";
 "ONBOARD_KEY_COLOR" = "Du kannst jedem Key auch eine eigene Farbe geben, welche auf dem Widget verwendet wird.";
 "ONBOARD_ISSUER_ID" = "Jetzt müssen wir den Key erstellen.
-Logge dich in AppStoreConnect ein und gehe zu 'Benutzer and Zugriffsrechte'. Klicke hier auf das untermenü 'Keys'. Um einen neuen zu erstellen, clicke auf das + und stelle sicher deinen Key zu sichern. Du kannst ihn später nicht erneut herunterladen.
+Logge dich in AppStoreConnect ein und gehe zu 'Benutzer and Zugriffsrechte'. Klicke hier auf das Untermenü 'Keys'. Um einen neuen zu erstellen, klicke auf das + und stelle sicher deinen Key zu speichern. Du kannst ihn später nicht erneut herunterladen.
 Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das obere Textfeld.";
 "ONBOARD_PRIVATE_KEY_ID" = "Auf der gleichen Seite steht die 'Key ID' des neu erstellten Keys. Füge diese in das obenstehende Textfeld ein.";
-"ONBOARD_PRIVATE_KEY" = "Jetzt kannst du den inhalt des eigentlichen Keys hier einfügen.";
-"ONBOARD_VENDOR_NR" = "Als letztes wird die 'Vendor Number' bennötigt. Diese befindet sich auf AppStoreConnect in dem 'Reports' Tab. Oben links sollte hier deine 'Vendor #' stehen.";
+"ONBOARD_PRIVATE_KEY" = "Jetzt kannst du den Inhalt des eigentlichen Keys hier einfügen.";
+"ONBOARD_VENDOR_NR" = "Als letztes wird die 'Vendor Number' benötigt. Diese befindet sich auf AppStoreConnect in dem 'Reports' Tab. Oben links sollte hier deine 'Vendor #' stehen.";
 
 "RECHECK_INPUTS" = "Key Überprüfen";
 "OK" = "Ok";
