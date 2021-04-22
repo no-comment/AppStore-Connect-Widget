@@ -21,6 +21,7 @@ struct SettingsView: View {
             widgetSection
             storageSection
             contactSection
+            notes
         }
         .navigationTitle("SETTINGS")
         .sheet(isPresented: $addKeySheet, content: sheet)
@@ -61,7 +62,7 @@ struct SettingsView: View {
     }
 
     var widgetSection: some View {
-        Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
+        Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill"), footer: Text("UPDATE_FREQUENCY_NOTICE")) {
             Button("FORCE_REFRESH_WIDGET") {
                 AppStoreConnectApi.clearInMemoryCache()
                 WidgetCenter.shared.reloadAllTimelines()
@@ -95,6 +96,12 @@ struct SettingsView: View {
                     Text("Buy me a coffee")
                 })
             }
+        }
+    }
+
+    var notes: some View {
+        Section(footer: Text("UPDATE_FREQUENCY_NOTICE")) {
+            EmptyView()
         }
     }
 

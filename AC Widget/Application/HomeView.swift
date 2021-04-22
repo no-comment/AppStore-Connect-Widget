@@ -54,7 +54,7 @@ struct HomeView: View {
     var additionalInformation: some View {
         VStack(spacing: 20) {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 8) {
-                Text("LAST_UPDATED:\(data?.latestReportingDate() ?? "-")")
+                Text("LAST_CHANGE:\(data?.latestReportingDate() ?? "-")")
                     .font(.system(size: 12))
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)

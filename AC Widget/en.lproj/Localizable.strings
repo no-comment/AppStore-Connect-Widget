@@ -27,7 +27,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "DOWNLOADS" = "Downloads";
 "UPDATES" = "Updates";
 
-"LAST_UPDATED:%@" = "Last updated: %@";
+"LAST_CHANGE:%@" = "Last change: %@";
 "CURRENCY:%@" = "Currency: %@";
 "API_KEY:%@" = "API Key: %@";
 "REFRESH_DATA" = "Refresh Data";
@@ -50,6 +50,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "STORAGE" = "Storage";
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
+"UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at arround 5am Pacific Time.";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Color";
