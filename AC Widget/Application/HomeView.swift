@@ -12,7 +12,6 @@ struct HomeView: View {
     @State var showingSheet: Bool = false
 
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
-    @AppStorage(UserDefaultsKey.homeApps, store: UserDefaults.shared) private var homeApps: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
         return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
@@ -39,7 +38,6 @@ struct HomeView: View {
         .sheet(isPresented: $showingSheet, content: sheet)
         .onChange(of: keyID, perform: { _ in onAppear() })
         .onChange(of: currency, perform: { _ in onAppear() })
-        .onChange(of: homeApps, perform: { _ in onAppear() })
         .onAppear(perform: onAppear)
     }
 
@@ -73,8 +71,7 @@ struct HomeView: View {
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                // TODO: list homeApps
-                Text("APP:\("App Name")")
+                Text("APPS:\("All")")
                     .font(.system(size: 12))
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -85,6 +82,7 @@ struct HomeView: View {
                 .padding(.horizontal, 20)
                 .background(Color.cardColor)
                 .clipShape(Capsule())
+                .foregroundColor(.primary)
         }
         .foregroundColor(.gray)
         .padding()
@@ -122,7 +120,6 @@ struct HomeView: View {
         let api = AppStoreConnectApi(apiKey: apiKey)
         api.getData(currency: Currency(rawValue: currency)).then { (data) in
             self.data = data
-            filteredApps = data.apps.filter({ homeApps.contains($0.id) })
         }.catch { (err) in
             guard let apiErr = err as? APIError else {
                 return
