@@ -31,7 +31,7 @@ struct HomeView: View {
             }
             additionalInformation
         }
-        .navigationTitle("Home")
+        .navigationTitle("HOME")
         .toolbar(content: toolbar)
         .sheet(isPresented: $showingSheet, content: sheet)
         .onChange(of: keyID, perform: { _ in onAppear() })

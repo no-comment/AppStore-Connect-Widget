@@ -42,7 +42,7 @@ struct KeySelectionView: View {
 
     var currencySelection: some View {
         Section(header: Label("CURRENCY", systemImage: "dollarsign.circle.fill")) {
-            Picker("App Currency", selection: $currency) {
+            Picker("APP_CURRENCY", selection: $currency) {
                 ForEach(Currency.sortedAllCases, id: \.rawValue) { currency in
                     Text(currency.rawValue)
                 }

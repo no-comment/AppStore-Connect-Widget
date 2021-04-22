@@ -22,11 +22,13 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "DUPLICATE_KEY_MSG" = "You have already added this Key. Please enter another one.";
 
 // MARK: Home
+"HOME" = "HOME";
 "LOADING_DATA" = "Loading Data";
 "PROCEEDS" = "Proceeds";
 "DOWNLOADS" = "Downloads";
 "UPDATES" = "Updates";
 
+"APP_CURRENCY" = "App Currency";
 "LAST_CHANGE:%@" = "Last change: %@";
 "CURRENCY:%@" = "Currency: %@";
 "API_KEY:%@" = "API Key: %@";
@@ -64,6 +66,9 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "CLEAR_CACHE" = "Clear the cache";
 
 // MARK: Widgets
+"WIDGET_NAME" = "Summary Widget";
+"WIDGET_DESC" = "An overview of downloads and proceeds.";
+
 "TODAY" = "Today";
 "YESTERDAY" = "Yesterday";
 

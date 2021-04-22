@@ -73,18 +73,14 @@ struct SummaryMedium: View {
 struct SummaryMedium_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryMedium(data: ACData.example, color: Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)))
+            SummaryMedium(data: ACData.example)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
 
-            SummaryMedium(data: ACData.example, color: Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+            SummaryMedium(data: ACData.example)
                 .background(Color.widgetBackground)
                 .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
 
-            SummaryMedium(data: ACData.example, color: Color(#colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)))
-                .background(Color.widgetBackground)
-                .preferredColorScheme(.dark)
-                .previewContext(WidgetPreviewContext(family: .systemMedium))
         }
     }
 }

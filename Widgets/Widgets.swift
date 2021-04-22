@@ -144,8 +144,8 @@ struct Widgets: Widget {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.widgetBackground)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("WIDGET_NAME")
+        .description("WIDGET_DESC")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
