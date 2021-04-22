@@ -22,7 +22,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "DUPLICATE_KEY_MSG" = "You have already added this key. Please enter another one.";
 
 // MARK: Home
-"HOME" = "HOME";
+"HOME" = "Home";
 "LOADING_DATA" = "Loading Data";
 "PROCEEDS" = "Proceeds";
 "DOWNLOADS" = "Downloads";

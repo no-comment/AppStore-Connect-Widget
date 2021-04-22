@@ -22,7 +22,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
 
 // MARK: Home
-"HOME" = "HOME";
+"HOME" = "Home";
 "LOADING_DATA" = "Daten werden geladen";
 "PROCEEDS" = "Gewinn";
 "DOWNLOADS" = "Downloads";
