@@ -236,8 +236,7 @@ extension ACData {
                                        type: ACEntryType.allCases.randomElement() ?? .download))
             }
         }
-        // TODO: create mock ACApp
-        return ACData(entries: entries, currency: .USD, apps: [])
+        return ACData(entries: entries, currency: .USD, apps: [ACApp.mockApp])
     }
 }
 
