@@ -19,7 +19,7 @@ AC Widget uses the *AppStoreConnect API*. As soon as you open the app, you will 
 
 **No data is shared by the app!** Privacy and security were one of our major concerns and reasons this app was made open source.
 
-## Contibuting
+## Contributing
 
 Are there some features you are missing? Do you want an additional metric to be displayed? Is your language not supported?
 

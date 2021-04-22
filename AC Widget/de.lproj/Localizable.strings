@@ -67,7 +67,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 
 // MARK: Widgets
 "WIDGET_NAME" = "Übersichts Widget";
-"WIDGET_DESC" = "Eine übersicht von Downloads and Gewinnen.";
+"WIDGET_DESC" = "Eine Übersicht von Downloads and Gewinnen.";
 
 "TODAY" = "Heute";
 "YESTERDAY" = "Gestern";
@@ -82,7 +82,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 // MARK: ERRORS
 "ERROR_CAPS" = "ERROR";
 "ERROR_INVALID_CREDENTIALS" = "Die eingegeben Zugangsdaten sind inkorrekt.";
-"ERROR_WRONG_PERMISSIONS" = "Dein API-key hat nicht die erforderlichen Befugnisse.";
+"ERROR_WRONG_PERMISSIONS" = "Dein API-Key hat nicht die erforderlichen Befugnisse.";
 "ERROR_EXCEEDED_LIMIT" = "Du hast das tägliche Limit an API Zugriffen erreicht.";
 "ERROR_UNKNOWN" = "Es ist ein unbekannter Fehler aufgetreten.";
 "ERROR_NO_DATA_AVAILABLE" = "Zur Zeit sind keine Daten verfügbar.";

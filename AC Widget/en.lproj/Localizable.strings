@@ -19,7 +19,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "INVALID_KEY" = "Invalid Key";
 "INVALID_KEY_MSG" = "Some parts of the information you entered is invalid.";
 "DUPLICATE_KEY" = "Duplicate Key";
-"DUPLICATE_KEY_MSG" = "You have already added this Key. Please enter another one.";
+"DUPLICATE_KEY_MSG" = "You have already added this key. Please enter another one.";
 
 // MARK: Home
 "HOME" = "HOME";
@@ -52,7 +52,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "STORAGE" = "Storage";
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
-"UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at arround 5am Pacific Time.";
+"UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at around 5am Pacific Time.";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Color";
