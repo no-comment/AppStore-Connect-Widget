@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import URLImage
 
 struct KeySelectionView: View {
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
