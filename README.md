@@ -15,7 +15,7 @@ AC Widget allows you to easily view your latest app sales on your Home Screen. S
 
 ## How does it work ?
 
-AC Widget uses the *AppStoreConnect API*. As soon as you open the app, you will be asked to enter an API Key. An exact guide on how to create a key can be found [here](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api) or in the onboarding section of the app. In order for the baseline features to work, the API key needs `Sales and Reports` access rights. If you want to be able to select specific applications, `Developer` rights are needed.
+AC Widget uses the *AppStoreConnect API*. As soon as you open the app, you will be asked to enter an API Key. An exact guide on how to create a key can be found [here](https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api) or in the onboarding section of the app. In order for the baseline features to work, the API key needs `Sales and Reports` access rights.
 
 **No data is shared by the app!** Privacy and security were one of our major concerns and reasons this app was made open source.
 
