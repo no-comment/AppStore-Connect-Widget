@@ -30,7 +30,6 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "LAST_UPDATED:%@" = "Last updated: %@";
 "CURRENCY:%@" = "Currency: %@";
 "API_KEY:%@" = "API Key: %@";
-"APPS:%@" = "Apps: %@";
 "REFRESH_DATA" = "Refresh Data";
 
 // Key Selection Sheet

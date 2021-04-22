@@ -11,7 +11,7 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>20D91</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>12E5244e</string>
+	<string>12E262</string>
 	<key>INIntentDefinitionToolsVersion</key>
 	<string>12.5</string>
 	<key>INIntents</key>
@@ -26,7 +26,7 @@
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
 			<key>INIntentLastParameterTag</key>
-			<integer>8</integer>
+			<integer>11</integer>
 			<key>INIntentName</key>
 			<string>WidgetConfiguration</string>
 			<key>INIntentParameters</key>
@@ -96,26 +96,6 @@
 							<true/>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>There are ${count} options matching ‘${apiKey}’.</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>fxYemG</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>DisambiguationIntroduction</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Just to confirm, you wanted ‘${apiKey}’?</string>
-							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>c1B5w8</string>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Confirmation</string>
 						</dict>
 					</array>
 					<key>INIntentParameterSupportsDynamicEnumeration</key>

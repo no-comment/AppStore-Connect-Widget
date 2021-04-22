@@ -17,15 +17,13 @@ struct HomeView: View {
         return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
     }
 
-    @State var filteredApps: [ACApp] = []
-
     var body: some View {
         ScrollView {
             if let data = data {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
-                    InfoTile(description: "DOWNLOADS", data: data, type: .downloads, filteredApps: filteredApps)
-                    InfoTile(description: "PROCEEDS", data: data, type: .proceeds, filteredApps: filteredApps)
-                    InfoTile(description: "UPDATES", data: data, type: .updates, filteredApps: filteredApps)
+                    InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
+                    InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
+                    InfoTile(description: "UPDATES", data: data, type: .updates)
                 }
                 .padding(.horizontal)
             } else {
@@ -38,7 +36,7 @@ struct HomeView: View {
         .sheet(isPresented: $showingSheet, content: sheet)
         .onChange(of: keyID, perform: { _ in onAppear() })
         .onChange(of: currency, perform: { _ in onAppear() })
-        .onAppear(perform: onAppear)
+        .onAppear(perform: { onAppear() })
     }
 
     var loadingIndicator: some View {
@@ -70,14 +68,9 @@ struct HomeView: View {
                     .font(.system(size: 12))
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
-
-                Text("APPS:\("All")")
-                    .font(.system(size: 12))
-                    .italic()
-                    .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            Button("REFRESH_DATA", action: onAppear)
+            Button("REFRESH_DATA", action: { onAppear(useCache: false) })
                 .padding(.vertical, 8)
                 .padding(.horizontal, 20)
                 .background(Color.cardColor)
@@ -115,10 +108,10 @@ struct HomeView: View {
         }
     }
 
-    private func onAppear() {
+    private func onAppear(useCache: Bool = true) {
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
-        api.getData(currency: Currency(rawValue: currency)).then { (data) in
+        api.getData(currency: Currency(rawValue: currency), useCache: useCache).then { (data) in
             self.data = data
         }.catch { (err) in
             guard let apiErr = err as? APIError else {
