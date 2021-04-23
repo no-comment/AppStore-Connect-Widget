@@ -23,4 +23,4 @@ AC Widget uses the *AppStoreConnect API*. As soon as you open the app, you will 
 
 Are there some features you are missing? Do you want an additional metric to be displayed? Is your language not supported?
 
-Feel free to contribute to this app, by submitting an issue and pull request. We are always happy to welcome new contributors who want to help us expand this app even further. To get started, read the [CONTRIBUTION.md]().
+Feel free to contribute to this app, by submitting an issue and pull request. We are always happy to welcome new contributors who want to help us expand this app even further. To get started, read the [CONTRIBUTION.md](https://github.com/no-comment/AppStore-Connect-Widget/blob/main/CONTRIBUTING.md).
