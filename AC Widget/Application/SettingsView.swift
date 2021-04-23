@@ -99,7 +99,7 @@ struct SettingsView: View {
                 })
             }
 
-            if let destination = URL(string: "https://www.buymeacoffee.com/no-comment") {
+            if let destination = URL(string: "https://www.buymeacoffee.com/nocomment") {
                 Link(destination: destination, label: {
                     Text("Buy me a coffee")
                 })
