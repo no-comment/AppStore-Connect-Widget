@@ -8,6 +8,7 @@ import WidgetKit
 
 struct SettingsView: View {
     @AppStorage(UserDefaultsKey.apiKeys, store: UserDefaults.shared) var keysData: Data?
+    @AppStorage(UserDefaultsKey.includeRedownloads, store: UserDefaults.shared) var includeRedownloads: Bool = false
     @State private var addKeySheet: Bool = false
 
     var apiKeys: [APIKey] {
@@ -18,6 +19,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             keySection
+            generalSection
             widgetSection
             storageSection
             contactSection
@@ -61,8 +63,14 @@ struct SettingsView: View {
             Text("PROBLEM_KEY")
     }
 
+    var generalSection: some View {
+        Section(header: Label("GENERAL", systemImage: "gearshape.fill")) {
+            Toggle("INCLUDE_REDOWNLOADS", isOn: $includeRedownloads)
+        }
+    }
+
     var widgetSection: some View {
-        Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill"), footer: Text("UPDATE_FREQUENCY_NOTICE")) {
+        Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
             Button("FORCE_REFRESH_WIDGET") {
                 AppStoreConnectApi.clearInMemoryCache()
                 WidgetCenter.shared.reloadAllTimelines()

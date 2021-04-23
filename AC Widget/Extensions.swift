@@ -81,6 +81,7 @@ enum UserDefaultsKey {
     static let apiKeys = "apiKeys"
     static let completedOnboarding = "completedOnboarding"
     static let dataCache = "dataCache"
+    static let includeRedownloads = "includeRedownloads"
     static let homeSelectedKey = "homeSelectedKey"
     static let homeCurrency = "homeCurrency"
 }

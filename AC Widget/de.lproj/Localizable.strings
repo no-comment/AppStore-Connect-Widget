@@ -47,6 +47,8 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "VALID_KEY" = "Valider Key";
 "INVALID_KEY" = "Invalider Key";
 "PROBLEM_KEY" = "Dieser Key hat ein anderes Problem";
+"GENERAL" = "Allgemein";
+"INCLUDE_REDOWNLOADS" = "Redownloads mitzählen";
 "WIDGET" = "Widget";
 "FORCE_REFRESH_WIDGET" = "Widget aktualisieren";
 "STORAGE" = "Speicher";

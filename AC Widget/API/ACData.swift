@@ -138,7 +138,12 @@ extension ACData {
     }
 
     private func getRawDownloads(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
-        let downloadEntries = entries.filter({ $0.type == .download && $0.belongsToApp(apps: filteredApps) })
+        var downloadEntries = entries
+        if UserDefaults.shared?.bool(forKey: UserDefaultsKey.includeRedownloads) ?? false {
+            downloadEntries = downloadEntries.filter { ($0.type == .download || $0.type == .redownload) && $0.belongsToApp(apps: filteredApps) }
+        } else {
+            downloadEntries = downloadEntries.filter { $0.type == .download && $0.belongsToApp(apps: filteredApps) }
+        }
         let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
 
         return latestDate.getLastNDates(lastNDays)
