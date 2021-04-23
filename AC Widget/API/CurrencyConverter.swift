@@ -1,8 +1,6 @@
 //
 //  CurrencyConverter.swift
-//  AC Widget
-//
-//  Created by Miká Kruschel on 29.03.21.
+//  AC Widget by NO-COMMENT
 //
 
 import Foundation
@@ -14,7 +12,7 @@ import Promises
 //
 
 // Global Enumerations:
-enum Currency: String, CaseIterable {
+enum Currency: String, CaseIterable, Codable {
     case AUD; case INR; case TRY
     case BGN; case ISK; case USD
     case BRL; case JPY; case ZAR
@@ -33,6 +31,14 @@ enum Currency: String, CaseIterable {
 
     var symbol: String {
         return getSymbolForCurrencyCode(code: self.rawValue)
+    }
+
+    static var sortedAllCases: [Currency] {
+        var identifiers: [Currency] = Currency.allCases
+        let first: [Currency] = [.USD, .EUR, .GBP]
+        identifiers = identifiers.filter({ !first.contains($0) }).sorted { $0.rawValue < $1.rawValue }
+        identifiers.insert(contentsOf: first, at: 0)
+        return identifiers
     }
 
     func getSymbolForCurrencyCode(code: String) -> String {

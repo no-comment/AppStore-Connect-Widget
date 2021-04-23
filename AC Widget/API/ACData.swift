@@ -1,162 +1,261 @@
 //
 //  ACData.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 01.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import Foundation
 import SwiftUI
 
-struct ACData {
-    private let downloads: [(Int, Date)]
-    private let proceeds: [(Float, Date)]
-    let currency: String
+struct ACData: Codable {
+    let apps: [ACApp]
+    let entries: [ACEntry]
+    let displayCurrency: Currency
 
-    init(downloads: [(Int, Date)], proceeds: [(Float, Date)], currency: String) {
-        self.downloads = downloads.sorted { $0.1 > $1.1 }
-        self.proceeds = proceeds.sorted { $0.1 > $1.1 }
-        self.currency = currency
+    init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
+        self.entries = entries
+        self.displayCurrency = currency
+        self.apps = apps
+    }
+}
+
+extension ACData {
+    func changeCurrency(to outputCurrency: Currency) -> ACData {
+        let newEntries: [ACEntry] = self.entries.map({ entry -> ACEntry in
+            let proceeds = CurrencyConverter.shared.convert(Double(entry.proceeds),
+                                                            valueCurrency: self.displayCurrency,
+                                                            outputCurrency: outputCurrency) ?? 0
+            return ACEntry(appTitle: entry.appTitle,
+                           appSKU: entry.appSKU,
+                           units: entry.units,
+                           proceeds: Float(proceeds),
+                           date: entry.date,
+                           countryCode: entry.countryCode,
+                           device: entry.device,
+                           type: entry.type)
+        })
+
+        return ACData(entries: newEntries, currency: outputCurrency, apps: self.apps)
+    }
+}
+
+extension ACData {
+    // MARK: Get String
+    func getAsString(_ type: InfoType, lastNDays: Int, size: NumberLength = .standard, filteredApps: [ACApp] = []) -> String {
+        switch type {
+        case .downloads:
+            return getDownloadsString(lastNDays, size: size, filteredApps: filteredApps)
+        case .proceeds:
+            return getProceedsString(lastNDays, size: size, filteredApps: filteredApps)
+        case .updates:
+            return getUpdatesString(lastNDays, size: size, filteredApps: filteredApps)
+        }
     }
 
-    // MARK: Getting Numbers
-    func getDownloadsString(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
-        let num: Int = getDownloadsSum(lastNDays)
-        if num < 1000 {
-            return "\(num)"
-        }
-
-        let fNum: NSNumber = NSNumber(value: Float(num)/1000)
-        let nf = NumberFormatter()
-
-        switch size {
-        case .compact:
-            if num <  10000 {
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 1
-            }
-        case .standard:
-            nf.numberStyle = .decimal
-            nf.maximumFractionDigits = 2
-        }
-
-        return (nf.string(from: fNum) ?? "0").appending("K")
+    private func getDownloadsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getDownloadsSum(lastNDays, filteredApps: filteredApps)
+        return ACData.formatNumberLength(num: num, size: size, type: .downloads)
     }
 
-    func getProceedsString(_ lastNDays: Int = 1, size: NumberLength = .standard) -> String {
-        let num: Float = getProceedsSum(lastNDays)
-        var fNum: NSNumber = NSNumber(value: num)
-        let nf = NumberFormatter()
-        var addK = false
+    private func getProceedsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getProceedsSum(lastNDays, filteredApps: filteredApps)
+        return ACData.formatNumberLength(num: num, size: size, type: .proceeds)
+    }
 
-        switch size {
-        case .compact:
-            if num <  10 {
+    private func getUpdatesString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getUpdatesSum(lastNDays, filteredApps: filteredApps)
+        return ACData.formatNumberLength(num: num, size: size, type: .updates)
+    }
+
+    // swiftlint:disable:next function_body_length
+    public static func formatNumberLength(num: Float, size: NumberLength = .standard, type: InfoType) -> String {
+        switch type {
+        case .downloads, .updates:
+            if num < 1000 { return "\(Int(num))" }
+
+            let fNum: NSNumber = NSNumber(value: num/1000)
+            let nf = NumberFormatter()
+
+            switch size {
+            case .compact:
+                if num <  10000 {
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 1
+                }
+            case .standard:
                 nf.numberStyle = .decimal
                 nf.maximumFractionDigits = 2
-            } else if num < 100 {
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 1
-            } else if num < 1000 {
-            } else if num < 10000 {
-                fNum = NSNumber(value: num/1000)
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 1
-                addK = true
-            } else if num < 100000 {
-                fNum = NSNumber(value: num/1000)
-                addK = true
-            }
-        case .standard:
-            if num >= 1000 {
-                fNum = NSNumber(value: num/1000)
-                addK = true
             }
 
-            nf.numberStyle = .decimal
-            nf.maximumFractionDigits = (num >= 1000 && num/1000 < 10) || num < 10 ? 2 : 1
-        }
+            return (nf.string(from: fNum) ?? "0").appending("K")
+        case .proceeds:
+            var fNum: NSNumber = NSNumber(value: num)
+            let nf = NumberFormatter()
+            var addK = false
 
-        return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
+            switch size {
+            case .compact:
+                if num <  10 {
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 2
+                } else if num < 100 {
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 1
+                } else if num < 1000 {
+                } else if num < 10000 {
+                    fNum = NSNumber(value: num/1000)
+                    nf.numberStyle = .decimal
+                    nf.maximumFractionDigits = 1
+                    addK = true
+                } else if num < 100000 {
+                    fNum = NSNumber(value: num/1000)
+                    addK = true
+                }
+            case .standard:
+                if num >= 1000 {
+                    fNum = NSNumber(value: num/1000)
+                    addK = true
+                }
+                nf.numberStyle = .decimal
+                nf.maximumFractionDigits = (num >= 1000 && num/1000 < 10) || num < 10 ? 2 : 1
+            }
+
+            return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
+        }
     }
 
-    func getDownloads(_ lastNDays: Int) -> [(Int, Date)] {
-        var result: [(Int, Date)] = []
-        let range = min(downloads.count, lastNDays)
-        for i in 0..<range {
-            result.append(downloads[i])
+    enum NumberLength { case compact, standard }
+
+    // MARK: Get Raw Data
+    func getRawData(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        switch type {
+        case .downloads:
+            return getRawDownloads(lastNDays, filteredApps: filteredApps)
+        case .proceeds:
+            return getRawProceeds(lastNDays, filteredApps: filteredApps)
+        case .updates:
+            return getRawUpdates(lastNDays, filteredApps: filteredApps)
         }
-        return result
     }
 
-    func getProceeds(_ lastNDays: Int) -> [(Float, Date)] {
-        var result: [(Float, Date)] = []
-        let range = min(proceeds.count, lastNDays)
-        for i in 0..<range {
-            result.append(proceeds[i])
+    private func getRawDownloads(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        var downloadEntries = entries
+        if UserDefaults.shared?.bool(forKey: UserDefaultsKey.includeRedownloads) ?? false {
+            downloadEntries = downloadEntries.filter { ($0.type == .download || $0.type == .redownload) && $0.belongsToApp(apps: filteredApps) }
+        } else {
+            downloadEntries = downloadEntries.filter { $0.type == .download && $0.belongsToApp(apps: filteredApps) }
         }
-        return result
+        let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
+
+        return latestDate.getLastNDates(lastNDays)
+            .map { day -> (Float, Date) in
+                let count = downloadEntries.filter({ $0.date == day }).reduce(0, { $0 + $1.units })
+                return (Float(count), day)
+            }
     }
 
-    private func getDownloadsSum(_ lastNDays: Int = 1) -> Int {
-        var result: Int = 0
-        for download in getDownloads(lastNDays) {
+    private func getRawProceeds(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        let downloadEntries = entries.filter({ $0.proceeds > 0 && $0.belongsToApp(apps: filteredApps) })
+        let latestDate: Date? = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
+
+        return (latestDate ?? Date()).getLastNDates(lastNDays)
+            .map { day -> (Float, Date) in
+                let sum = downloadEntries.filter({ $0.date == day }).reduce(Float.zero, { $0 + $1.proceeds * Float($1.units) })
+                return (sum, day)
+            }
+    }
+
+    private func getRawUpdates(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        let downloadEntries = entries.filter({ $0.type == .update && $0.belongsToApp(apps: filteredApps) })
+        let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
+
+        return latestDate.getLastNDates(lastNDays)
+            .map { day -> (Float, Date) in
+                let count = downloadEntries.filter({ $0.date == day }).reduce(0, { $0 + $1.units })
+                return (Float(count), day)
+            }
+    }
+
+    // MARK: Get Sum
+    func getSum(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
+        switch type {
+        case .downloads:
+            return getDownloadsSum(lastNDays, filteredApps: filteredApps)
+        case .proceeds:
+            return getProceedsSum(lastNDays, filteredApps: filteredApps)
+        case .updates:
+            return getUpdatesSum(lastNDays, filteredApps: filteredApps)
+        }
+    }
+
+    private func getDownloadsSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
+        var result: Float = 0
+        for download in getRawDownloads(lastNDays, filteredApps: filteredApps) {
             result += download.0
         }
         return result
     }
 
-    private func getProceedsSum(_ lastNDays: Int = 1) -> Float {
+    private func getProceedsSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
         var result: Float = 0
-        for proceed in getProceeds(lastNDays) {
+        for proceed in getRawProceeds(lastNDays, filteredApps: filteredApps) {
             result += proceed.0
         }
         return result
     }
 
-    enum NumberLength { case compact, standard }
+    private func getUpdatesSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
+        var result: Float = 0
+        for update in getRawUpdates(lastNDays, filteredApps: filteredApps) {
+            result += update.0
+        }
+        return result
+    }
 
     // MARK: Getting Dates
     func latestReportingDate() -> String {
-        guard let date = downloads.first?.1 else {
+        let latestDate: Date? = entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
+
+        guard let date = latestDate else {
             return NSLocalizedString("NO_DATA", comment: "")
         }
-        return dateToString(date)
-    }
-
-    private func dateToString(_ date: Date) -> String {
-        if Calendar.current.isDateInToday(date) {
-            return NSLocalizedString("TODAY", comment: "")
-        }
-        if Calendar.current.isDateInYesterday(date) {
-            return NSLocalizedString("YESTERDAY", comment: "")
-        }
-        let df = DateFormatter()
-        if Calendar.current.isDate(date, inSameDayAs: date.advanced(by: -86400*6)) || date > date.advanced(by: -86400*6) {
-            return df.weekdaySymbols[Calendar.current.component(.weekday, from: date) - 1]
-        }
-        df.dateFormat = "dd. MMM."
-        return df.string(from: date)
+        return date.toString()
     }
 
     // MARK: Mock Data
-    static let example = createMockData(35)
-    static let exampleLargeSums = createMockData(35, largeValues: true)
+    static let example = createMockData(31)
+    static let exampleLargeSums = createMockData(31, largeValues: true)
 
     private static func createMockData(_ days: Int, largeValues: Bool = false) -> ACData {
-        var downloads: [(Int, Date)] = []
-        var proceeds: [(Float, Date)] = []
+        var entries: [ACEntry] = []
+        let countries = ["US", "DE", "ES", "UK"]
+        let devices = ["Desktop", "iPhone", "iPad"]
 
-        for i in 1..<days+1 {
-            if largeValues {
-                downloads.append((Int.random(in: 0..<1600), Date(timeIntervalSinceNow: -86400*Double(i))))
-                proceeds.append((Float.random(in: 0..<700), Date(timeIntervalSinceNow: -86400*Double(i))))
-            } else {
-                downloads.append((Int.random(in: 0..<110), Date(timeIntervalSinceNow: -86400*Double(i))))
-                proceeds.append((Float.random(in: 0..<40), Date(timeIntervalSinceNow: -86400*Double(i))))
+        Date(timeIntervalSinceNow: -86400).getLastNDates(days).forEach { day in
+            for _ in 0...(Int.random(in: 10...30) * (largeValues ? 5 : 1)) {
+                entries.append(ACEntry(appTitle: "TestApp",
+                                       appSKU: "TestApp",
+                                       units: Int.random(in: 1...10),
+                                       proceeds: Float.random(in: 0...5),
+                                       date: day, countryCode: countries.randomElement() ?? "US",
+                                       device: devices.randomElement() ?? "iPhone",
+                                       type: ACEntryType.allCases.randomElement() ?? .download))
             }
         }
+        return ACData(entries: entries, currency: .USD, apps: [ACApp.mockApp])
+    }
+}
 
-        return ACData(downloads: downloads, proceeds: proceeds, currency: "$")
+enum InfoType {
+    case proceeds, downloads, updates
+
+    var systemImage: String {
+        switch self {
+        case .proceeds:
+            return "dollarsign.circle"
+        case .downloads:
+            return "square.and.arrow.down"
+        case .updates:
+            return "arrow.triangle.2.circlepath"
+        }
     }
 }

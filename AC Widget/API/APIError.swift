@@ -1,8 +1,6 @@
 //
 //  APIError.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 01.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import Foundation
@@ -11,6 +9,8 @@ enum APIError: Error {
     case invalidCredentials
     case wrongPermissions
     case exceededLimit
+    case noDataAvailable
+    case notPublic
     case unknown
 
     var userDescription: String {
@@ -21,8 +21,12 @@ enum APIError: Error {
             return NSLocalizedString("ERROR_WRONG_PERMISSIONS", comment: "")
         case .exceededLimit:
             return NSLocalizedString("ERROR_EXCEEDED_LIMIT", comment: "")
+        case .noDataAvailable:
+            return NSLocalizedString("ERROR_NO_DATA_AVAILABLE", comment: "")
         case .unknown:
             return NSLocalizedString("ERROR_UNKNOWN", comment: "")
+        case .notPublic:
+            return "not public"
         }
     }
 }

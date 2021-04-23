@@ -1,8 +1,6 @@
 //
 //  OnboardingView.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 03.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI
@@ -21,6 +19,7 @@ struct OnboardingView: View {
 
     init(startAt: Int = 0) {
         self._selection = State(initialValue: startAt)
+        UITextView.appearance().backgroundColor = .clear
     }
 
     var body: some View {
@@ -49,6 +48,7 @@ struct OnboardingView: View {
                 .padding()
                 .tag(5)
         }
+        .multilineTextAlignment(.center)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .alert(item: $alert, content: { generateAlert($0) })
     }
@@ -59,7 +59,7 @@ struct OnboardingView: View {
             Text("WELCOME")
                 .font(.system(.largeTitle, design: .rounded))
 
-            SummaryMedium(data: ACData.exampleLargeSums)
+            SummaryMedium(data: ACData.example, color: color)
                 .showAsWidget(.systemMedium)
 
             Text("ONBOARD_WELCOME")
@@ -78,10 +78,10 @@ struct OnboardingView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Text("ONBOARD_KEY_NAME")
-
+            Divider()
             Text("ONBOARD_KEY_COLOR")
 
-            ColorPicker("KEY_COLOR", selection: $color)
+            ColorPicker("KEY_COLOR", selection: $color, supportsOpacity: false)
 
             Spacer()
             nextButton
@@ -130,8 +130,11 @@ struct OnboardingView: View {
 
             TextEditor(text: $key)
                 .frame(maxHeight: 250)
-                .border(Color.gray)
                 .disableAutocorrection(true)
+                .background(Color.systemWhite.cornerRadius(5))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5).stroke(Color(.systemGray4), lineWidth: 0.3)
+                )
 
             Text("ONBOARD_PRIVATE_KEY")
 
@@ -183,12 +186,8 @@ struct OnboardingView: View {
                 return
             }
 
-            AppStoreConnectApi(apiKey: apiKey).testApiKeys()
-                .then { worked in
-                    if !worked {
-                        alert = .invalidKey
-                        return
-                    }
+            apiKey.checkKey()
+                .then {
                     APIKey.addApiKey(apiKey: apiKey)
                     finishOnboarding()
                 }

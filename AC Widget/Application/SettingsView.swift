@@ -1,8 +1,6 @@
 //
 //  SettingsView.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 01.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI
@@ -10,6 +8,7 @@ import WidgetKit
 
 struct SettingsView: View {
     @AppStorage(UserDefaultsKey.apiKeys, store: UserDefaults.shared) var keysData: Data?
+    @AppStorage(UserDefaultsKey.includeRedownloads, store: UserDefaults.shared) var includeRedownloads: Bool = false
     @State private var addKeySheet: Bool = false
 
     var apiKeys: [APIKey] {
@@ -20,14 +19,11 @@ struct SettingsView: View {
     var body: some View {
         Form {
             keySection
-
-            Section {
-                Button("Force Refresh Widget") {
-                    WidgetCenter.shared.reloadAllTimelines()
-                }
-            }
-
+            generalSection
+            widgetSection
+            storageSection
             contactSection
+            notes
         }
         .navigationTitle("SETTINGS")
         .sheet(isPresented: $addKeySheet, content: sheet)
@@ -43,16 +39,7 @@ struct SettingsView: View {
                                         .foregroundColor(key.color)
                                     Text(key.name)
                                     Spacer()
-                                    if key.checkKey() == nil {
-                                        Image(systemName: "checkmark.circle")
-                                            .foregroundColor(.green)
-                                    } else if key.checkKey() == .invalidCredentials {
-                                        Image(systemName: "xmark.circle")
-                                            .foregroundColor(.red)
-                                    } else {
-                                        Image(systemName: "exclamationmark.circle")
-                                            .foregroundColor(.orange)
-                                    }
+                                    ApiKeyCheckIndicator(key: key)
                                 }
                                })
             }
@@ -76,19 +63,53 @@ struct SettingsView: View {
             Text("PROBLEM_KEY")
     }
 
+    var generalSection: some View {
+        Section(header: Label("GENERAL", systemImage: "gearshape.fill")) {
+            Toggle("INCLUDE_REDOWNLOADS", isOn: $includeRedownloads)
+        }
+    }
+
+    var widgetSection: some View {
+        Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
+            Button("FORCE_REFRESH_WIDGET") {
+                AppStoreConnectApi.clearInMemoryCache()
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+        }
+    }
+
+    var storageSection: some View {
+        Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
+            Text("ALL_CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached())")
+
+            Button("CLEAR_ALL_CACHE") {
+                AppStoreConnectApi.clearInMemoryCache()
+                APIKey.clearInMemoryCache()
+                ACDataCache.clearCache()
+            }
+            .foregroundColor(.orange)
+        }
+    }
+
     var contactSection: some View {
         Section(header: Label("Links", systemImage: "link")) {
-            if let destination = URL(string: "https://github.com/mikakruschel/AppStore-Connect-Widget") {
+            if let destination = URL(string: "https://github.com/no-comment/AppStore-Connect-Widget") {
                 Link(destination: destination, label: {
                     Text("GitHub")
                 })
             }
 
-            if let destination = URL(string: "https://www.apple.com") {
+            if let destination = URL(string: "https://www.buymeacoffee.com/no-comment") {
                 Link(destination: destination, label: {
                     Text("Buy me a coffee")
                 })
             }
+        }
+    }
+
+    var notes: some View {
+        Section(footer: Text("UPDATE_FREQUENCY_NOTICE")) {
+            EmptyView()
         }
     }
 
@@ -99,8 +120,9 @@ struct SettingsView: View {
     private func deleteKey(at offsets: IndexSet) {
         let empty: Bool = offsets.count == apiKeys.count
         let keys = offsets.map({ apiKeys[$0] })
+        keys.forEach { ACDataCache.clearCache(apiKey: $0) }
         APIKey.deleteApiKeys(apiKeys: keys)
-        
+
         if empty {
             UserDefaults.standard.set(false, forKey: UserDefaultsKey.completedOnboarding)
         }
@@ -112,5 +134,40 @@ struct SettingsView_Previews: PreviewProvider {
         NavigationView {
             SettingsView()
         }
+    }
+}
+
+// MARK: - ApiKeyCheckIndicator
+
+struct ApiKeyCheckIndicator: View {
+    let key: APIKey
+    @State var status: APIError?
+    @State var loading = true
+
+    var body: some View {
+        Group {
+            if loading {
+                Image(systemName: "circle")
+                    .foregroundColor(.gray)
+            } else if status == nil {
+                Image(systemName: "checkmark.circle")
+                    .foregroundColor(.green)
+            } else if status == .invalidCredentials {
+                Image(systemName: "xmark.circle")
+                    .foregroundColor(.red)
+            } else {
+                Image(systemName: "exclamationmark.circle")
+                    .foregroundColor(.orange)
+            }
+        }
+        .onAppear(perform: {
+            key.checkKey()
+                .catch { err in
+                    status = (err as? APIError) ?? .unknown
+                }
+                .always {
+                    loading = false
+                }
+        })
     }
 }

@@ -1,8 +1,6 @@
 //
 //  APIKeyDetailView.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 04.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI
@@ -11,29 +9,41 @@ struct APIKeyDetailView: View {
     let key: APIKey
     @State private var keyName: String
     @State private var keyColor: Color
-    @State private var issuerID: String
-    @State private var privateKeyID: String
-    @State private var privateKey: String
-    @State private var vendorNumber: String
+    private var issuerID: String
+    private var privateKeyID: String
+    private var privateKey: String
+    private var vendorNumber: String
+
+    @State private var status: APIError?
 
     init(_ key: APIKey) {
         self.key = key
         self._keyName = State(initialValue: key.name)
         self._keyColor = State(initialValue: key.color)
-        self._issuerID = State(initialValue: key.issuerID)
-        self._privateKeyID = State(initialValue: key.privateKeyID)
-        self._privateKey = State(initialValue: key.privateKey)
-        self._vendorNumber = State(initialValue: key.vendorNumber)
+        self.issuerID = key.issuerID
+        self.privateKeyID = key.privateKeyID
+        self.privateKey = key.privateKey
+        self.vendorNumber = key.vendorNumber
     }
 
     var body: some View {
         Form {
             namingSection
-            keySection
-                .disableAutocorrection(true)
+            if let status = status {
+                Section {
+                    ErrorWidget(error: status)
+                }
+                .frame(maxHeight: 250)
+            }
             savingSection
-            statusSection
+            keySection
+            storageSection
         }
+        .onAppear(perform: {
+            key.checkKey().catch { err in
+                status = (err as? APIError) ?? .unknown
+            }
+        })
         .navigationTitle(keyName)
     }
 
@@ -46,48 +56,38 @@ struct APIKeyDetailView: View {
                 TextField("KEY_NAME", text: $keyName)
             }
 
-            ColorPicker("KEY_COLOR", selection: $keyColor)
+            ColorPicker("KEY_COLOR", selection: $keyColor, supportsOpacity: false)
         }
     }
 
     var keySection: some View {
-        Section {
+        Section(footer: Text("KEY_DETAIL_FOOTER")) {
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("ISSUER_ID")
                     .bold()
 
-                TextField("ISSUER_ID", text: $issuerID)
+                TextField("ISSUER_ID", text: .constant(issuerID))
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY_ID")
                     .bold()
 
-                TextField("PRIVATE_KEY_ID", text: $privateKeyID)
+                TextField("PRIVATE_KEY_ID", text: .constant(privateKeyID))
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY")
                     .bold()
-                ZStack {
-                    TextEditor(text: $privateKey)
-                    if privateKey.isEmpty {
-                        VStack {
-                            HStack {
-                                Text("PRIVATE_KEY")
-                                    .foregroundColor(Color(UIColor.placeholderText))
-                                Spacer()
-                            }
-                        }
-                    }
-                }
+
+                TextEditor(text: .constant(privateKey))
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("VENDOR_NR")
                     .bold()
 
-                TextField("VENDOR_NR", text: $vendorNumber)
+                TextField("VENDOR_NR", text: .constant(vendorNumber))
             }
         }
     }
@@ -99,20 +99,25 @@ struct APIKeyDetailView: View {
     }
 
     private func save() {
-        // TODO: Darf privateKeyID editable sein? Dann muss erst noch alter Key gelöscht werden.
-        APIKey.addApiKey(apiKey: APIKey(name: keyName, color: keyColor, issuerID: issuerID, privateKeyID: privateKeyID, privateKey: privateKey, vendorNumber: vendorNumber))
+        APIKey.addApiKey(apiKey: APIKey(name: keyName,
+                                        color: keyColor,
+                                        issuerID: issuerID,
+                                        privateKeyID: privateKeyID,
+                                        privateKey: privateKey,
+                                        vendorNumber: vendorNumber))
     }
 
-    var statusSection: some View {
-        let status = key.checkKey()
+    var storageSection: some View {
+        Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
+            Text("CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached(apiKey: key))")
 
-        return Section {
-            if let status = status {
-                ErrorWidget(error: status)
-            } else {
+            Button("CLEAR_CACHE") {
+                AppStoreConnectApi.clearInMemoryCache()
+                APIKey.clearInMemoryCache()
+                ACDataCache.clearCache(apiKey: key)
             }
+            .foregroundColor(.orange)
         }
-        .frame(maxHeight: 250)
     }
 }
 

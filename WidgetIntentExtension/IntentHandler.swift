@@ -1,8 +1,6 @@
 //
 //  IntentHandler.swift
-//  WidgetIntentExtension
-//
-//  Created by Miká Kruschel on 04.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import Intents
@@ -16,17 +14,12 @@ class IntentHandler: INExtension, WidgetConfigurationIntentHandling {
     }
 
     func defaultApiKey(for intent: WidgetConfigurationIntent) -> ApiKeyParam? {
-        guard let key = APIKey.getApiKeys().first else { return nil}
+        guard let key = APIKey.getApiKeys().first else { return nil }
         return ApiKeyParam(key: key)
     }
 
     func provideCurrencyOptionsCollection(for intent: WidgetConfigurationIntent, with completion: @escaping (INObjectCollection<CurrencyParam>?, Error?) -> Void) {
-        var identifiers = Currency.allCases.map({ $0.rawValue })
-        let first = ["USD", "EUR", "GBP"]
-        identifiers = identifiers.filter({ !first.contains($0) }).sorted()
-        identifiers.insert(contentsOf: first, at: 0)
-
-        var items = identifiers.map({ CurrencyParam(identifier: $0, display: $0) })
+        var items = Currency.sortedAllCases.map({ CurrencyParam(identifier: $0.rawValue, display: $0.rawValue) })
         items.insert(.system, at: 0)
         let collection = INObjectCollection(items: items)
         completion(collection, nil)

@@ -1,8 +1,6 @@
 //
 //  UnitText.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 01.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI

@@ -1,15 +1,16 @@
 //
 //  SummaryMedium.swift
-//  AC Widget
-//
-//  Created by Cameron Shemilt on 01.04.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI
 import WidgetKit
 
 struct SummaryMedium: View {
+    @Environment(\.colorScheme) var colorScheme
+
     let data: ACData
+    var color: Color = .accentColor
 
     var body: some View {
         HStack(spacing: 0) {
@@ -25,7 +26,7 @@ struct SummaryMedium: View {
             .rotationEffect(.degrees(-90))
             .fixedSize()
             .frame(maxWidth: 30, maxHeight: .infinity)
-            .background(Color(UIColor.systemGray6))
+            .background(Color.widgetSecondary)
     }
 
     var informationSection: some View {
@@ -42,24 +43,28 @@ struct SummaryMedium: View {
 
     var downloadsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            UnitText(data.getDownloadsString(), metricSymbol: "square.and.arrow.down")
-            GraphView(data.getDownloads(30))
+            UnitText(data.getAsString(.downloads, lastNDays: 1), metricSymbol: "square.and.arrow.down")
+            GraphView(data.getRawData(.downloads, lastNDays: 30), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
-                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getDownloadsString(7, size: .compact))
-                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getDownloadsString(30, size: .compact))
+                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(.downloads, lastNDays: 7, size: .compact))
+                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(.downloads, lastNDays: 30, size: .compact))
             }
         }
     }
 
     var proceedsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            UnitText(data.getProceedsString(), metric: data.currency)
-            GraphView(data.getProceeds(30))
+            UnitText(data.getAsString(.proceeds, lastNDays: 1), metric: data.displayCurrency.symbol)
+            GraphView(data.getRawData(.proceeds, lastNDays: 30), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
-                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getProceedsString(7, size: .compact).appending(data.currency))
-                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getProceedsString(30, size: .compact).appending(data.currency))
+                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data
+                                    .getAsString(.proceeds, lastNDays: 7, size: .compact)
+                                    .appending(data.displayCurrency.symbol))
+                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
+                                    .getAsString(.proceeds, lastNDays: 30, size: .compact)
+                                    .appending(data.displayCurrency.symbol))
             }
         }
     }
@@ -71,8 +76,11 @@ struct SummaryMedium_Previews: PreviewProvider {
             SummaryMedium(data: ACData.example)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
 
-            SummaryMedium(data: ACData.exampleLargeSums)
+            SummaryMedium(data: ACData.example)
+                .background(Color.widgetBackground)
+                .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
+
         }
     }
 }

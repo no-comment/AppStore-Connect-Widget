@@ -1,8 +1,6 @@
 //
 //  Widgets.swift
-//  Widgets
-//
-//  Created by Miká Kruschel on 29.03.21.
+//  AC Widget by NO-COMMENT
 //
 
 import WidgetKit
@@ -12,7 +10,7 @@ import Promises
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
-        ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent())
+        ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent())
     }
 
     func getSnapshot(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (ACStatEntry) -> Void) {
@@ -21,16 +19,16 @@ struct Provider: IntentTimelineProvider {
         } else {
             getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
                 .then { data in
-                    let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
+                    let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
                             Calendar.current.isDateInYesterday(proceed.1)
                     }
 
-                    let entry = ACStatEntry(date: Date(), data: data, configuration: configuration, relevance: isNewData ? .high : .medium)
+                    let entry = ACStatEntry(date: Date(), data: data, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: isNewData ? .high : .medium)
                     completion(entry)
                 }
                 .catch { err in
-                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration, relevance: .low)
+                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: .low)
                     completion(entry)
                 }
         }
@@ -41,30 +39,25 @@ struct Provider: IntentTimelineProvider {
 
         getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
             .then { data in
-                let isNewData = data.getProceeds(3).contains { (proceed) -> Bool in
+                let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
                         Calendar.current.isDateInYesterday(proceed.1)
                 }
 
-                let entry = ACStatEntry(date: Date(), data: data, configuration: configuration, relevance: isNewData ? .high : .medium)
+                let entry = ACStatEntry(date: Date(),
+                                        data: data,
+                                        color: configuration.apiKey?.getColor() ?? .accentColor,
+                                        configuration: configuration,
+                                        relevance: isNewData ? .high : .medium)
                 entries.append(entry)
 
                 // Report is not available yet. Daily reports for the Americas are available by 5 am Pacific Time; Japan, Australia, and New Zealand by 5 am Japan Standard Time; and 5 am Central European Time for all other territories.
 
                 var nextUpdate = Date()
 
-                if nextUpdate.getPSTHour() == 5 || nextUpdate.getJSTHour() == 5 || nextUpdate.getCETHour() == 5 {
-                    let minutes = nextUpdate.getMinutes()
-
-                    if minutes < 15 {
-                        nextUpdate = nextUpdate.nextDateWithMinute(15)
-                    } else if minutes < 30 {
-                        nextUpdate = nextUpdate.nextDateWithMinute(30)
-                    } else if minutes < 45 {
-                        nextUpdate = nextUpdate.nextDateWithMinute(45)
-                    } else {
-                        nextUpdate = nextUpdate.nextFullHour()
-                    }
+                if nextUpdate.getCETHour() <= 12 {
+                    // every 15 minutes
+                    nextUpdate = nextUpdate.advanced(by: 15 * 60)
                 } else {
                     nextUpdate = nextUpdate.nextFullHour()
                 }
@@ -73,12 +66,12 @@ struct Provider: IntentTimelineProvider {
                 completion(timeline)
             }
             .catch { err in
-                let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, configuration: configuration)
+                let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, color: .accentColor, configuration: configuration)
                 entries.append(entry)
 
                 var nextUpdateDate = Date()
                 if err as? APIError == .invalidCredentials {
-                    nextUpdateDate = nextUpdateDate.advanced(by: 60 * 60 * 24)
+                    nextUpdateDate = nextUpdateDate.advanced(by: 24 * 60)
                 } else {
                     // wenn api down, update in 5 min erneut
                     nextUpdateDate = nextUpdateDate.advanced(by: 5 * 60)
@@ -90,7 +83,8 @@ struct Provider: IntentTimelineProvider {
     }
 
     func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) -> Promise<ACData> {
-        guard let apiKey = apiKeyParam?.toApiKey() else {
+        guard let apiKey = apiKeyParam?.toApiKey(),
+              APIKey.getApiKey(apiKeyId: apiKey.id) != nil else {
             let promise = Promise<ACData>.pending()
             promise.reject(APIError.invalidCredentials)
             return promise
@@ -104,12 +98,13 @@ struct ACStatEntry: TimelineEntry {
     let date: Date
     let data: ACData?
     var error: APIError?
+    let color: Color
     let configuration: WidgetConfigurationIntent
     var relevance: TimelineEntryRelevance?
 }
 
 extension ACStatEntry {
-    static let placeholder = ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent())
+    static let placeholder = ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent())
 }
 
 extension TimelineEntryRelevance {
@@ -127,9 +122,9 @@ struct WidgetsEntryView: View {
         if let data = entry.data {
             switch size {
             case .systemSmall:
-                SummarySmall(data: data)
+                SummarySmall(data: data, color: entry.color)
             case .systemMedium:
-                SummaryMedium(data: data)
+                SummaryMedium(data: data, color: entry.color)
             default:
                 ErrorWidget(error: .unknown)
             }
@@ -146,19 +141,21 @@ struct Widgets: Widget {
     var body: some WidgetConfiguration {
         IntentConfiguration(kind: kind, intent: WidgetConfigurationIntent.self, provider: Provider()) { entry in
             WidgetsEntryView(entry: entry)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.widgetBackground)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("WIDGET_NAME")
+        .description("WIDGET_DESC")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
 struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
 
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }
