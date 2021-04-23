@@ -3,7 +3,7 @@
 [![Latest release](https://img.shields.io/github/v/release/no-comment/AppStore-Connect-Widget?include_prereleases)](https://github.com/no-comment/AppStore-Connect-Widget//releases/latest)
 [![Licence](https://img.shields.io/github/license/no-comment/AppStore-Connect-Widget)](https://github.com/no-comment/AppStore-Connect-Widget/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/no-comment/AppStore-Connect-Widget?style=social)](https://github.com/no-comment/AppStore-Connect-Widget/stargazers)
-[![Buy me a coffee](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/no-comment)
+[![Buy me a coffee](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/nocomment)
 
 ## What is AppStoreConnect Widget ?
 
