@@ -76,6 +76,8 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 
 "LAST_SEVEN_DAYS" = "7 days:";
 "LAST_THIRTY_DAYS" = "30 days:";
+"MONTH_TO_DATE" = "Month:";
+"CHANGE_PERCENT" = "Change:";
 
 "NO_DATA" = "No Data";
 

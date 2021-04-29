@@ -211,6 +211,17 @@ extension ACData {
         return result
     }
 
+    // MARK: Get Change
+    func getChange(_ type: InfoType) -> String {
+        let lastWeek = getSum(type, lastNDays: 7)
+        let weekBefore = getSum(type, lastNDays: 14) - lastWeek
+        let change = NSNumber(value: ((lastWeek/weekBefore) - 1) * 100)
+        let nf = NumberFormatter()
+        nf.numberStyle = .decimal
+        nf.maximumFractionDigits = 1
+        return nf.string(from: change) ?? "-"
+    }
+
     // MARK: Getting Dates
     func latestReportingDate() -> String {
         let latestDate: Date? = entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
