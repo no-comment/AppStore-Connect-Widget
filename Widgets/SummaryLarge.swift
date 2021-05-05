@@ -90,7 +90,7 @@ struct SummaryLarge: View {
     private func countryName(placement: Int) -> LocalizedStringKey {
         let countries = data.getCountries(.proceeds, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
         if placement < countries.count {
-            return LocalizedStringKey(countries[placement].0)
+            return LocalizedStringKey(countries[placement].0.countryCodeToName())
         }
         return ""
     }

@@ -100,6 +100,10 @@ extension String {
         }
         return newString
     }
+
+    func countryCodeToName() -> String {
+        return (Locale.current as NSLocale).localizedString(forCountryCode: self) ?? ""
+    }
 }
 
 // MARK: View Modifier
