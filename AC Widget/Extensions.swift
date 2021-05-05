@@ -68,6 +68,10 @@ extension Date {
         df.dateFormat = "dd. MMM."
         return df.string(from: self)
     }
+
+    static func dateToMonthNumber() -> Int {
+        return Int(Calendar.current.component(.day, from: Date())) - 1
+    }
 }
 
 // MARK: User Defaults
@@ -95,6 +99,10 @@ extension String {
             return set.contains(scalar)
         }
         return newString
+    }
+
+    func countryCodeToName() -> String {
+        return (Locale.current as NSLocale).localizedString(forCountryCode: self) ?? ""
     }
 }
 

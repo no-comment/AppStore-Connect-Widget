@@ -64,18 +64,22 @@ struct HomeView: View {
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                Text("API_KEY:\(APIKey.getApiKey(apiKeyId: keyID)?.name ?? "-")")
+                Text("API_KEY:\(selectedKey?.name ?? "-")")
                     .font(.system(size: 12))
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            Button("REFRESH_DATA", action: { onAppear(useCache: false) })
+            if data != nil {
+                Button(action: { data = nil; onAppear(useCache: false) }) {
+                    Text("REFRESH_DATA")
+                }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 20)
                 .background(Color.cardColor)
                 .clipShape(Capsule())
                 .foregroundColor(.primary)
+            }
         }
         .foregroundColor(.gray)
         .padding()

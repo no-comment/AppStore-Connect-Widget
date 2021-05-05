@@ -76,6 +76,9 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 
 "LAST_SEVEN_DAYS" = "7 Tage:";
 "LAST_THIRTY_DAYS" = "30 Tage:";
+"MONTH_TO_DATE" = "Monat:";
+"CHANGE_PERCENT" = "Verlauf:";
+"TOP_COUNTRIES" = "Top Länder:";
 
 "NO_DATA" = "Keine Daten";
 

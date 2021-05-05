@@ -43,7 +43,7 @@ struct InfoTile: View {
                 .frame(minHeight: 100)
             bottomSection
         }
-        .frame(height: 220)
+        .frame(height: 250)
     }
 
     // MARK: Top
@@ -146,11 +146,20 @@ struct InfoTile: View {
 
     // MARK: Bottom
     var bottomSection: some View {
-        HStack(alignment: .bottom) {
-            DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(type, lastNDays: 7, size: .compact).appending(currencySymbol))
-            Spacer()
-                .frame(width: 40)
-            DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(type, lastNDays: 30, size: .compact).appending(currencySymbol))
+        VStack {
+            HStack(alignment: .bottom) {
+                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(type, lastNDays: 7, size: .compact).appending(currencySymbol))
+                Spacer()
+                    .frame(width: 40)
+                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(type, lastNDays: 30, size: .compact).appending(currencySymbol))
+            }
+
+            HStack(alignment: .bottom) {
+                DescribedValueView(description: "MONTH_TO_DATE", value: data.getAsString(type, lastNDays: Date.dateToMonthNumber(), size: .compact).appending(currencySymbol))
+                Spacer()
+                    .frame(width: 40)
+                DescribedValueView(description: "CHANGE_PERCENT", value: data.getChange(type).appending("%"))
+            }
         }
     }
 }

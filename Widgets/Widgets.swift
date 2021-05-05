@@ -125,6 +125,8 @@ struct WidgetsEntryView: View {
                 SummarySmall(data: data, color: entry.color)
             case .systemMedium:
                 SummaryMedium(data: data, color: entry.color)
+            case .systemLarge:
+                SummaryLarge(data: data, color: entry.color)
             default:
                 ErrorWidget(error: .unknown)
             }
@@ -146,7 +148,7 @@ struct Widgets: Widget {
         }
         .configurationDisplayName("WIDGET_NAME")
         .description("WIDGET_DESC")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
