@@ -235,7 +235,7 @@ extension ACData {
         let downloadEntries = filteredDownloadEntries(lastNDays, filteredApps: filteredApps)
         return Dictionary(grouping: downloadEntries, by: { $0.countryCode })
             .map({ (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, Float(value.count))
+                return (key, value.reduce(Float.zero, { $0 + Float($1.units) }))
             })
     }
 
@@ -246,7 +246,7 @@ extension ACData {
 
         return Dictionary(grouping: proceedsEntries.filter({ validDays.contains($0.date) }), by: { $0.countryCode })
             .map({ (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, Float(value.count))
+                return (key, value.reduce(Float.zero, { $0 + $1.proceeds * Float($1.units) }))
             })
     }
 
@@ -257,7 +257,7 @@ extension ACData {
 
         return Dictionary(grouping: downloadEntries.filter({ validDays.contains($0.date) }), by: { $0.countryCode })
             .map({ (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, Float(value.count))
+                return (key, value.reduce(Float.zero, { $0 + Float($1.units) }))
             })
     }
 
