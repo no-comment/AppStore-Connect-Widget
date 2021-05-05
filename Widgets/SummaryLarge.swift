@@ -82,19 +82,19 @@ struct SummaryLarge: View {
                 .padding(.bottom, 3)
 
             DescribedValueView(description: countryName(placement: 0), value: countryProceeds(placement: 0))
-            DescribedValueView(description: countryName(placement: 1), value: countryProceeds(placement: 0))
-            DescribedValueView(description: countryName(placement: 2), value: countryProceeds(placement: 0))
+            DescribedValueView(description: countryName(placement: 1), value: countryProceeds(placement: 1))
+            DescribedValueView(description: countryName(placement: 2), value: countryProceeds(placement: 2))
         }
     }
-    
-    private func countryName(placement: Int) -> String {
+
+    private func countryName(placement: Int) -> LocalizedStringKey {
         let countries = data.getCountries(.proceeds, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
         if placement < countries.count {
-            return countries[placement].0
+            return LocalizedStringKey(countries[placement].0)
         }
         return ""
     }
-    
+
     private func countryProceeds(placement: Int) -> String {
         let countries = data.getCountries(.proceeds, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
         if placement < countries.count {
