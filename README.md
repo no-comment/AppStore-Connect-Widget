@@ -2,7 +2,7 @@
 
 [![Latest release](https://img.shields.io/github/v/release/no-comment/AppStore-Connect-Widget?include_prereleases)](https://github.com/no-comment/AppStore-Connect-Widget//releases/latest)
 [![Licence](https://img.shields.io/github/license/no-comment/AppStore-Connect-Widget)](https://github.com/no-comment/AppStore-Connect-Widget/blob/main/LICENSE)
-[![TestFlight](https://img.shields.io/endpoint?color=%231468c8&url=https%3A%2F%2Facwidget-testflight-count.herokuapp.com%2F)](https://testflight.apple.com/join/FrG9FTYt)
+[![TestFlight](https://acwidget-testflight-count.herokuapp.com/)](https://testflight.apple.com/join/FrG9FTYt)
 [![Stars](https://img.shields.io/github/stars/no-comment/AppStore-Connect-Widget?style=social)](https://github.com/no-comment/AppStore-Connect-Widget/stargazers)
 [![Buy me a coffee](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/nocomment)
 
