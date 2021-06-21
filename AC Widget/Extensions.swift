@@ -163,6 +163,30 @@ extension View {
     }
 }
 
+// Close sheet button
+struct CloseSheet: ViewModifier {
+    @Environment(\.presentationMode) var presentationMode
+
+    func body(content: Content) -> some View {
+        content
+            .toolbar(content: {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        self.presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle").imageScale(.large)
+                    }.keyboardShortcut(.cancelAction)
+                }
+            })
+    }
+}
+
+extension View {
+    func closeSheetButton() -> some View {
+        self.modifier(CloseSheet())
+    }
+}
+
 // MARK: Color
 extension Color {
     static let widgetBackground: Color = Color("WidgetBackground")

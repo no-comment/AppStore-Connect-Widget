@@ -7,8 +7,9 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var selection: Int
     @State private var alert: AddAPIKeyAlert?
+
+    private let showsWelcome: Bool
 
     @State private var name: String = ""
     @State private var color: Color = .accentColor
@@ -17,36 +18,47 @@ struct OnboardingView: View {
     @State private var key: String = ""
     @State private var vendor: String = ""
 
-    init(startAt: Int = 0) {
-        self._selection = State(initialValue: startAt)
-        UITextView.appearance().backgroundColor = .clear
+    init(showsWelcome: Bool = true) {
+        self.showsWelcome = showsWelcome
+        UITextView.appearance().backgroundColor = .red
     }
 
     var body: some View {
-        TabView(selection: $selection) {
-            welcomeSection
+        ScrollView {
+            if showsWelcome {
+                GroupBox(label: Text("WELCOME"), content: {
+                    welcomeSection
+                })
                 .padding()
-                .tag(0)
+            }
 
-            nameSection
-                .padding()
-                .tag(1)
+            GroupBox(label: Text("KEY_NAME"), content: {
+                nameSection
+            })
+            .padding()
 
-            issuerIDSection
-                .padding()
-                .tag(2)
+            GroupBox(label: Text("ISSUER_ID"), content: {
+                issuerIDSection
+            })
+            .padding()
 
-            privateKeyIDSection
-                .padding()
-                .tag(3)
+            GroupBox(label: Text("PRIVATE_KEY_ID"), content: {
+                privateKeyIDSection
+            })
+            .padding()
 
-            privateKeySection
-                .padding()
-                .tag(4)
+            GroupBox(label: Text("PRIVATE_KEY"), content: {
+                privateKeySection
+            })
+            .padding()
 
-            VendorNrSection
+            GroupBox(label: Text("VENDOR_NR"), content: {
+                VendorNrSection
+            })
+            .padding()
+
+            finishButton
                 .padding()
-                .tag(5)
         }
         .multilineTextAlignment(.center)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -56,78 +68,58 @@ struct OnboardingView: View {
     // MARK: Pages
     var welcomeSection: some View {
         VStack(spacing: 20) {
-            Text("WELCOME")
-                .font(.system(.largeTitle, design: .rounded))
-
             SummaryMedium(data: ACData.example, color: color)
                 .showAsWidget(.systemMedium)
+                .padding(.top)
 
             Text("ONBOARD_WELCOME")
-
-            Spacer()
-            nextButton
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     var nameSection: some View {
         VStack(spacing: 20) {
-            Text("KEY_NAME")
-                .font(.system(.largeTitle, design: .rounded))
-
             TextField("KEY_NAME", text: $name)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Text("ONBOARD_KEY_NAME")
+                .fixedSize(horizontal: false, vertical: true)
             Divider()
             Text("ONBOARD_KEY_COLOR")
+                .fixedSize(horizontal: false, vertical: true)
 
-            ColorPicker("KEY_COLOR", selection: $color, supportsOpacity: false)
-
-            Spacer()
-            nextButton
-                .disabled(name.isEmpty)
+            ColorPicker(selection: $color, supportsOpacity: false, label: {
+                Text("KEY_COLOR")
+                    .fixedSize()
+            })
+            .frame(maxWidth: 250)
         }
     }
 
     var issuerIDSection: some View {
         VStack(spacing: 20) {
-            Text("ISSUER_ID")
-                .font(.system(.largeTitle, design: .rounded))
-
             TextField("ISSUER_ID", text: $issuerID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_ISSUER_ID")
-
-            Spacer()
-            nextButton
-                .disabled(issuerID.isEmpty)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     var privateKeyIDSection: some View {
         VStack(spacing: 20) {
-            Text("PRIVATE_KEY_ID")
-                .font(.system(.largeTitle, design: .rounded))
-
             TextField("PRIVATE_KEY_ID", text: $keyID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_PRIVATE_KEY_ID")
-
-            Spacer()
-            nextButton
-                .disabled(keyID.isEmpty)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     var privateKeySection: some View {
         VStack(spacing: 20) {
-            Text("PRIVATE_KEY")
-                .font(.system(.largeTitle, design: .rounded))
-
             TextEditor(text: $key)
                 .frame(maxHeight: 250)
                 .disableAutocorrection(true)
@@ -137,34 +129,25 @@ struct OnboardingView: View {
                 )
 
             Text("ONBOARD_PRIVATE_KEY")
-
-            Spacer()
-            nextButton
-                .disabled(key.isEmpty)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     var VendorNrSection: some View {
         VStack(spacing: 20) {
-            Text("VENDOR_NR")
-                .font(.system(.largeTitle, design: .rounded))
-
             TextField("VENDOR_NR", text: $vendor)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_VENDOR_NR")
-
-            Spacer()
-            nextButton
-                .disabled(vendor.isEmpty)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
-    // MARK: Next Button
-    var nextButton: some View {
-        Button(action: onNextPress, label: {
-            Text(selection < 5 ? "NEXT" : "FINISH")
+    // MARK: Finish Button
+    var finishButton: some View {
+        Button(action: onFinishPressed, label: {
+            Text("FINISH")
                 .font(.system(size: 18, weight: .bold))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
@@ -173,31 +156,30 @@ struct OnboardingView: View {
                 .clipShape(Capsule())
                 .contentShape(Rectangle())
         })
+        .disabled(
+            name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
+        )
     }
 
-    private func onNextPress() {
-        if selection < 5 {
-            selection += 1
-        } else {
-            let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
+    private func onFinishPressed() {
+        let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
 
-            if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
-                alert = .duplicateKey
-                return
-            }
-
-            apiKey.checkKey()
-                .then {
-                    APIKey.addApiKey(apiKey: apiKey)
-                    finishOnboarding()
-                }
-                .catch { err in
-                    let apiErr: APIError = (err as? APIError) ?? .unknown
-                    if apiErr == .invalidCredentials {
-                        alert = .invalidKey
-                    }
-                }
+        if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
+            alert = .duplicateKey
+            return
         }
+
+        apiKey.checkKey()
+            .then {
+                APIKey.addApiKey(apiKey: apiKey)
+                finishOnboarding()
+            }
+            .catch { err in
+                let apiErr: APIError = (err as? APIError) ?? .unknown
+                if apiErr == .invalidCredentials {
+                    alert = .invalidKey
+                }
+            }
     }
 
     private func finishOnboarding() {
@@ -221,11 +203,11 @@ struct OnboardingView: View {
         case .invalidKey:
             title = Text("INVALID_KEY")
             message = Text("INVALID_KEY_MSG")
-            button = Alert.Button.default(Text("OK"), action: { self.selection = 1 })
+            button = Alert.Button.default(Text("OK"))
         case .duplicateKey:
             title = Text("DUPLICATE_KEY")
             message = Text("DUPLICATE_KEY_MSG")
-            button = Alert.Button.default(Text("RECHECK_INPUTS"), action: { self.selection = 1 })
+            button = Alert.Button.default(Text("RECHECK_INPUTS"))
         }
         return Alert(title: title, message: message, dismissButton: button)
     }
