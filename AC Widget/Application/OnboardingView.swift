@@ -9,7 +9,7 @@ struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var alert: AddAPIKeyAlert?
 
-    private let showsWelcome: Bool
+    @State var showsWelcome: Bool
 
     @State private var name: String = ""
     @State private var color: Color = .accentColor
@@ -18,67 +18,46 @@ struct OnboardingView: View {
     @State private var key: String = ""
     @State private var vendor: String = ""
 
-    init(showsWelcome: Bool = true) {
-        self.showsWelcome = showsWelcome
-        UITextView.appearance().backgroundColor = .clear
-    }
-
     var body: some View {
         ScrollView {
-            if showsWelcome {
-                GroupBox(label: Text("WELCOME"), content: {
-                    welcomeSection
-                })
-                .padding()
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 330))], alignment: .center, spacing: 20) {
+                if showsWelcome {
+                    welcomeSection.padding(.horizontal, 5)
+                }
+
+                nameSection.padding(.horizontal, 5)
+
+                issuerIDSection.padding(.horizontal, 5)
+
+                privateKeyIDSection.padding(.horizontal, 5)
+
+                privateKeySection.padding(.horizontal, 5)
+
+                VendorNrSection.padding(.horizontal, 5)
             }
-
-            GroupBox(label: Text("KEY_NAME"), content: {
-                nameSection
-            })
-            .padding()
-
-            GroupBox(label: Text("ISSUER_ID"), content: {
-                issuerIDSection
-            })
-            .padding()
-
-            GroupBox(label: Text("PRIVATE_KEY_ID"), content: {
-                privateKeyIDSection
-            })
-            .padding()
-
-            GroupBox(label: Text("PRIVATE_KEY"), content: {
-                privateKeySection
-            })
-            .padding()
-
-            GroupBox(label: Text("VENDOR_NR"), content: {
-                VendorNrSection
-            })
             .padding()
 
             finishButton
-                .padding()
         }
         .multilineTextAlignment(.center)
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .alert(item: $alert, content: { generateAlert($0) })
     }
 
     // MARK: Pages
     var welcomeSection: some View {
-        VStack(spacing: 20) {
+        GroupBox(label: Text("WELCOME"), content: {
             SummaryMedium(data: ACData.example, color: color)
                 .showAsWidget(.systemMedium)
-                .padding(.top)
+                .padding(.vertical)
 
             Text("ONBOARD_WELCOME")
                 .fixedSize(horizontal: false, vertical: true)
-        }
+            Spacer()
+        })
     }
 
     var nameSection: some View {
-        VStack(spacing: 20) {
+        GroupBox(label: Text("KEY_NAME"), content: {
             TextField("KEY_NAME", text: $name)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
@@ -92,34 +71,37 @@ struct OnboardingView: View {
                 Text("KEY_COLOR")
                     .fixedSize()
             })
-            .frame(maxWidth: 250)
-        }
+            .frame(maxWidth: 250, maxHeight: 30)
+            Spacer()
+        })
     }
 
     var issuerIDSection: some View {
-        VStack(spacing: 20) {
+        GroupBox(label: Text("ISSUER_ID"), content: {
             TextField("ISSUER_ID", text: $issuerID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_ISSUER_ID")
                 .fixedSize(horizontal: false, vertical: true)
-        }
+            Spacer()
+        })
     }
 
     var privateKeyIDSection: some View {
-        VStack(spacing: 20) {
+        GroupBox(label: Text("PRIVATE_KEY_ID"), content: {
             TextField("PRIVATE_KEY_ID", text: $keyID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_PRIVATE_KEY_ID")
                 .fixedSize(horizontal: false, vertical: true)
-        }
+            Spacer()
+        })
     }
 
     var privateKeySection: some View {
-        VStack(spacing: 20) {
+        GroupBox(label: Text("PRIVATE_KEY"), content: {
             TextEditor(text: $key)
                 .frame(maxHeight: 250)
                 .disableAutocorrection(true)
@@ -130,18 +112,20 @@ struct OnboardingView: View {
 
             Text("ONBOARD_PRIVATE_KEY")
                 .fixedSize(horizontal: false, vertical: true)
-        }
+            Spacer()
+        })
     }
 
     var VendorNrSection: some View {
-        VStack(spacing: 20) {
+        GroupBox(label: Text("VENDOR_NR"), content: {
             TextField("VENDOR_NR", text: $vendor)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_VENDOR_NR")
                 .fixedSize(horizontal: false, vertical: true)
-        }
+            Spacer()
+        })
     }
 
     // MARK: Finish Button
@@ -215,6 +199,6 @@ struct OnboardingView: View {
 
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingView()
+        OnboardingView(showsWelcome: true)
     }
 }

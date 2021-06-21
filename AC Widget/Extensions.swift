@@ -150,7 +150,8 @@ struct ShowAsWidget: ViewModifier {
     }
     func body(content: Content) -> some View {
         content
-            .frame(width: width, height: height)
+            .aspectRatio(CGSize(width: width, height: height), contentMode: .fill)
+            .frame(minWidth: 0.8 * width, maxWidth: 1.2 * width, minHeight: 0.8 * height, maxHeight: 1.2 * height)
             .background(Color(UIColor.systemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 6)
