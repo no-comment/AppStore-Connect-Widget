@@ -7,8 +7,9 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var selection: Int
     @State private var alert: AddAPIKeyAlert?
+
+    @State var showsWelcome: Bool
 
     @State private var name: String = ""
     @State private var color: Color = .accentColor
@@ -17,119 +18,96 @@ struct OnboardingView: View {
     @State private var key: String = ""
     @State private var vendor: String = ""
 
-    init(startAt: Int = 0) {
-        self._selection = State(initialValue: startAt)
-        UITextView.appearance().backgroundColor = .clear
-    }
-
     var body: some View {
-        TabView(selection: $selection) {
-            welcomeSection
-                .padding()
-                .tag(0)
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 330))], alignment: .center, spacing: 20) {
+                if showsWelcome {
+                    welcomeSection.padding(.horizontal, 5)
+                }
 
-            nameSection
-                .padding()
-                .tag(1)
+                nameSection.padding(.horizontal, 5)
 
-            issuerIDSection
-                .padding()
-                .tag(2)
+                issuerIDSection.padding(.horizontal, 5)
 
-            privateKeyIDSection
-                .padding()
-                .tag(3)
+                privateKeyIDSection.padding(.horizontal, 5)
 
-            privateKeySection
-                .padding()
-                .tag(4)
+                privateKeySection.padding(.horizontal, 5)
 
-            VendorNrSection
-                .padding()
-                .tag(5)
+                VendorNrSection.padding(.horizontal, 5)
+            }
+            .padding()
+
+            finishButton
         }
-        .multilineTextAlignment(.center)
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .alert(item: $alert, content: { generateAlert($0) })
     }
 
     // MARK: Pages
     var welcomeSection: some View {
-        VStack(spacing: 20) {
-            Text("WELCOME")
-                .font(.system(.largeTitle, design: .rounded))
-
+        GroupBox(label: Text("WELCOME"), content: {
             SummaryMedium(data: ACData.example, color: color)
                 .showAsWidget(.systemMedium)
+                .padding(.vertical)
 
             Text("ONBOARD_WELCOME")
-
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
             Spacer()
-            nextButton
-        }
+        })
     }
 
     var nameSection: some View {
-        VStack(spacing: 20) {
-            Text("KEY_NAME")
-                .font(.system(.largeTitle, design: .rounded))
-
+        GroupBox(label: Text("KEY_NAME"), content: {
             TextField("KEY_NAME", text: $name)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Text("ONBOARD_KEY_NAME")
-            Divider()
-            Text("ONBOARD_KEY_COLOR")
-
-            ColorPicker("KEY_COLOR", selection: $color, supportsOpacity: false)
+                .fixedSize(horizontal: false, vertical: true)
 
             Spacer()
-            nextButton
-                .disabled(name.isEmpty)
-        }
+            Divider()
+            Spacer()
+
+            Text("ONBOARD_KEY_COLOR")
+                .fixedSize(horizontal: false, vertical: true)
+
+            ColorPicker(selection: $color, supportsOpacity: false, label: {
+                Text("KEY_COLOR")
+                    .fixedSize()
+            })
+            .frame(maxWidth: 250, maxHeight: 30)
+            Spacer()
+        })
     }
 
     var issuerIDSection: some View {
-        VStack(spacing: 20) {
-            Text("ISSUER_ID")
-                .font(.system(.largeTitle, design: .rounded))
-
+        GroupBox(label: Text("ISSUER_ID"), content: {
             TextField("ISSUER_ID", text: $issuerID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_ISSUER_ID")
-
+                .fixedSize(horizontal: false, vertical: true)
             Spacer()
-            nextButton
-                .disabled(issuerID.isEmpty)
-        }
+        })
     }
 
     var privateKeyIDSection: some View {
-        VStack(spacing: 20) {
-            Text("PRIVATE_KEY_ID")
-                .font(.system(.largeTitle, design: .rounded))
-
+        GroupBox(label: Text("PRIVATE_KEY_ID"), content: {
             TextField("PRIVATE_KEY_ID", text: $keyID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_PRIVATE_KEY_ID")
-
+                .fixedSize(horizontal: false, vertical: true)
             Spacer()
-            nextButton
-                .disabled(keyID.isEmpty)
-        }
+        })
     }
 
     var privateKeySection: some View {
-        VStack(spacing: 20) {
-            Text("PRIVATE_KEY")
-                .font(.system(.largeTitle, design: .rounded))
-
+        GroupBox(label: Text("PRIVATE_KEY"), content: {
             TextEditor(text: $key)
-                .frame(maxHeight: 250)
+                .frame(minHeight: 30, maxHeight: 250)
                 .disableAutocorrection(true)
                 .background(Color.systemWhite.cornerRadius(5))
                 .overlay(
@@ -137,34 +115,27 @@ struct OnboardingView: View {
                 )
 
             Text("ONBOARD_PRIVATE_KEY")
-
+                .fixedSize(horizontal: false, vertical: true)
             Spacer()
-            nextButton
-                .disabled(key.isEmpty)
-        }
+        })
     }
 
     var VendorNrSection: some View {
-        VStack(spacing: 20) {
-            Text("VENDOR_NR")
-                .font(.system(.largeTitle, design: .rounded))
-
+        GroupBox(label: Text("VENDOR_NR"), content: {
             TextField("VENDOR_NR", text: $vendor)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
             Text("ONBOARD_VENDOR_NR")
-
+                .fixedSize(horizontal: false, vertical: true)
             Spacer()
-            nextButton
-                .disabled(vendor.isEmpty)
-        }
+        })
     }
 
-    // MARK: Next Button
-    var nextButton: some View {
-        Button(action: onNextPress, label: {
-            Text(selection < 5 ? "NEXT" : "FINISH")
+    // MARK: Finish Button
+    var finishButton: some View {
+        Button(action: onFinishPressed, label: {
+            Text("FINISH")
                 .font(.system(size: 18, weight: .bold))
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
@@ -173,31 +144,30 @@ struct OnboardingView: View {
                 .clipShape(Capsule())
                 .contentShape(Rectangle())
         })
+        .disabled(
+            name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
+        )
     }
 
-    private func onNextPress() {
-        if selection < 5 {
-            selection += 1
-        } else {
-            let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
+    private func onFinishPressed() {
+        let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
 
-            if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
-                alert = .duplicateKey
-                return
-            }
-
-            apiKey.checkKey()
-                .then {
-                    APIKey.addApiKey(apiKey: apiKey)
-                    finishOnboarding()
-                }
-                .catch { err in
-                    let apiErr: APIError = (err as? APIError) ?? .unknown
-                    if apiErr == .invalidCredentials {
-                        alert = .invalidKey
-                    }
-                }
+        if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
+            alert = .duplicateKey
+            return
         }
+
+        apiKey.checkKey()
+            .then {
+                APIKey.addApiKey(apiKey: apiKey)
+                finishOnboarding()
+            }
+            .catch { err in
+                let apiErr: APIError = (err as? APIError) ?? .unknown
+                if apiErr == .invalidCredentials {
+                    alert = .invalidKey
+                }
+            }
     }
 
     private func finishOnboarding() {
@@ -221,11 +191,11 @@ struct OnboardingView: View {
         case .invalidKey:
             title = Text("INVALID_KEY")
             message = Text("INVALID_KEY_MSG")
-            button = Alert.Button.default(Text("OK"), action: { self.selection = 1 })
+            button = Alert.Button.default(Text("OK"))
         case .duplicateKey:
             title = Text("DUPLICATE_KEY")
             message = Text("DUPLICATE_KEY_MSG")
-            button = Alert.Button.default(Text("RECHECK_INPUTS"), action: { self.selection = 1 })
+            button = Alert.Button.default(Text("RECHECK_INPUTS"))
         }
         return Alert(title: title, message: message, dismissButton: button)
     }
@@ -233,6 +203,6 @@ struct OnboardingView: View {
 
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingView()
+        OnboardingView(showsWelcome: true)
     }
 }
