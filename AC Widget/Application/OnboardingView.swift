@@ -20,7 +20,7 @@ struct OnboardingView: View {
 
     init(showsWelcome: Bool = true) {
         self.showsWelcome = showsWelcome
-        UITextView.appearance().backgroundColor = .red
+        UITextView.appearance().backgroundColor = .clear
     }
 
     var body: some View {
