@@ -39,7 +39,6 @@ struct OnboardingView: View {
 
             finishButton
         }
-        .multilineTextAlignment(.center)
         .alert(item: $alert, content: { generateAlert($0) })
     }
 
@@ -52,6 +51,7 @@ struct OnboardingView: View {
 
             Text("ONBOARD_WELCOME")
                 .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
             Spacer()
         })
     }
@@ -63,7 +63,11 @@ struct OnboardingView: View {
 
             Text("ONBOARD_KEY_NAME")
                 .fixedSize(horizontal: false, vertical: true)
+
+            Spacer()
             Divider()
+            Spacer()
+
             Text("ONBOARD_KEY_COLOR")
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -103,7 +107,7 @@ struct OnboardingView: View {
     var privateKeySection: some View {
         GroupBox(label: Text("PRIVATE_KEY"), content: {
             TextEditor(text: $key)
-                .frame(maxHeight: 250)
+                .frame(minHeight: 30, maxHeight: 250)
                 .disableAutocorrection(true)
                 .background(Color.systemWhite.cornerRadius(5))
                 .overlay(
