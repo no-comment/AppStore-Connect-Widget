@@ -16,7 +16,7 @@ struct ContentView: View {
             }
             .navigationViewStyle(StackNavigationViewStyle())
         } else {
-            OnboardingView()
+            OnboardingView(showsWelcome: true)
         }
     }
 }
