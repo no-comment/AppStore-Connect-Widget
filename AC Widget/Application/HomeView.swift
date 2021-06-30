@@ -11,6 +11,8 @@ struct HomeView: View {
     @State var error: APIError?
     @State var showingSheet: Bool = false
 
+    @State var showSettings = false
+
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
@@ -33,6 +35,11 @@ struct HomeView: View {
             }
             additionalInformation
         }
+        .background(
+            NavigationLink(destination: SettingsView(), isActive: $showSettings) {
+                EmptyView()
+            }
+        )
         .navigationTitle("HOME")
         .toolbar(content: toolbar)
         .sheet(isPresented: $showingSheet, content: sheet)
@@ -105,9 +112,11 @@ struct HomeView: View {
             }
 
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: SettingsView(),
-                               label: { Image(systemName: "gear") }
-                )
+                Button(action: {
+                    showSettings.toggle()
+                }, label: {
+                    Image(systemName: "gear")
+                })
             }
         }
     }
