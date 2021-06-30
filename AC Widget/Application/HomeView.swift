@@ -19,6 +19,8 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView {
+            lastChangeSubtitle
+
             if let data = data {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
                     InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
@@ -49,6 +51,15 @@ struct HomeView: View {
                 .italic()
         }
         .padding(.top, 25)
+    }
+
+    var lastChangeSubtitle: some View {
+        HStack {
+            Text("LAST_CHANGE:\(data?.latestReportingDate() ?? "-")")
+                .font(.subheadline)
+            Spacer()
+        }
+        .padding(.horizontal)
     }
 
     var additionalInformation: some View {
