@@ -177,7 +177,6 @@ struct OnboardingView: View {
     }
 
     private func finishOnboarding() {
-        UserDefaults.standard.set(true, forKey: UserDefaultsKey.completedOnboarding)
         presentationMode.wrappedValue.dismiss()
     }
 
