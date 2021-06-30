@@ -27,6 +27,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "PROCEEDS" = "Gewinn";
 "DOWNLOADS" = "Downloads";
 "UPDATES" = "Updates";
+"IN-APP-PURCHASES" = "In-App Käufe";
 
 "APP_CURRENCY" = "App Währung";
 "LAST_CHANGE:%@" = "Stand: %@";

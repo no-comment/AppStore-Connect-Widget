@@ -48,6 +48,8 @@ extension ACData {
             return getProceedsString(lastNDays, size: size, filteredApps: filteredApps)
         case .updates:
             return getUpdatesString(lastNDays, size: size, filteredApps: filteredApps)
+        case .iap:
+            return getIapString(lastNDays, size: size, filteredApps: filteredApps)
         }
     }
 
@@ -66,10 +68,15 @@ extension ACData {
         return ACData.formatNumberLength(num: num, size: size, type: .updates)
     }
 
+    private func getIapString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getIapSum(lastNDays, filteredApps: filteredApps)
+        return ACData.formatNumberLength(num: num, size: size, type: .iap)
+    }
+
     // swiftlint:disable:next function_body_length
     public static func formatNumberLength(num: Float, size: NumberLength = .standard, type: InfoType) -> String {
         switch type {
-        case .downloads, .updates:
+        case .downloads, .updates, .iap:
             if num < 1000 { return "\(Int(num))" }
 
             let fNum: NSNumber = NSNumber(value: num/1000)
@@ -134,6 +141,8 @@ extension ACData {
             return getRawProceeds(lastNDays, filteredApps: filteredApps)
         case .updates:
             return getRawUpdates(lastNDays, filteredApps: filteredApps)
+        case .iap:
+            return getRawIap(lastNDays, filteredApps: filteredApps)
         }
     }
 
@@ -183,6 +192,16 @@ extension ACData {
             }
     }
 
+    private func getRawIap(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        let iapEntires = entries.filter({ $0.type == .iap && $0.belongsToApp(apps: filteredApps) })
+        let latestDate: Date? = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
+
+        return (latestDate ?? Date()).getLastNDates(lastNDays)
+            .map { day -> (Float, Date) in
+                return (iapEntires.filter({ $0.date == day }).reduce(Float.zero, { $0 + Float($1.units) }), day)
+            }
+    }
+
     // MARK: Get Sum
     func getSum(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
         switch type {
@@ -192,6 +211,8 @@ extension ACData {
             return getProceedsSum(lastNDays, filteredApps: filteredApps)
         case .updates:
             return getUpdatesSum(lastNDays, filteredApps: filteredApps)
+        case .iap:
+            return getIapSum(lastNDays, filteredApps: filteredApps)
         }
     }
 
@@ -219,6 +240,14 @@ extension ACData {
         return result
     }
 
+    private func getIapSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
+        var result: Float = 0
+        for iap in getRawIap(lastNDays, filteredApps: filteredApps) {
+            result += iap.0
+        }
+        return result
+    }
+
     // MARK: Get CountryCode
     func getCountries(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
         switch type {
@@ -228,6 +257,8 @@ extension ACData {
             return getProceedsCountries(lastNDays, filteredApps: filteredApps)
         case .updates:
             return getUpdatesCountries(lastNDays, filteredApps: filteredApps)
+        case .iap:
+            return getIapCountries(lastNDays, filteredApps: filteredApps)
         }
     }
 
@@ -256,6 +287,17 @@ extension ACData {
         let validDays = latestDate.getLastNDates(lastNDays)
 
         return Dictionary(grouping: downloadEntries.filter({ validDays.contains($0.date) }), by: { $0.countryCode })
+            .map({ (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, value.reduce(Float.zero, { $0 + Float($1.units) }))
+            })
+    }
+
+    private func getIapCountries(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
+        let iapEntries = entries.filter({ $0.type == .iap && $0.belongsToApp(apps: filteredApps) })
+        let latestDate = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
+        let validDays = latestDate.getLastNDates(lastNDays)
+
+        return Dictionary(grouping: iapEntries.filter({ validDays.contains($0.date) }), by: { $0.countryCode })
             .map({ (key: String, value: [ACEntry]) -> (String, Float) in
                 return (key, value.reduce(Float.zero, { $0 + Float($1.units) }))
             })
@@ -307,7 +349,7 @@ extension ACData {
 }
 
 enum InfoType {
-    case proceeds, downloads, updates
+    case proceeds, downloads, updates, iap
 
     var systemImage: String {
         switch self {
@@ -317,6 +359,8 @@ enum InfoType {
             return "square.and.arrow.down"
         case .updates:
             return "arrow.triangle.2.circlepath"
+        case .iap:
+            return "cart"
         }
     }
 }

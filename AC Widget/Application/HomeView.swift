@@ -28,6 +28,7 @@ struct HomeView: View {
                     InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
                     InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
                     InfoTile(description: "UPDATES", data: data, type: .updates)
+                    InfoTile(description: "IN-APP-PURCHASES", data: data, type: .iap)
                 }
                 .padding(.horizontal)
             } else {
