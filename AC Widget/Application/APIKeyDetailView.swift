@@ -38,6 +38,7 @@ struct APIKeyDetailView: View {
             savingSection
             keySection
             storageSection
+            deleteSection
         }
         .onAppear(perform: {
             key.checkKey().catch { err in
@@ -117,6 +118,27 @@ struct APIKeyDetailView: View {
                 ACDataCache.clearCache(apiKey: key)
             }
             .foregroundColor(.orange)
+        }
+    }
+
+    @State var showingDeleteAlert = false
+    var deleteSection: some View {
+        Section {
+            Button("DELETE_KEY") {
+                showingDeleteAlert.toggle()
+            }
+            .foregroundColor(.red)
+        }
+        .alert(isPresented: $showingDeleteAlert) {
+            Alert(
+                title: Text("CONFIRM_DELETE_KEY"),
+                message: Text("DELETE_NO_UNDO"),
+                primaryButton: .destructive(Text("DELETE_KEY")) {
+                    ACDataCache.clearCache(apiKey: key)
+                    APIKey.deleteApiKeys(apiKeys: [key])
+                },
+                secondaryButton: .cancel()
+            )
         }
     }
 }

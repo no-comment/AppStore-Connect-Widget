@@ -66,6 +66,9 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "SAVE" = "Speichern";
 "CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
 "CLEAR_CACHE" = "Cache löschen";
+"DELETE_KEY" = "Key löschen";
+"CONFIRM_DELETE_KEY" = "Möchtest du wirklich diesen Key löschen?";
+"DELETE_NO_UNDO" = "Es gibt kein zurück";
 
 // MARK: Widgets
 "WIDGET_NAME" = "Übersichts Widget";

@@ -66,6 +66,9 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "SAVE" = "Save";
 "CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_CACHE" = "Clear the cache";
+"DELETE_KEY" = "Delete Key";
+"CONFIRM_DELETE_KEY" = "Are you sure you want to delete this key?";
+"DELETE_NO_UNDO" = "There is no undo";
 
 // MARK: Widgets
 "WIDGET_NAME" = "Summary Widget";
