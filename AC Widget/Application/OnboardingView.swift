@@ -9,7 +9,7 @@ struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var alert: AddAPIKeyAlert?
 
-    @State var showsWelcome: Bool
+    let showsWelcome: Bool
 
     @State private var name: String = ""
     @State private var color: Color = .accentColor
@@ -17,6 +17,11 @@ struct OnboardingView: View {
     @State private var keyID: String = ""
     @State private var key: String = ""
     @State private var vendor: String = ""
+
+    init(showsWelcome: Bool) {
+        self.showsWelcome = showsWelcome
+        UITextView.appearance().backgroundColor = .clear
+    }
 
     var body: some View {
         ScrollView {
@@ -38,6 +43,7 @@ struct OnboardingView: View {
             .padding()
 
             finishButton
+                .padding(.bottom)
         }
         .alert(item: $alert, content: { generateAlert($0) })
     }
