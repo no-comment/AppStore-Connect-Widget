@@ -155,10 +155,10 @@ struct InfoTile: View {
             }
 
             HStack(alignment: .bottom) {
-                DescribedValueView(description: "MONTH_TO_DATE", value: data.getAsString(type, lastNDays: Date.dateToMonthNumber(), size: .compact).appending(currencySymbol))
+                DescribedValueView(description: "CHANGE_PERCENT", value: data.getChange(type).appending("%"))
                 Spacer()
                     .frame(width: 40)
-                DescribedValueView(description: "CHANGE_PERCENT", value: data.getChange(type).appending("%"))
+                DescribedValueView(description: "MONTH_TO_DATE", value: data.getAsString(type, lastNDays: Date.dateToMonthNumber(), size: .compact).appending(currencySymbol))
             }
         }
     }

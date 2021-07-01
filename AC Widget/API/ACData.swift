@@ -284,9 +284,9 @@ extension ACData {
 
     // MARK: Get Change
     func getChange(_ type: InfoType) -> String {
-        let lastWeek = getSum(type, lastNDays: 7)
-        let weekBefore = getSum(type, lastNDays: 14) - lastWeek
-        let change = NSNumber(value: ((lastWeek/weekBefore) - 1) * 100)
+        let latestInterval = getSum(type, lastNDays: 15)
+        let previousInterval = getSum(type, lastNDays: 30) - latestInterval
+        let change = NSNumber(value: ((latestInterval/previousInterval) - 1) * 100)
         let nf = NumberFormatter()
         nf.numberStyle = .decimal
         nf.maximumFractionDigits = 1
