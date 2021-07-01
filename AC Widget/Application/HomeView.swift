@@ -23,9 +23,8 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView {
-            lastChangeSubtitle
-
             if let data = data {
+                lastChangeSubtitle
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
 
                     ForEach(tiles) { tile in
@@ -183,11 +182,10 @@ enum TileType: String, CaseIterable, Identifiable {
     case downloads
     case proceeds
     case updates
-    case iap
     case topCountry
     case devices
+    case iap
 
     var localized: LocalizedStringKey { return .init(rawValue) }
-
     var id: String { return rawValue }
 }
