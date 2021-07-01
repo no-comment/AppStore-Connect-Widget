@@ -28,6 +28,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "DOWNLOADS" = "Downloads";
 "UPDATES" = "Updates";
 "IN-APP-PURCHASES" = "In-App Purchases";
+"DEVICES" = "Devices";
 
 "APP_CURRENCY" = "App Currency";
 "LAST_CHANGE:%@" = "Last change: %@";

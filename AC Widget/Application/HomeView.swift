@@ -40,7 +40,7 @@ struct HomeView: View {
                         case .topCountry:
                             CountryTile(data: data)
                         case .devices:
-                            Text("TODO")
+                            DeviceTile(data: data)
                         }
                     }
                 }
