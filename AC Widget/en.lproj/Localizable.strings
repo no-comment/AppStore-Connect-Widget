@@ -71,6 +71,16 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "CONFIRM_DELETE_KEY" = "Are you sure you want to delete this key?";
 "DELETE_NO_UNDO" = "There is no undo";
 
+// MARK: Rearrange Tiles
+"REARRANGE" = "Rearrange tiles in home";
+"REARRANGE_SHORT" = "Rearrange";
+"downloads" = "Downloads";
+"proceeds" = "Proceeds";
+"updates" = "Updates";
+"iap" = "IAP";
+"topCountry" = "Top country";
+"devices" = "Devices";
+
 // MARK: Widgets
 "WIDGET_NAME" = "Summary Widget";
 "WIDGET_DESC" = "An overview of downloads and proceeds.";

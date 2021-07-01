@@ -19,17 +19,31 @@ struct HomeView: View {
         return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
     }
 
+    @State private var tiles: [TileType] = []
+
     var body: some View {
         ScrollView {
             lastChangeSubtitle
 
             if let data = data {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
-                    InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
-                    InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
-                    InfoTile(description: "UPDATES", data: data, type: .updates)
-                    InfoTile(description: "IN-APP-PURCHASES", data: data, type: .iap)
-                    CountryTile(data: data)
+
+                    ForEach(tiles) { tile in
+                        switch tile {
+                        case .downloads:
+                            InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
+                        case .proceeds:
+                            InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
+                        case .updates:
+                            InfoTile(description: "UPDATES", data: data, type: .updates)
+                        case .iap:
+                            InfoTile(description: "IN-APP-PURCHASES", data: data, type: .iap)
+                        case .topCountry:
+                            CountryTile(data: data)
+                        case .devices:
+                            Text("TODO")
+                        }
+                    }
                 }
                 .padding(.horizontal)
             } else {
@@ -39,8 +53,8 @@ struct HomeView: View {
         }
         .background(
             NavigationLink(destination: SettingsView(), isActive: $showSettings) {
-                EmptyView()
-            }
+            EmptyView()
+        }
         )
         .navigationTitle("HOME")
         .toolbar(content: toolbar)
@@ -135,6 +149,8 @@ struct HomeView: View {
     }
 
     private func onAppear(useCache: Bool = true) {
+        tiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
+
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
         api.getData(currency: Currency(rawValue: currency), useCache: useCache).then { (data) in
@@ -161,4 +177,17 @@ struct HomeView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
         }
     }
+}
+
+enum TileType: String, CaseIterable, Identifiable {
+    case downloads
+    case proceeds
+    case updates
+    case iap
+    case topCountry
+    case devices
+
+    var localized: LocalizedStringKey { return .init(rawValue) }
+
+    var id: String { return rawValue }
 }

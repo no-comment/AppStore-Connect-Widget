@@ -87,6 +87,7 @@ enum UserDefaultsKey {
     static let includeRedownloads = "includeRedownloads"
     static let homeSelectedKey = "homeSelectedKey"
     static let homeCurrency = "homeCurrency"
+    static let tilesInHome = "tilesInHome"
 }
 
 // MARK: Editing Strings
@@ -279,7 +280,7 @@ extension Array where Element == ACEntry {
         let lastNDays: [Date] = (latestDate ?? Date()).getLastNDates(n)
         return self.filter({ lastNDays.contains($0.date) })
     }
-    
+
     func filterApps(_ isIncluded: [ACApp]) -> [ACEntry] {
         return self.filter({ $0.belongsToApp(apps: isIncluded) })
     }

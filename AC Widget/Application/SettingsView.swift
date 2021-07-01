@@ -66,6 +66,7 @@ struct SettingsView: View {
     var generalSection: some View {
         Section(header: Label("GENERAL", systemImage: "gearshape.fill")) {
             Toggle("INCLUDE_REDOWNLOADS", isOn: $includeRedownloads)
+            NavigationLink("REARRANGE", destination: RearrangeTilesView())
         }
     }
 

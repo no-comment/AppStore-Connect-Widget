@@ -71,6 +71,16 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "CONFIRM_DELETE_KEY" = "Möchtest du wirklich diesen Key löschen?";
 "DELETE_NO_UNDO" = "Es gibt kein zurück";
 
+// MARK: Rearrange Tiles
+"REARRANGE" = "Homebildschirm bearbeiten";
+"REARRANGE_SHORT" = "Umsortieren";
+"downloads" = "Downloads";
+"proceeds" = "Proceeds";
+"updates" = "Updates";
+"iap" = "IAP";
+"topCountry" = "Top Länder";
+"devices" = "Geräte";
+
 // MARK: Widgets
 "WIDGET_NAME" = "Übersichts Widget";
 "WIDGET_DESC" = "Eine Übersicht von Downloads and Gewinnen.";
