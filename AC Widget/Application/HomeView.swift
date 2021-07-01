@@ -52,8 +52,8 @@ struct HomeView: View {
         }
         .background(
             NavigationLink(destination: SettingsView(), isActive: $showSettings) {
-            EmptyView()
-        }
+                EmptyView()
+            }
         )
         .navigationTitle("HOME")
         .toolbar(content: toolbar)
