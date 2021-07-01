@@ -369,7 +369,7 @@ extension ACData {
 
     private static func createMockData(_ days: Int, largeValues: Bool = false) -> ACData {
         var entries: [ACEntry] = []
-        let countries = ["US", "DE", "ES", "UK"]
+        let countries = ["US", "DE", "ES", "UK", "IN", "CA", "SE", "NZ"]
         let devices = ["Desktop", "iPhone", "iPad"]
 
         Date(timeIntervalSinceNow: -86400).getLastNDates(days).forEach { day in

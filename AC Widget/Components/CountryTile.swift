@@ -23,10 +23,10 @@ struct CountryTile: View {
             }
             .padding(.bottom, 5)
 
-            ForEach(0..<7) { i in
+            ForEach(0..<8) { i in
                 DescribedValueView(description: countryName(placement: i), value: countryProceeds(placement: i))
             }
-            Spacer()
+            Spacer(minLength: 0)
         }
         .frame(height: 250)
     }
