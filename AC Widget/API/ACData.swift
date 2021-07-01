@@ -159,7 +159,7 @@ extension ACData {
         return Dictionary(grouping: downloadEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (Float(value.reduce(0, { $0 + $1.units })), key)
-            }
+            }.fillZeroLastDays(lastNDays)
     }
 
     private func getRawProceeds(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
@@ -169,7 +169,7 @@ extension ACData {
         return Dictionary(grouping: proceedEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (value.reduce(0, { $0 + $1.proceeds * Float($1.units) }), key)
-            }
+            }.fillZeroLastDays(lastNDays)
     }
 
     private func getRawUpdates(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
@@ -179,7 +179,7 @@ extension ACData {
         return Dictionary(grouping: proceedEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (Float(value.reduce(0, { $0 + $1.units })), key)
-            }
+            }.fillZeroLastDays(lastNDays)
     }
 
     private func getRawIap(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
