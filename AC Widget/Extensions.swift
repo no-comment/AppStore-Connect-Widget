@@ -272,6 +272,19 @@ extension Color {
     }
 }
 
+// MARK: ACEntry Array
+extension Array where Element == ACEntry {
+    func getLastDays(_ n: Int) -> [ACEntry] {
+        let latestDate: Date? = self.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
+        let lastNDays: [Date] = (latestDate ?? Date()).getLastNDates(n)
+        return self.filter({ lastNDays.contains($0.date) })
+    }
+    
+    func filterApps(_ isIncluded: [ACApp]) -> [ACEntry] {
+        return self.filter({ $0.belongsToApp(apps: isIncluded) })
+    }
+}
+
 // MARK: Other
 extension Collection {
     func count(where test: (Element) throws -> Bool) rethrows -> Int {
