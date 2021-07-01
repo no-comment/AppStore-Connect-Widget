@@ -34,7 +34,7 @@ struct DeviceTile: View {
             Text("DEVICES")
                 .font(.system(size: 20))
             charts
-            Spacer()
+            Spacer(minLength: 0)
             legend
         }
         .frame(height: 250)
@@ -44,15 +44,15 @@ struct DeviceTile: View {
         VStack(alignment: .leading, spacing: 5) {
             Text("DOWNLOADS")
             PercentStackedBarChart(data: downloadData.map({ ($0.1, legendPairs[$0.0] ?? .gray) }))
-                .frame(height: 12)
+                .frame(height: 10)
 
             Text("PROCEEDS")
             PercentStackedBarChart(data: proceedData.map({ ($0.1, legendPairs[$0.0] ?? .gray) }))
-                .frame(height: 12)
+                .frame(height: 10)
 
             Text("UPDATES")
             PercentStackedBarChart(data: updateData.map({ ($0.1, legendPairs[$0.0] ?? .gray) }))
-                .frame(height: 12)
+                .frame(height: 10)
         }
     }
 
