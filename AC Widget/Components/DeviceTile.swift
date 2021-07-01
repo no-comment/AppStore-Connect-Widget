@@ -22,7 +22,7 @@ struct DeviceTile: View {
 
         var i = 0
         var deviceLegend: [String: Color] = [:]
-        for device in Set(allDevices) {
+        for device in Set(allDevices).sorted() {
             deviceLegend[device] = colors[i % colors.count]
             i += 1
         }
