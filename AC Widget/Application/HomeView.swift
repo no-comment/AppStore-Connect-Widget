@@ -148,7 +148,8 @@ struct HomeView: View {
     }
 
     private func onAppear(useCache: Bool = true) {
-        tiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
+        let selectedTiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
+        tiles = selectedTiles.isEmpty ? TileType.allCases : selectedTiles
 
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)

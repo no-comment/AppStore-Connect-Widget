@@ -189,7 +189,7 @@ extension ACData {
         return Dictionary(grouping: proceedEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (Float(value.reduce(0, { $0 + $1.units })), key)
-            }
+            }.fillZeroLastDays(lastNDays)
     }
 
     // MARK: Get Sum
