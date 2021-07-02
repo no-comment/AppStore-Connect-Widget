@@ -11,19 +11,38 @@ struct HomeView: View {
     @State var error: APIError?
     @State var showingSheet: Bool = false
 
+    @State var showSettings = false
+
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
         return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
     }
 
+    @State private var tiles: [TileType] = []
+
     var body: some View {
         ScrollView {
             if let data = data {
+                lastChangeSubtitle
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
-                    InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
-                    InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
-                    InfoTile(description: "UPDATES", data: data, type: .updates)
+
+                    ForEach(tiles) { tile in
+                        switch tile {
+                        case .downloads:
+                            InfoTile(description: "DOWNLOADS", data: data, type: .downloads)
+                        case .proceeds:
+                            InfoTile(description: "PROCEEDS", data: data, type: .proceeds)
+                        case .updates:
+                            InfoTile(description: "UPDATES", data: data, type: .updates)
+                        case .iap:
+                            InfoTile(description: "IN-APP-PURCHASES", data: data, type: .iap)
+                        case .topCountry:
+                            CountryTile(data: data)
+                        case .devices:
+                            DeviceTile(data: data)
+                        }
+                    }
                 }
                 .padding(.horizontal)
             } else {
@@ -31,6 +50,11 @@ struct HomeView: View {
             }
             additionalInformation
         }
+        .background(
+            NavigationLink(destination: SettingsView(), isActive: $showSettings) {
+                EmptyView()
+            }
+        )
         .navigationTitle("HOME")
         .toolbar(content: toolbar)
         .sheet(isPresented: $showingSheet, content: sheet)
@@ -49,6 +73,15 @@ struct HomeView: View {
                 .italic()
         }
         .padding(.top, 25)
+    }
+
+    var lastChangeSubtitle: some View {
+        HStack {
+            Text("LAST_CHANGE:\(data?.latestReportingDate() ?? "-")")
+                .font(.subheadline)
+            Spacer()
+        }
+        .padding(.horizontal)
     }
 
     var additionalInformation: some View {
@@ -94,9 +127,11 @@ struct HomeView: View {
             }
 
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: SettingsView(),
-                               label: { Image(systemName: "gear") }
-                )
+                Button(action: {
+                    showSettings.toggle()
+                }, label: {
+                    Image(systemName: "gear")
+                })
             }
         }
     }
@@ -113,6 +148,9 @@ struct HomeView: View {
     }
 
     private func onAppear(useCache: Bool = true) {
+        let selectedTiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
+        tiles = selectedTiles.isEmpty ? TileType.allCases : selectedTiles
+
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
         api.getData(currency: Currency(rawValue: currency), useCache: useCache).then { (data) in
@@ -139,4 +177,16 @@ struct HomeView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
         }
     }
+}
+
+enum TileType: String, CaseIterable, Identifiable {
+    case downloads
+    case proceeds
+    case updates
+    case topCountry
+    case devices
+    case iap
+
+    var localized: LocalizedStringKey { return .init(rawValue) }
+    var id: String { return rawValue }
 }

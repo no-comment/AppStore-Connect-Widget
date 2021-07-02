@@ -83,11 +83,11 @@ extension UserDefaults {
 
 enum UserDefaultsKey {
     static let apiKeys = "apiKeys"
-    static let completedOnboarding = "completedOnboarding"
     static let dataCache = "dataCache"
     static let includeRedownloads = "includeRedownloads"
     static let homeSelectedKey = "homeSelectedKey"
     static let homeCurrency = "homeCurrency"
+    static let tilesInHome = "tilesInHome"
 }
 
 // MARK: Editing Strings
@@ -270,6 +270,29 @@ extension Color {
             return (colorComponent < 0.04045) ? (colorComponent / 12.92) : pow((colorComponent + 0.055) / 1.055, 2.4)
         }
         return 0.2126 * adjust(colorComponent: self.colorComponents?.red ?? 0) + 0.7152 * adjust(colorComponent: self.colorComponents?.green ?? 0) + 0.0722 * adjust(colorComponent: self.colorComponents?.blue ?? 0)
+    }
+}
+
+// MARK: ACEntry Array
+extension Array where Element == ACEntry {
+    func getLastDays(_ n: Int) -> [ACEntry] {
+        let latestDate: Date? = self.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
+        let lastNDays: [Date] = (latestDate ?? Date()).getLastNDates(n)
+        return self.filter({ lastNDays.contains($0.date) })
+    }
+
+    func filterApps(_ isIncluded: [ACApp]) -> [ACEntry] {
+        return self.filter({ $0.belongsToApp(apps: isIncluded) })
+    }
+}
+
+extension Array where Element == (Float, Date) {
+    func fillZeroLastDays(_ n: Int) -> [(Float, Date)] {
+        let latestDate: Date? = self.reduce(Date.distantPast, { $0 > $1.1 ? $0 : $1.1 })
+        let lastNDays: [Date] = (latestDate ?? Date()).getLastNDates(n)
+        return lastNDays.map({ day -> (Float, Date) in
+            return self.first(where: { $0.1 == day }) ?? (Float.zero, day)
+        })
     }
 }
 

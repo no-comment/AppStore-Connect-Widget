@@ -304,6 +304,7 @@ extension Date {
     }
 
     func getLastNDates(_ n: Int) -> [Date] {
+        if n == 0 { return [] }
         let cal = NSCalendar.current
         // start with today
         var date = cal.startOfDay(for: self)

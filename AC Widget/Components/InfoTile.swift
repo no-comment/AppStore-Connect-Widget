@@ -38,10 +38,23 @@ struct InfoTile: View {
 
     var body: some View {
         Card {
-            topSection
+            // Temporarily disabled update numbers (GitHub Issue #3)
+            if type == .updates {
+                HStack {
+                    Text(description)
+                    Spacer()
+                    Image(systemName: InfoType.updates.systemImage)
+                }
+                .font(.system(size: 20))
+                .padding(.bottom, 20)
+            } else {
+                topSection
+            }
             graphSection
                 .frame(minHeight: 100)
-            bottomSection
+            if type != .updates {
+                bottomSection
+            }
         }
         .frame(height: 250)
     }
@@ -155,10 +168,10 @@ struct InfoTile: View {
             }
 
             HStack(alignment: .bottom) {
-                DescribedValueView(description: "MONTH_TO_DATE", value: data.getAsString(type, lastNDays: Date.dateToMonthNumber(), size: .compact).appending(currencySymbol))
+                DescribedValueView(description: "CHANGE_PERCENT", value: data.getChange(type).appending("%"))
                 Spacer()
                     .frame(width: 40)
-                DescribedValueView(description: "CHANGE_PERCENT", value: data.getChange(type).appending("%"))
+                DescribedValueView(description: "MONTH_TO_DATE", value: data.getAsString(type, lastNDays: Date.dateToMonthNumber(), size: .compact).appending(currencySymbol))
             }
         }
     }
@@ -169,6 +182,7 @@ struct InfoTile_Previews: PreviewProvider {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
             InfoTile(description: "DOWNLOADS", data: ACData.example, type: .downloads)
             InfoTile(description: "PROCEEDS", data: ACData.example, type: .proceeds)
+            InfoTile(description: "UPDATES", data: ACData.example, type: .updates)
         }.padding()
     }
 }

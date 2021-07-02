@@ -48,6 +48,8 @@ extension ACData {
             return getProceedsString(lastNDays, size: size, filteredApps: filteredApps)
         case .updates:
             return getUpdatesString(lastNDays, size: size, filteredApps: filteredApps)
+        case .iap:
+            return getIapString(lastNDays, size: size, filteredApps: filteredApps)
         }
     }
 
@@ -66,10 +68,15 @@ extension ACData {
         return ACData.formatNumberLength(num: num, size: size, type: .updates)
     }
 
+    private func getIapString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
+        let num: Float = getIapSum(lastNDays, filteredApps: filteredApps)
+        return ACData.formatNumberLength(num: num, size: size, type: .iap)
+    }
+
     // swiftlint:disable:next function_body_length
     public static func formatNumberLength(num: Float, size: NumberLength = .standard, type: InfoType) -> String {
         switch type {
-        case .downloads, .updates:
+        case .downloads, .updates, .iap:
             if num < 1000 { return "\(Int(num))" }
 
             let fNum: NSNumber = NSNumber(value: num/1000)
@@ -134,53 +141,55 @@ extension ACData {
             return getRawProceeds(lastNDays, filteredApps: filteredApps)
         case .updates:
             return getRawUpdates(lastNDays, filteredApps: filteredApps)
+        case .iap:
+            return getRawIap(lastNDays, filteredApps: filteredApps)
         }
     }
 
     private func getRawDownloads(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
-        let downloadEntries = filteredDownloadEntries(lastNDays, filteredApps: filteredApps)
-        let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
+        var downloadEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
 
-        return latestDate.getLastNDates(lastNDays)
-            .map { day -> (Float, Date) in
-                let count = downloadEntries.filter({ $0.date == day }).reduce(0, { $0 + $1.units })
-                return (Float(count), day)
-            }
-    }
-
-    private func filteredDownloadEntries(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [ACEntry] {
-        var downloadEntries = entries
+        // Checking if Re-Dowloads are to be included
         if UserDefaults.shared?.bool(forKey: UserDefaultsKey.includeRedownloads) ?? false {
-            downloadEntries = downloadEntries.filter { ($0.type == .download || $0.type == .redownload) && $0.belongsToApp(apps: filteredApps) }
+            downloadEntries = downloadEntries.filter({ $0.type == .download || $0.type == .redownload })
         } else {
-            downloadEntries = downloadEntries.filter { $0.type == .download && $0.belongsToApp(apps: filteredApps) }
+            downloadEntries = downloadEntries.filter({ $0.type == .download })
         }
-        let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
 
-        let validDates = latestDate.getLastNDates(lastNDays)
-        return downloadEntries.filter({ validDates.contains($0.date) })
+        return Dictionary(grouping: downloadEntries, by: { $0.date })
+            .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
+                return (Float(value.reduce(0, { $0 + $1.units })), key)
+            }.fillZeroLastDays(lastNDays)
     }
 
     private func getRawProceeds(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
-        let downloadEntries = entries.filter({ $0.proceeds > 0 && $0.belongsToApp(apps: filteredApps) })
-        let latestDate: Date? = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.proceeds > 0 })
 
-        return (latestDate ?? Date()).getLastNDates(lastNDays)
-            .map { day -> (Float, Date) in
-                let sum = downloadEntries.filter({ $0.date == day }).reduce(Float.zero, { $0 + $1.proceeds * Float($1.units) })
-                return (sum, day)
-            }
+        return Dictionary(grouping: proceedEntries, by: { $0.date })
+            .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
+                return (value.reduce(0, { $0 + $1.proceeds * Float($1.units) }), key)
+            }.fillZeroLastDays(lastNDays)
     }
 
     private func getRawUpdates(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
-        let downloadEntries = entries.filter({ $0.type == .update && $0.belongsToApp(apps: filteredApps) })
-        let latestDate: Date = downloadEntries.count > 0 ? downloadEntries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 }) : Date()
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.type == .update })
 
-        return latestDate.getLastNDates(lastNDays)
-            .map { day -> (Float, Date) in
-                let count = downloadEntries.filter({ $0.date == day }).reduce(0, { $0 + $1.units })
-                return (Float(count), day)
-            }
+        return Dictionary(grouping: proceedEntries, by: { $0.date })
+            .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
+                return (Float(value.reduce(0, { $0 + $1.units })), key)
+            }.fillZeroLastDays(lastNDays)
+    }
+
+    private func getRawIap(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.type == .iap })
+
+        return Dictionary(grouping: proceedEntries, by: { $0.date })
+            .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
+                return (Float(value.reduce(0, { $0 + $1.units })), key)
+            }.fillZeroLastDays(lastNDays)
     }
 
     // MARK: Get Sum
@@ -192,31 +201,25 @@ extension ACData {
             return getProceedsSum(lastNDays, filteredApps: filteredApps)
         case .updates:
             return getUpdatesSum(lastNDays, filteredApps: filteredApps)
+        case .iap:
+            return getIapSum(lastNDays, filteredApps: filteredApps)
         }
     }
 
     private func getDownloadsSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
-        var result: Float = 0
-        for download in getRawDownloads(lastNDays, filteredApps: filteredApps) {
-            result += download.0
-        }
-        return result
+        return getRawDownloads(lastNDays, filteredApps: filteredApps).map({ $0.0 }).reduce(0, +)
     }
 
     private func getProceedsSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
-        var result: Float = 0
-        for proceed in getRawProceeds(lastNDays, filteredApps: filteredApps) {
-            result += proceed.0
-        }
-        return result
+        return getRawProceeds(lastNDays, filteredApps: filteredApps).map({ $0.0 }).reduce(0, +)
     }
 
     private func getUpdatesSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
-        var result: Float = 0
-        for update in getRawUpdates(lastNDays, filteredApps: filteredApps) {
-            result += update.0
-        }
-        return result
+        return getRawUpdates(lastNDays, filteredApps: filteredApps).map({ $0.0 }).reduce(0, +)
+    }
+
+    private func getIapSum(_ lastNDays: Int, filteredApps: [ACApp] = []) -> Float {
+        return getRawIap(lastNDays, filteredApps: filteredApps).map({ $0.0 }).reduce(0, +)
     }
 
     // MARK: Get CountryCode
@@ -228,44 +231,122 @@ extension ACData {
             return getProceedsCountries(lastNDays, filteredApps: filteredApps)
         case .updates:
             return getUpdatesCountries(lastNDays, filteredApps: filteredApps)
+        case .iap:
+            return getIapCountries(lastNDays, filteredApps: filteredApps)
         }
     }
 
     private func getDownloadsCountries(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
-        let downloadEntries = filteredDownloadEntries(lastNDays, filteredApps: filteredApps)
+        var downloadEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+
+        // Checking if Re-Dowloads are to be included
+        if UserDefaults.shared?.bool(forKey: UserDefaultsKey.includeRedownloads) ?? false {
+            downloadEntries = downloadEntries.filter({ $0.type == .download || $0.type == .redownload })
+        } else {
+            downloadEntries = downloadEntries.filter({ $0.type == .download })
+        }
+
         return Dictionary(grouping: downloadEntries, by: { $0.countryCode })
-            .map({ (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, value.reduce(Float.zero, { $0 + Float($1.units) }))
-            })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, Float(value.reduce(0, { $0 + $1.units })))
+            }
     }
 
     private func getProceedsCountries(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
-        let proceedsEntries = entries.filter({ $0.proceeds > 0 && $0.belongsToApp(apps: filteredApps) })
-        let latestDate = entries.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
-        let validDays = latestDate.getLastNDates(lastNDays)
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.proceeds > 0 })
 
-        return Dictionary(grouping: proceedsEntries.filter({ validDays.contains($0.date) }), by: { $0.countryCode })
-            .map({ (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, value.reduce(Float.zero, { $0 + $1.proceeds * Float($1.units) }))
-            })
+        return Dictionary(grouping: proceedEntries, by: { $0.countryCode })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, value.reduce(0, { $0 + $1.proceeds * Float($1.units) }))
+            }
     }
 
     private func getUpdatesCountries(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
-        let downloadEntries = entries.filter({ $0.type == .update && $0.belongsToApp(apps: filteredApps) })
-        let latestDate = entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
-        let validDays = latestDate.getLastNDates(lastNDays)
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.type == .update })
 
-        return Dictionary(grouping: downloadEntries.filter({ validDays.contains($0.date) }), by: { $0.countryCode })
-            .map({ (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, value.reduce(Float.zero, { $0 + Float($1.units) }))
-            })
+        return Dictionary(grouping: proceedEntries, by: { $0.countryCode })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, Float(value.reduce(0, { $0 + $1.units })))
+            }
+    }
+
+    private func getIapCountries(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.type == .iap })
+
+        return Dictionary(grouping: proceedEntries, by: { $0.countryCode })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, Float(value.reduce(0, { $0 + $1.units })))
+            }
+    }
+
+    // MARK: Get Device
+    func getDevices(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
+        switch type {
+        case .downloads:
+            return getDownloadsDevices(lastNDays, filteredApps: filteredApps)
+        case .proceeds:
+            return getProceedsDevices(lastNDays, filteredApps: filteredApps)
+        case .updates:
+            return getUpdatesDevices(lastNDays, filteredApps: filteredApps)
+        case .iap:
+            return getIapDevices(lastNDays, filteredApps: filteredApps)
+        }
+    }
+
+    private func getDownloadsDevices(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
+        var downloadEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+
+        // Checking if Re-Dowloads are to be included
+        if UserDefaults.shared?.bool(forKey: UserDefaultsKey.includeRedownloads) ?? false {
+            downloadEntries = downloadEntries.filter({ $0.type == .download || $0.type == .redownload })
+        } else {
+            downloadEntries = downloadEntries.filter({ $0.type == .download })
+        }
+
+        return Dictionary(grouping: downloadEntries, by: { $0.device })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, Float(value.reduce(0, { $0 + $1.units })))
+            }
+    }
+
+    private func getProceedsDevices(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.proceeds > 0 })
+
+        return Dictionary(grouping: proceedEntries, by: { $0.device })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, value.reduce(0, { $0 + $1.proceeds * Float($1.units) }))
+            }
+    }
+
+    private func getUpdatesDevices(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.type == .update })
+
+        return Dictionary(grouping: proceedEntries, by: { $0.device })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, Float(value.reduce(0, { $0 + $1.units })))
+            }
+    }
+
+    private func getIapDevices(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
+        var proceedEntries = entries.getLastDays(lastNDays).filterApps(filteredApps)
+        proceedEntries = proceedEntries.filter({ $0.type == .iap })
+
+        return Dictionary(grouping: proceedEntries, by: { $0.device })
+            .map { (key: String, value: [ACEntry]) -> (String, Float) in
+                return (key, Float(value.reduce(0, { $0 + $1.units })))
+            }
     }
 
     // MARK: Get Change
     func getChange(_ type: InfoType) -> String {
-        let lastWeek = getSum(type, lastNDays: 7)
-        let weekBefore = getSum(type, lastNDays: 14) - lastWeek
-        let change = NSNumber(value: ((lastWeek/weekBefore) - 1) * 100)
+        let latestInterval = getSum(type, lastNDays: 15)
+        let previousInterval = getSum(type, lastNDays: 30) - latestInterval
+        let change = NSNumber(value: ((latestInterval/previousInterval) - 1) * 100)
         let nf = NumberFormatter()
         nf.numberStyle = .decimal
         nf.maximumFractionDigits = 1
@@ -288,7 +369,7 @@ extension ACData {
 
     private static func createMockData(_ days: Int, largeValues: Bool = false) -> ACData {
         var entries: [ACEntry] = []
-        let countries = ["US", "DE", "ES", "UK"]
+        let countries = ["US", "DE", "ES", "UK", "IN", "CA", "SE", "NZ"]
         let devices = ["Desktop", "iPhone", "iPad"]
 
         Date(timeIntervalSinceNow: -86400).getLastNDates(days).forEach { day in
@@ -307,7 +388,7 @@ extension ACData {
 }
 
 enum InfoType {
-    case proceeds, downloads, updates
+    case proceeds, downloads, updates, iap
 
     var systemImage: String {
         switch self {
@@ -317,6 +398,8 @@ enum InfoType {
             return "square.and.arrow.down"
         case .updates:
             return "arrow.triangle.2.circlepath"
+        case .iap:
+            return "cart"
         }
     }
 }

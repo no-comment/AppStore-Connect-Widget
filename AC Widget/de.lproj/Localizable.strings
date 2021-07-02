@@ -27,6 +27,8 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "PROCEEDS" = "Gewinn";
 "DOWNLOADS" = "Downloads";
 "UPDATES" = "Updates";
+"IN-APP-PURCHASES" = "In-App Käufe";
+"DEVICES" = "Geräte";
 
 "APP_CURRENCY" = "App Währung";
 "LAST_CHANGE:%@" = "Stand: %@";
@@ -66,6 +68,19 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "SAVE" = "Speichern";
 "CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
 "CLEAR_CACHE" = "Cache löschen";
+"DELETE_KEY" = "Key löschen";
+"CONFIRM_DELETE_KEY" = "Möchtest du wirklich diesen Key löschen?";
+"DELETE_NO_UNDO" = "Es gibt kein zurück";
+
+// MARK: Rearrange Tiles
+"REARRANGE" = "Homebildschirm bearbeiten";
+"REARRANGE_SHORT" = "Umsortieren";
+"downloads" = "Downloads";
+"proceeds" = "Proceeds";
+"updates" = "Updates";
+"iap" = "IAP";
+"topCountry" = "Top Länder";
+"devices" = "Geräte";
 
 // MARK: Widgets
 "WIDGET_NAME" = "Übersichts Widget";
@@ -78,7 +93,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "LAST_THIRTY_DAYS" = "30 Tage:";
 "MONTH_TO_DATE" = "Monat:";
 "CHANGE_PERCENT" = "Verlauf:";
-"TOP_COUNTRIES" = "Top Länder:";
+"TOP_COUNTRIES" = "Top Länder";
 
 "NO_DATA" = "Keine Daten";
 
