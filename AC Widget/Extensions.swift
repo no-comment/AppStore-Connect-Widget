@@ -269,9 +269,8 @@ extension Array where Element == ACEntry {
 }
 
 extension Array where Element == (Float, Date) {
-    func fillZeroLastDays(_ n: Int) -> [(Float, Date)] {
-        let latestDate: Date? = self.reduce(Date.distantPast, { $0 > $1.1 ? $0 : $1.1 })
-        let lastNDays: [Date] = (latestDate ?? Date()).getLastNDates(n)
+    func fillZeroLastDays(_ n: Int, latestDate: Date) -> [(Float, Date)] {
+        let lastNDays: [Date] = latestDate.getLastNDates(n)
         return lastNDays.map({ day -> (Float, Date) in
             return self.first(where: { $0.1 == day }) ?? (Float.zero, day)
         })
