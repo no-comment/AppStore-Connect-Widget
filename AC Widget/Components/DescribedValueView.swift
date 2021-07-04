@@ -7,12 +7,22 @@ import SwiftUI
 import WidgetKit
 
 struct DescribedValueView: View {
-    let description: LocalizedStringKey
+    let description: Text
     let value: String
+
+    init(description: LocalizedStringKey, value: String) {
+        self.description = Text(description)
+        self.value = value
+    }
+
+    init(descriptionString: String, value: String) {
+        self.description = Text(descriptionString)
+        self.value = value
+    }
 
     var body: some View {
         HStack(spacing: 0) {
-            Text(description)
+            description
                 .font(.system(size: 17, weight: .regular, design: .default))
                 .foregroundColor(.gray)
                 .minimumScaleFactor(0.6)
