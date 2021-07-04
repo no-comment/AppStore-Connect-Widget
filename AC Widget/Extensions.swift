@@ -52,7 +52,7 @@ extension Date {
     }
 
     func dateToMonthNumber() -> Int {
-        return Int(Calendar.current.component(.day, from: self)) - 1
+        return Int(Calendar.current.component(.day, from: self))
     }
 }
 
