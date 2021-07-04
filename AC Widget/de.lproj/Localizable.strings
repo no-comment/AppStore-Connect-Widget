@@ -87,7 +87,9 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "WIDGET_DESC" = "Eine Übersicht von Downloads and Gewinnen.";
 
 "TODAY" = "Heute";
+"Today" = "Today";
 "YESTERDAY" = "Gestern";
+"Yesterday" = "Gestern";
 
 "LAST_SEVEN_DAYS" = "7 Tage:";
 "LAST_THIRTY_DAYS" = "30 Tage:";

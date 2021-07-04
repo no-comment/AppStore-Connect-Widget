@@ -87,7 +87,9 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "WIDGET_DESC" = "An overview of downloads and proceeds.";
 
 "TODAY" = "Today";
+"Today" = "Today";
 "YESTERDAY" = "Yesterday";
+"Yesterday" = "Yesterday";
 
 "LAST_SEVEN_DAYS" = "7 days:";
 "LAST_THIRTY_DAYS" = "30 days:";
