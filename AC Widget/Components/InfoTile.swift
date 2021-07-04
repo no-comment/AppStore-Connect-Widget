@@ -68,9 +68,9 @@ struct InfoTile: View {
                     .font(.system(size: 20))
                 Spacer()
                 if currencySymbol.isEmpty {
-                    UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 3), metricSymbol: type.systemImage)
+                    UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 2), metricSymbol: type.systemImage)
                 } else {
-                    UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 3), metric: currencySymbol)
+                    UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 2), metric: currencySymbol)
                 }
             } else {
                 Text(description)
