@@ -54,6 +54,7 @@ struct DeviceTile: View {
             PercentStackedBarChart(data: updateData.map({ ($0.1, legendPairs[$0.0] ?? .gray) }))
                 .frame(height: 10)
         }
+        .font(.system(size: 15))
     }
 
     var legend: some View {
@@ -65,6 +66,7 @@ struct DeviceTile: View {
                     Text(key)
                     Spacer()
                 }
+                .font(.system(size: legendPairs.count > 4 ? 13 : 16))
             }
         }
     }
