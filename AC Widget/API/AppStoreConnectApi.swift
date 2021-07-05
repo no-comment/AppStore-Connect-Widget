@@ -39,6 +39,11 @@ class AppStoreConnectApi {
         let localCurrency: Currency = currency ?? .USD
         let promise = Promise<ACData>.pending()
 
+        if apiKey.name == APIKey.demoKeyName {
+            promise.fulfill(ACData.example)
+            return promise
+        }
+
         if useCache {
             if let last = AppStoreConnectApi.lastData.first(where: { $0.key.id == self.apiKey.id }) {
                 if last.date.timeIntervalSinceNow > -60 * 5 {
