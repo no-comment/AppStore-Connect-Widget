@@ -100,6 +100,12 @@ struct SettingsView: View {
                 })
             }
 
+            if let destination = URL(string: "https://github.com/no-comment/AppStore-Connect-Widget/issues") {
+                Link(destination: destination, label: {
+                    Text("SUPPORT")
+                })
+            }
+
             if let destination = URL(string: "https://www.buymeacoffee.com/nocomment") {
                 Link(destination: destination, label: {
                     Text("Buy me a coffee")

@@ -5,6 +5,7 @@
 
 import SwiftUI
 import WidgetKit
+import BetterToStrings
 
 struct SummaryLarge: View {
     @Environment(\.colorScheme) var colorScheme
@@ -50,8 +51,8 @@ struct SummaryLarge: View {
                                     .getAsString(.downloads, lastNDays: 7, size: .compact))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
                                     .getAsString(.downloads, lastNDays: 30, size: .compact))
-                DescribedValueView(description: "MONTH_TO_DATE", value: data
-                                    .getAsString(.downloads, lastNDays: Date.dateToMonthNumber(), size: .compact))
+                DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
+                                   value: data.getAsString(.downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact))
             }
         }
     }
@@ -68,8 +69,9 @@ struct SummaryLarge: View {
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
                                     .getAsString(.proceeds, lastNDays: 30, size: .compact)
                                     .appending(data.displayCurrency.symbol))
-                DescribedValueView(description: "MONTH_TO_DATE", value: data
-                                    .getAsString(.proceeds, lastNDays: Date.dateToMonthNumber(), size: .compact)
+                DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
+                                   value: data
+                                    .getAsString(.proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact)
                                     .appending(data.displayCurrency.symbol))
             }
         }

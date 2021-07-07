@@ -148,6 +148,10 @@ extension APIKey {
     }
 }
 
+extension APIKey {
+    static let demoKeyName = "demoKey1234"
+}
+
 extension ApiKeyParam {
     convenience init(key: APIKey) {
         self.init(identifier: key.id, display: key.name)

@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import BetterToStrings
 
 struct InfoTile: View {
     private var description: LocalizedStringKey
@@ -63,13 +64,13 @@ struct InfoTile: View {
     var topSection: some View {
         HStack(alignment: .top) {
             if let index = currentIndex {
-                Text(getGraphDataPoint(index).1.toString())
+                Text(getGraphDataPoint(index).1.toString(format: "dd. MMM.", smartConversion: true))
                     .font(.system(size: 20))
                 Spacer()
                 if currencySymbol.isEmpty {
-                    UnitText(ACData.formatNumberLength(num: getGraphDataPoint(index).0, type: type), metricSymbol: type.systemImage)
+                    UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 2), metricSymbol: type.systemImage)
                 } else {
-                    UnitText(ACData.formatNumberLength(num: getGraphDataPoint(index).0, type: type), metric: currencySymbol)
+                    UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 2), metric: currencySymbol)
                 }
             } else {
                 Text(description)
@@ -171,7 +172,9 @@ struct InfoTile: View {
                 DescribedValueView(description: "CHANGE_PERCENT", value: data.getChange(type).appending("%"))
                 Spacer()
                     .frame(width: 40)
-                DescribedValueView(description: "MONTH_TO_DATE", value: data.getAsString(type, lastNDays: Date.dateToMonthNumber(), size: .compact).appending(currencySymbol))
+                DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
+                                   value: data.getAsString(type, lastNDays: data.latestReportingDate().dateToMonthNumber(),
+                                                           size: .compact).appending(currencySymbol))
             }
         }
     }

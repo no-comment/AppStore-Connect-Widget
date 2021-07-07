@@ -41,6 +41,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "SELECT_KEY" = "API Key auswählen";
 "API_KEY" = "API Key";
 "APPLICATIONS" = "Applikationen";
+"CURRENCY" = "Währung";
 
 // MARK: Settings
 "SETTINGS" = "Einstellungen";
@@ -52,11 +53,12 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "GENERAL" = "Allgemein";
 "INCLUDE_REDOWNLOADS" = "Redownloads mitzählen";
 "WIDGET" = "Widget";
-"FORCE_REFRESH_WIDGET" = "Widget aktualisieren";
+"FORCE_REFRESH_WIDGET" = "Widget aktualisieren erzwingen";
 "STORAGE" = "Speicher";
 "ALL_CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
 "CLEAR_ALL_CACHE" = "Gesamten Cache löschen";
 "UPDATE_FREQUENCY_NOTICE" = "Anmerkung: AppStoreConnect stellt die Daten vom Vortag erst gegen 14Uhr deutscher Zeit bereit.";
+"SUPPORT" = "Support";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Farbe";
@@ -87,7 +89,9 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "WIDGET_DESC" = "Eine Übersicht von Downloads and Gewinnen.";
 
 "TODAY" = "Heute";
+"Today" = "Today";
 "YESTERDAY" = "Gestern";
+"Yesterday" = "Gestern";
 
 "LAST_SEVEN_DAYS" = "7 Tage:";
 "LAST_THIRTY_DAYS" = "30 Tage:";

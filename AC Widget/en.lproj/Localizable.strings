@@ -41,6 +41,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "SELECT_KEY" = "Select API Key";
 "API_KEY" = "API Key";
 "APPLICATIONS" = "Applications";
+"CURRENCY" = "Currency";
 
 // MARK: Settings
 "SETTINGS" = "Settings";
@@ -57,6 +58,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
 "UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at around 5am Pacific Time.";
+"SUPPORT" = "Support";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Color";
@@ -87,7 +89,9 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "WIDGET_DESC" = "An overview of downloads and proceeds.";
 
 "TODAY" = "Today";
+"Today" = "Today";
 "YESTERDAY" = "Yesterday";
+"Yesterday" = "Yesterday";
 
 "LAST_SEVEN_DAYS" = "7 days:";
 "LAST_THIRTY_DAYS" = "30 days:";

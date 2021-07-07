@@ -1,4 +1,6 @@
-# AppStoreConnect Widget
+<h1 align="center">
+  <img height="180" src="https://user-images.githubusercontent.com/31541782/124495392-55509f00-ddb8-11eb-9383-ee920a72f563.png" alt="AC Widget">
+</h1!>
 
 [![Latest release](https://img.shields.io/github/v/release/no-comment/AppStore-Connect-Widget?include_prereleases)](https://github.com/no-comment/AppStore-Connect-Widget//releases/latest)
 [![Licence](https://img.shields.io/github/license/no-comment/AppStore-Connect-Widget)](https://github.com/no-comment/AppStore-Connect-Widget/blob/main/LICENSE)
@@ -10,9 +12,20 @@
 
 AC Widget allows you to easily view your latest app sales on your Home Screen. Some of its main features are:
 
+- Different sized widgets for your home screen.
 - Add multiple accounts and quickly switch between them.
 - Choose the currency you want your proceeds to be displayed in.
-- Select specific apps you want your data to be displaying
+- See one day at a time, the last 7 or 30 days and the current month at a glance.
+- Track real downloads instead of app units.
+- Decide if you want redownloads included.
+- Smart auto updating.
+- Completely free and without ads.
+- Detailed graphs with satisfying haptics on iPhone.
+- Darkmode for the app and widgets
+
+![GitHub-Screenshots](https://user-images.githubusercontent.com/31541782/124496190-65b54980-ddb9-11eb-817b-9f454bf29cc6.png)
+![GitHub-Widgets](https://user-images.githubusercontent.com/31541782/124496201-6948d080-ddb9-11eb-887c-cdddecef124b.png)
+
 
 ## How does it work ?
 

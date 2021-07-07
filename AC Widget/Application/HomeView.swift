@@ -19,7 +19,7 @@ struct HomeView: View {
         return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
     }
 
-    @State private var tiles: [TileType] = []
+    @State var tiles: [TileType] = []
 
     var body: some View {
         ScrollView {
@@ -168,11 +168,11 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             NavigationView {
-                HomeView(data: ACData.example)
+                HomeView(data: ACData.example, tiles: TileType.allCases)
             }
 
             NavigationView {
-                HomeView(data: ACData.example)
+                HomeView(data: ACData.example, tiles: TileType.allCases)
             }
             .preferredColorScheme(.dark)
         }

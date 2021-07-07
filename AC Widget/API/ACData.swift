@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftUI
+import BetterToStrings
 
 struct ACData: Codable {
     let apps: [ACApp]
@@ -55,79 +56,22 @@ extension ACData {
 
     private func getDownloadsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
         let num: Float = getDownloadsSum(lastNDays, filteredApps: filteredApps)
-        return ACData.formatNumberLength(num: num, size: size, type: .downloads)
+        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 4 : nil, maxFractionDigits: 2)
     }
 
     private func getProceedsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
         let num: Float = getProceedsSum(lastNDays, filteredApps: filteredApps)
-        return ACData.formatNumberLength(num: num, size: size, type: .proceeds)
+        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 4 : nil, maxFractionDigits: 2)
     }
 
     private func getUpdatesString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
         let num: Float = getUpdatesSum(lastNDays, filteredApps: filteredApps)
-        return ACData.formatNumberLength(num: num, size: size, type: .updates)
+        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 4 : nil, maxFractionDigits: 2)
     }
 
     private func getIapString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
         let num: Float = getIapSum(lastNDays, filteredApps: filteredApps)
-        return ACData.formatNumberLength(num: num, size: size, type: .iap)
-    }
-
-    // swiftlint:disable:next function_body_length
-    public static func formatNumberLength(num: Float, size: NumberLength = .standard, type: InfoType) -> String {
-        switch type {
-        case .downloads, .updates, .iap:
-            if num < 1000 { return "\(Int(num))" }
-
-            let fNum: NSNumber = NSNumber(value: num/1000)
-            let nf = NumberFormatter()
-
-            switch size {
-            case .compact:
-                if num <  10000 {
-                    nf.numberStyle = .decimal
-                    nf.maximumFractionDigits = 1
-                }
-            case .standard:
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = 2
-            }
-
-            return (nf.string(from: fNum) ?? "0").appending("K")
-        case .proceeds:
-            var fNum: NSNumber = NSNumber(value: num)
-            let nf = NumberFormatter()
-            var addK = false
-
-            switch size {
-            case .compact:
-                if num <  10 {
-                    nf.numberStyle = .decimal
-                    nf.maximumFractionDigits = 2
-                } else if num < 100 {
-                    nf.numberStyle = .decimal
-                    nf.maximumFractionDigits = 1
-                } else if num < 1000 {
-                } else if num < 10000 {
-                    fNum = NSNumber(value: num/1000)
-                    nf.numberStyle = .decimal
-                    nf.maximumFractionDigits = 1
-                    addK = true
-                } else if num < 100000 {
-                    fNum = NSNumber(value: num/1000)
-                    addK = true
-                }
-            case .standard:
-                if num >= 1000 {
-                    fNum = NSNumber(value: num/1000)
-                    addK = true
-                }
-                nf.numberStyle = .decimal
-                nf.maximumFractionDigits = (num >= 1000 && num/1000 < 10) || num < 10 ? 2 : 1
-            }
-
-            return (nf.string(from: fNum) ?? "0").appending(addK ? "K" : "")
-        }
+        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 4 : nil, maxFractionDigits: 2)
     }
 
     enum NumberLength { case compact, standard }
@@ -159,7 +103,7 @@ extension ACData {
         return Dictionary(grouping: downloadEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (Float(value.reduce(0, { $0 + $1.units })), key)
-            }.fillZeroLastDays(lastNDays)
+            }.fillZeroLastDays(lastNDays, latestDate: self.latestReportingDate())
     }
 
     private func getRawProceeds(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
@@ -169,7 +113,7 @@ extension ACData {
         return Dictionary(grouping: proceedEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (value.reduce(0, { $0 + $1.proceeds * Float($1.units) }), key)
-            }.fillZeroLastDays(lastNDays)
+            }.fillZeroLastDays(lastNDays, latestDate: self.latestReportingDate())
     }
 
     private func getRawUpdates(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
@@ -179,7 +123,7 @@ extension ACData {
         return Dictionary(grouping: proceedEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (Float(value.reduce(0, { $0 + $1.units })), key)
-            }.fillZeroLastDays(lastNDays)
+            }.fillZeroLastDays(lastNDays, latestDate: self.latestReportingDate())
     }
 
     private func getRawIap(_ lastNDays: Int, filteredApps: [ACApp] = []) -> [(Float, Date)] {
@@ -189,7 +133,7 @@ extension ACData {
         return Dictionary(grouping: proceedEntries, by: { $0.date })
             .map { (key: Date, value: [ACEntry]) -> (Float, Date) in
                 return (Float(value.reduce(0, { $0 + $1.units })), key)
-            }.fillZeroLastDays(lastNDays)
+            }.fillZeroLastDays(lastNDays, latestDate: self.latestReportingDate())
     }
 
     // MARK: Get Sum
@@ -354,13 +298,17 @@ extension ACData {
     }
 
     // MARK: Getting Dates
+    func latestReportingDate() -> Date {
+        return entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
+    }
+
     func latestReportingDate() -> String {
         let latestDate: Date? = entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
 
         guard let date = latestDate else {
             return NSLocalizedString("NO_DATA", comment: "")
         }
-        return date.toString()
+        return date.toString(format: "dd. MMM.", smartConversion: true)
     }
 
     // MARK: Mock Data
