@@ -1,6 +1,8 @@
-<h1 align="center">
-  <img height="180" src="https://user-images.githubusercontent.com/31541782/124495392-55509f00-ddb8-11eb-9383-ee920a72f563.png" alt="AC Widget">
-</h1!>
+<div align="center">
+  <a href="https://apps.apple.com/us/app/ac-widget/id1562025981">
+    <img height="180" src="https://user-images.githubusercontent.com/20423069/124828886-284aea80-df78-11eb-8dc4-c53e9f626efa.png" alt="AC Widget">
+  </a>
+</div>
 
 [![Latest release](https://img.shields.io/github/v/release/no-comment/AppStore-Connect-Widget?include_prereleases)](https://github.com/no-comment/AppStore-Connect-Widget//releases/latest)
 [![Licence](https://img.shields.io/github/license/no-comment/AppStore-Connect-Widget)](https://github.com/no-comment/AppStore-Connect-Widget/blob/main/LICENSE)
@@ -23,9 +25,8 @@ AC Widget allows you to easily view your latest app sales on your Home Screen. S
 - Detailed graphs with satisfying haptics on iPhone.
 - Darkmode for the app and widgets
 
-![GitHub-Screenshots](https://user-images.githubusercontent.com/31541782/124496190-65b54980-ddb9-11eb-817b-9f454bf29cc6.png)
-![GitHub-Widgets](https://user-images.githubusercontent.com/31541782/124496201-6948d080-ddb9-11eb-887c-cdddecef124b.png)
-
+![GitHub-Screenshots](https://user-images.githubusercontent.com/20423069/124829195-92fc2600-df78-11eb-9f0a-0e095b84628d.png)
+![GitHub-Widgets](https://user-images.githubusercontent.com/20423069/124829207-98f20700-df78-11eb-8125-358189b646f1.png)
 
 ## How does it work ?
 
