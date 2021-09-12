@@ -68,6 +68,7 @@ enum UserDefaultsKey {
     static let dataCache = "dataCache"
     static let includeRedownloads = "includeRedownloads"
     static let homeSelectedKey = "homeSelectedKey"
+    static let homeSelectedApps = "homeSelectedApps"
     static let homeCurrency = "homeCurrency"
     static let tilesInHome = "tilesInHome"
 }

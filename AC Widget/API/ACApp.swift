@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct ACApp: Codable {
+struct ACApp: Codable, Identifiable {
     let id: String
     let name: String
     let sku: String
