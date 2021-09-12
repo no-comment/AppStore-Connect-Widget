@@ -32,6 +32,7 @@ extension ACData {
                            date: entry.date,
                            countryCode: entry.countryCode,
                            device: entry.device,
+                           appIdentifier: "",
                            type: entry.type)
         })
 
@@ -328,6 +329,7 @@ extension ACData {
                                        proceeds: Float.random(in: 0...5),
                                        date: day, countryCode: countries.randomElement() ?? "US",
                                        device: devices.randomElement() ?? "iPhone",
+                                       appIdentifier: "",
                                        type: ACEntryType.allCases.randomElement() ?? .download))
             }
         }

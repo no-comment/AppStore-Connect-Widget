@@ -124,12 +124,13 @@ class AppStoreConnectApi {
                                                date: Date.fromACFormat(dict["Begin Date"] ?? "") ?? Date.distantPast,
                                                countryCode: dict["Country Code"] ?? "UNKNOWN",
                                                device: dict["Device"] ?? "UNKNOWN",
+                                               appIdentifier: dict["Apple Identifier"] ?? "",
                                                type: ACEntryType(dict["Product Type Identifier"]))
                         entries.append(newEntry)
                     }
                 }
 
-                self.getApps()
+                self.getApps(entries: entries)
                     .then { apps in
                         let newData = ACData(entries: entries, currency: localCurrency, apps: apps)
                         ACDataCache.saveData(data: newData, apiKey: self.apiKey)
@@ -153,7 +154,8 @@ class AppStoreConnectApi {
                         case 403:
                             promise.reject(APIError.wrongPermissions)
                         case 404:
-                            guard let errData = errData else {                            promise.reject(APIError.unknown)
+                            guard let errData = errData else {
+                                promise.reject(APIError.unknown)
                                 break
                             }
 
@@ -162,7 +164,7 @@ class AppStoreConnectApi {
                                 if entries.isEmpty {
                                     promise.reject(APIError.noDataAvailable)
                                 } else {
-                                    self.getApps()
+                                    self.getApps(entries: entries)
                                         .then { apps in
                                             let newData = ACData(entries: entries, currency: localCurrency, apps: apps)
                                             ACDataCache.saveData(data: newData, apiKey: self.apiKey)
@@ -198,21 +200,25 @@ class AppStoreConnectApi {
         return promise
     }
 
-    private func getApps() -> Promise<[ACApp]> {
+    private func getApps(entries: [ACEntry]) -> Promise<[ACApp]> {
         let promise = Promise<[ACApp]>.pending()
-        let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
 
-        let provider: APIProvider = APIProvider(configuration: configuration)
+        let tupples: [(id: String, name: String, sku: String)] = entries.map({ (id: $0.appIdentifier, name: $0.appTitle, sku: $0.appSKU) })
+        var uniqueTupple: [(id: String, name: String, sku: String)] = []
+        for tupple in tupples {
+            if !uniqueTupple.contains(where: { $0.id == tupple.id }) {
+                uniqueTupple.append(tupple)
+            }
+        }
 
-        apiAppsWrapped(provider: provider)
-            .then { resp in
-                any(resp.data.map({ self.iTunesLookup(app: $0) }))
-                    .then { data in
-                        promise.fulfill(data.compactMap({ $0.value }))
-                    }
-            }.catch { err in
+        any(uniqueTupple.map(self.iTunesLookup(app:)))
+            .then { data in
+                promise.fulfill(data.compactMap({ $0.value }))
+            }
+            .catch { err in
                 promise.reject(err)
             }
+
         return promise
     }
 
@@ -248,10 +254,9 @@ class AppStoreConnectApi {
         let version: String
     }
 
-    private func iTunesLookup(app: App) -> Promise<ACApp> {
-        let appId: String = app.id
+    private func iTunesLookup(app: (id: String, name: String, sku: String)) -> Promise<ACApp> {
         let promise = Promise<ACApp>.pending()
-        guard let url = URL(string: "http://itunes.apple.com/lookup?id=" + appId) else {
+        guard let url = URL(string: "http://itunes.apple.com/lookup?id=" + app.id) else {
             promise.reject(APIError.unknown)
             return promise
         }
@@ -260,13 +265,13 @@ class AppStoreConnectApi {
             let decoder = JSONDecoder()
             let result = try? decoder.decode(ITunesResponse.self, from: data)
             guard let appData = result?.results.first else {
-                promise.reject(APIError.notPublic)
+                promise.reject(APIError.unknown)
                 return promise
             }
             promise.fulfill(
                 ACApp(id: app.id,
-                      name: app.attributes?.name ?? "",
-                      sku: app.attributes?.sku ?? "",
+                      name: app.name,
+                      sku: app.sku,
                       version: appData.version,
                       currentVersionReleaseDate: appData.currentVersionReleaseDate,
                       artworkUrl60: appData.artworkUrl60,

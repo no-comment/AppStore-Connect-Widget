@@ -13,6 +13,7 @@ struct ACEntry: Codable {
     let date: Date
     let countryCode: String
     let device: String
+    let appIdentifier: String
     let type: ACEntryType
 }
 
