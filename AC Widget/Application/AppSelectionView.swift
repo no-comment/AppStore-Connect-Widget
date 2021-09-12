@@ -7,9 +7,12 @@ import SwiftUI
 
 struct AppSelectionView: View {
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
-    // TODO: Initialize with stored properties
+    @AppStorage(UserDefaultsKey.homeSelectedApps, store: UserDefaults.shared) private var selectedAppsString: String = ""
     @State var apps: [ACApp] = []
-    @State var selectedApps: [ACApp] = []
+    var selectedApps: [ACApp] {
+        let ids = selectedAppsString.split(separator: ";").map({ String($0) })
+        return apps.filter { ids.contains($0.id) }
+    }
 
     var body: some View {
         List(apps) { item in
@@ -41,9 +44,11 @@ struct AppSelectionView: View {
 
     private func select(app: ACApp) {
         if selectedApps.contains(where: { $0.id == app.id }) {
-            selectedApps.removeAll(where: { $0.id == app.id })
+            var tempApps = selectedApps
+            tempApps.removeAll(where: { $0.id == app.id })
+            selectedAppsString = tempApps.map({ $0.id }).joined(separator: ";")
         } else {
-            selectedApps.append(app)
+            selectedAppsString.append(";\(app.id)")
         }
     }
 
@@ -64,9 +69,6 @@ struct AppSelectionView_Previews: PreviewProvider {
                 ACApp.mockApp,
                 ACApp(id: "3", name: "My pretty App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
                 ACApp(id: "4", name: "My ugly App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
-                ACApp(id: "5", name: "My awesome App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
-            ], selectedApps: [
-                ACApp.mockApp,
                 ACApp(id: "5", name: "My awesome App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
             ])
         }
