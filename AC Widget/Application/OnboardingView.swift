@@ -51,7 +51,7 @@ struct OnboardingView: View {
     // MARK: Pages
     var welcomeSection: some View {
         GroupBox(label: Text("WELCOME"), content: {
-            SummaryMedium(data: ACData.example, color: color)
+            SummaryMedium(data: ACData.example, color: color, filteredApps: [])
                 .showAsWidget(.systemMedium)
                 .padding(.vertical)
 
@@ -81,7 +81,7 @@ struct OnboardingView: View {
                 Text("KEY_COLOR")
                     .fixedSize()
             })
-            .frame(maxWidth: 250, maxHeight: 30)
+                .frame(maxWidth: 250, maxHeight: 30)
             Spacer()
         })
     }
@@ -150,9 +150,9 @@ struct OnboardingView: View {
                 .clipShape(Capsule())
                 .contentShape(Rectangle())
         })
-        .disabled(
-            name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
-        )
+            .disabled(
+                name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
+            )
     }
 
     private func onFinishPressed() {

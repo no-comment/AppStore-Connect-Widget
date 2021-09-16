@@ -6,22 +6,33 @@
 import Foundation
 
 struct ACApp: Codable, Identifiable {
-    let id: String
+    var id: String { return sku }
+    let appstoreId: String
     let name: String
     let sku: String
     let version: String
     let currentVersionReleaseDate: String
     let artworkUrl60: String
     let artworkUrl100: String
+
+    static func == (lhs: ACApp, rhs: ACApp) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
 
 extension ACApp {
     static let mockApp = ACApp(
-        id: "testId",
+        appstoreId: "testId",
         name: "Test App",
         sku: "test.app.sku",
         version: "1.2.3",
         currentVersionReleaseDate: "1.2.3",
         artworkUrl60: "https://is2-ssl.mzstatic.com/image/thumb/Purple115/v4/16/fa/99/16fa99d4-67b5-3bcc-9b28-34f88326ac5d/source/60x60bb.jpg",
         artworkUrl100: "https://is2-ssl.mzstatic.com/image/thumb/Purple115/v4/16/fa/99/16fa99d4-67b5-3bcc-9b28-34f88326ac5d/source/100x100bb.jpg")
+}
+
+extension FilteredAppParam {
+    func toACApp(data: ACData) -> ACApp? {
+        return data.apps.first(where: { $0.id == self.identifier })
+    }
 }

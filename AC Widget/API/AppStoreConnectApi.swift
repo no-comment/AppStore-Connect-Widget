@@ -91,18 +91,18 @@ class AppStoreConnectApi {
                         continue
                     }
                     guard let decompressedData = try? resultValue.gunzipped() else {
-                        #if DEBUG
+#if DEBUG
                         fatalError()
-                        #endif
+#endif
                         continue
                     }
 
                     let str = String(decoding: decompressedData, as: UTF8.self)
 
                     guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
-                        #if DEBUG
+#if DEBUG
                         fatalError()
-                        #endif
+#endif
                         continue
                     }
 
@@ -203,10 +203,10 @@ class AppStoreConnectApi {
     private func getApps(entries: [ACEntry]) -> Promise<[ACApp]> {
         let promise = Promise<[ACApp]>.pending()
 
-        let tupples: [(id: String, name: String, sku: String)] = entries.map({ (id: $0.appIdentifier, name: $0.appTitle, sku: $0.appSKU) })
-        var uniqueTupple: [(id: String, name: String, sku: String)] = []
+        let tupples: [ITunesLookupApp] = entries.map({ .init(appstoreId: $0.appIdentifier, name: $0.appTitle, sku: $0.appSKU) })
+        var uniqueTupple: [ITunesLookupApp] = []
         for tupple in tupples {
-            if !uniqueTupple.contains(where: { $0.id == tupple.id }) {
+            if !uniqueTupple.contains(where: { $0.appstoreId == tupple.appstoreId }) {
                 uniqueTupple.append(tupple)
             }
         }
@@ -254,9 +254,15 @@ class AppStoreConnectApi {
         let version: String
     }
 
-    private func iTunesLookup(app: (id: String, name: String, sku: String)) -> Promise<ACApp> {
+    private struct ITunesLookupApp {
+        let appstoreId: String
+        let name: String
+        let sku: String
+    }
+
+    private func iTunesLookup(app: ITunesLookupApp) -> Promise<ACApp> {
         let promise = Promise<ACApp>.pending()
-        guard let url = URL(string: "http://itunes.apple.com/lookup?id=" + app.id) else {
+        guard let url = URL(string: "http://itunes.apple.com/lookup?id=" + app.appstoreId) else {
             promise.reject(APIError.unknown)
             return promise
         }
@@ -269,7 +275,7 @@ class AppStoreConnectApi {
                 return promise
             }
             promise.fulfill(
-                ACApp(id: app.id,
+                ACApp(appstoreId: app.appstoreId,
                       name: app.name,
                       sku: app.sku,
                       version: appData.version,
@@ -288,14 +294,14 @@ class AppStoreConnectApi {
         return Promise<AppsResponse> { fulfill, reject in
             provider.request(APIEndpoint.apps(select: [.apps([.name, .sku])]),
                              completion: { result in
-                                switch result {
-                                case .success(let data):
-                                    fulfill(data)
-                                case .failure(let reason):
-                                    print("Something went wrong fetching the apps: \(reason)")
-                                    reject(reason)
-                                }
-                             })
+                switch result {
+                case .success(let data):
+                    fulfill(data)
+                case .failure(let reason):
+                    print("Something went wrong fetching the apps: \(reason)")
+                    reject(reason)
+                }
+            })
         }
     }
 }

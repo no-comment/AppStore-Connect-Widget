@@ -12,6 +12,7 @@ struct SummaryLarge: View {
 
     let data: ACData
     var color: Color = .accentColor
+    let filteredApps: [ACApp]
 
     var body: some View {
         VStack {
@@ -43,31 +44,31 @@ struct SummaryLarge: View {
 
     var downloadsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            UnitText(data.getAsString(.downloads, lastNDays: 1), metricSymbol: "square.and.arrow.down")
-            GraphView(data.getRawData(.downloads, lastNDays: 30), color: color.readable(colorScheme: colorScheme))
+            UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: filteredApps), metricSymbol: "square.and.arrow.down")
+            GraphView(data.getRawData(.downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data
-                                    .getAsString(.downloads, lastNDays: 7, size: .compact))
+                                    .getAsString(.downloads, lastNDays: 7, size: .compact, filteredApps: filteredApps))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
-                                    .getAsString(.downloads, lastNDays: 30, size: .compact))
+                                    .getAsString(.downloads, lastNDays: 30, size: .compact, filteredApps: filteredApps))
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
-                                   value: data.getAsString(.downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact))
+                                   value: data.getAsString(.downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps))
             }
         }
     }
 
     var proceedsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            UnitText(data.getAsString(.proceeds, lastNDays: 1), metric: data.displayCurrency.symbol)
-            GraphView(data.getRawData(.proceeds, lastNDays: 30), color: color.readable(colorScheme: colorScheme))
+            UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: filteredApps), metric: data.displayCurrency.symbol)
+            GraphView(data.getRawData(.proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data
-                                    .getAsString(.proceeds, lastNDays: 7, size: .compact)
+                                    .getAsString(.proceeds, lastNDays: 7, size: .compact, filteredApps: filteredApps)
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
-                                    .getAsString(.proceeds, lastNDays: 30, size: .compact)
+                                    .getAsString(.proceeds, lastNDays: 30, size: .compact, filteredApps: filteredApps)
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
                                    value: data
@@ -90,7 +91,7 @@ struct SummaryLarge: View {
     }
 
     private func countryName(placement: Int) -> LocalizedStringKey {
-        let countries = data.getCountries(.proceeds, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        let countries = data.getCountries(.proceeds, lastNDays: 30, filteredApps: filteredApps).sorted(by: { $0.1 > $1.1 })
         if placement < countries.count {
             return LocalizedStringKey(countries[placement].0.countryCodeToName())
         }
@@ -98,7 +99,7 @@ struct SummaryLarge: View {
     }
 
     private func countryProceeds(placement: Int) -> String {
-        let countries = data.getCountries(.proceeds, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        let countries = data.getCountries(.proceeds, lastNDays: 30, filteredApps: filteredApps).sorted(by: { $0.1 > $1.1 })
         if placement < countries.count {
             let nf = NumberFormatter()
             nf.numberStyle = .decimal
@@ -115,10 +116,10 @@ struct SummaryLarge: View {
 struct SummaryLarge_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryLarge(data: ACData.example)
+            SummaryLarge(data: ACData.example, filteredApps: [])
                 .previewContext(WidgetPreviewContext(family: .systemLarge))
 
-            SummaryLarge(data: ACData.example)
+            SummaryLarge(data: ACData.example, filteredApps: [])
                 .background(Color.widgetBackground)
                 .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemLarge))
