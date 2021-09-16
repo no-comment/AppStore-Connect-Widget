@@ -101,9 +101,9 @@ struct InfoTile: View {
             }
 
             if currencySymbol.isEmpty {
-                UnitText(data.getAsString(type, lastNDays: lastNDays), metricSymbol: type.systemImage)
+                UnitText(data.getAsString(type, lastNDays: lastNDays, filteredApps: [app]), metricSymbol: type.systemImage)
             } else {
-                UnitText(data.getAsString(type, lastNDays: lastNDays), metric: currencySymbol)
+                UnitText(data.getAsString(type, lastNDays: lastNDays, filteredApps: [app]), metric: currencySymbol)
             }
         }
     }
@@ -114,7 +114,6 @@ struct InfoTile_Previews: PreviewProvider {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
             InfoTile(description: "PROCEEDS", data: ACData.example, type: .proceeds)
             InfoTile(description: "PROCEEDS", data: ACData.example, type: .proceeds)
-                //.preferredColorScheme(.dark)
         }.padding()
     }
 }
