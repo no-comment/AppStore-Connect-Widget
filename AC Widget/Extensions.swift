@@ -177,6 +177,7 @@ extension Color {
     static let widgetSecondary: Color = Color("WidgetSecondary")
     static let systemWhite: Color = Color("systemWhite")
     static let cardColor: Color = Color("CardColor")
+    static let secondaryCardColor: Color = Color("SecondaryCardColor")
 }
 
 // From: http://brunowernimont.me/howtos/make-swiftui-color-codable
