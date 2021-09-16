@@ -16,6 +16,8 @@ struct APIKeyDetailView: View {
 
     @State private var status: APIError?
 
+    @State var apps: [ACApp] = []
+
     init(_ key: APIKey) {
         self.key = key
         self._keyName = State(initialValue: key.name)
@@ -35,8 +37,8 @@ struct APIKeyDetailView: View {
                 }
                 .frame(maxHeight: 250)
             }
-            savingSection
             keySection
+            appListSection
             storageSection
             deleteSection
         }
@@ -44,8 +46,15 @@ struct APIKeyDetailView: View {
             key.checkKey().catch { err in
                 status = (err as? APIError) ?? .unknown
             }
+            loadApps()
         })
         .navigationTitle(keyName)
+    }
+
+    var appListSection: some View {
+        Section(header: Label("APP_LIST", systemImage: "app.fill")) {
+            AppListView(apps: apps)
+        }
     }
 
     var namingSection: some View {
@@ -58,6 +67,8 @@ struct APIKeyDetailView: View {
             }
 
             ColorPicker("KEY_COLOR", selection: $keyColor, supportsOpacity: false)
+
+            Button("SAVE", action: save)
         }
     }
 
@@ -67,35 +78,40 @@ struct APIKeyDetailView: View {
                 Text("ISSUER_ID")
                     .bold()
 
-                TextField("ISSUER_ID", text: .constant(issuerID))
+                Text(issuerID)
+                    .textSelection(.enabled)
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY_ID")
                     .bold()
 
-                TextField("PRIVATE_KEY_ID", text: .constant(privateKeyID))
+                Text(privateKeyID)
+                    .textSelection(.enabled)
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("PRIVATE_KEY")
                     .bold()
 
-                TextEditor(text: .constant(privateKey))
+                Text(privateKey)
+                    .textSelection(.enabled)
             }
 
             VStack(alignment: .leading, spacing: 0.0) {
                 Text("VENDOR_NR")
                     .bold()
 
-                TextField("VENDOR_NR", text: .constant(vendorNumber))
+                Text(vendorNumber)
+                    .textSelection(.enabled)
             }
         }
     }
 
-    var savingSection: some View {
-        Section {
-            Button("SAVE", action: save)
+    private func loadApps() {
+        let api = AppStoreConnectApi(apiKey: key)
+        api.getData(currency: Currency.USD, useCache: true).then { (data) in
+            self.apps = data.apps
         }
     }
 

@@ -15,7 +15,6 @@ struct KeySelectionView: View {
     var body: some View {
         Form {
             keySelection
-            appSelection
             currencySelection
         }
         .navigationTitle("SELECT_KEY")
@@ -37,12 +36,6 @@ struct KeySelectionView: View {
                     }
                 })
             }
-        }
-    }
-
-    var appSelection: some View {
-        Section(header: Label("APPS", systemImage: "app.fill")) {
-            NavigationLink("SELECT_APPS", destination: AppSelectionView())
         }
     }
 

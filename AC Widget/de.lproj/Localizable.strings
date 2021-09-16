@@ -14,9 +14,9 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "ONBOARD_PRIVATE_KEY" = "Jetzt kannst du den Inhalt des eigentlichen Keys hier einfügen.";
 "ONBOARD_VENDOR_NR" = "Als letztes wird die 'Vendor Number' benötigt. Diese befindet sich auf AppStoreConnect in dem 'Reports' Tab. Oben links sollte hier deine 'Vendor #' stehen.";
 
-"RECHECK_INPUTS" = "Key Überprüfen";
+"RECHECK_INPUTS" = "Key überprüfen";
 "OK" = "Ok";
-"INVALID_KEY" = "Invalider Key";
+"INVALID_KEY" = "Ungültiger Key";
 "INVALID_KEY_MSG" = "Einige der Informationen sind inkorrekt.";
 "DUPLICATE_KEY" = "Duplizierter Key";
 "DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
@@ -47,17 +47,18 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "SETTINGS" = "Einstellungen";
 "API_KEYS" = "API Keys";
 "ADD_KEY" = "Key hinzufügen";
-"VALID_KEY" = "Valider Key";
-"INVALID_KEY" = "Invalider Key";
+"VALID_KEY" = "Gültiger Key";
 "PROBLEM_KEY" = "Dieser Key hat ein anderes Problem";
 "GENERAL" = "Allgemein";
 "INCLUDE_REDOWNLOADS" = "Redownloads mitzählen";
 "WIDGET" = "Widget";
 "FORCE_REFRESH_WIDGET" = "Widget aktualisieren erzwingen";
 "STORAGE" = "Speicher";
+"APP_LIST" = "Apps";
+"NO_APPS" = "Keine Apps verfügbar";
 "ALL_CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
 "CLEAR_ALL_CACHE" = "Gesamten Cache löschen";
-"UPDATE_FREQUENCY_NOTICE" = "Anmerkung: AppStoreConnect stellt die Daten vom Vortag erst gegen 14Uhr deutscher Zeit bereit.";
+"UPDATE_FREQUENCY_NOTICE" = "Anmerkung: AppStoreConnect stellt die Daten vom Vortag erst gegen 14 Uhr deutscher Zeit bereit.";
 "SUPPORT" = "Support";
 
 "KEY_NAME" = "Key Name";

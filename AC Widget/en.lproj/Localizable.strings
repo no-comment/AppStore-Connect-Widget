@@ -55,6 +55,8 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "WIDGET" = "Widget";
 "FORCE_REFRESH_WIDGET" = "Force refresh widget";
 "STORAGE" = "Storage";
+"APP_LIST" = "Apps";
+"NO_APPS" = "No Apps available";
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
 "UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at around 5am Pacific Time.";
