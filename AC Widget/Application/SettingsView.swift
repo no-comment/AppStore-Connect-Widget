@@ -54,11 +54,11 @@ struct SettingsView: View {
             +
             Text("VALID_KEY")
             +
-            Text(", \(Image(systemName: "xmark.circle")): ")
+            Text(" \(Image(systemName: "xmark.circle")): ")
             +
             Text("INVALID_KEY")
             +
-            Text(", \(Image(systemName: "exclamationmark.circle")): ")
+            Text(" \(Image(systemName: "exclamationmark.circle")): ")
             +
             Text("PROBLEM_KEY")
     }

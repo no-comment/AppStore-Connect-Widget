@@ -49,7 +49,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "ADD_KEY" = "Add Key";
 "VALID_KEY" = "Valid Key";
 "INVALID_KEY" = "Invalid Key";
-"PROBLEM_KEY" = "This Key has some other problem";
+"PROBLEM_KEY" = "Faulty Key";
 "GENERAL" = "General";
 "INCLUDE_REDOWNLOADS" = "Include redownloads";
 "WIDGET" = "Widget";
