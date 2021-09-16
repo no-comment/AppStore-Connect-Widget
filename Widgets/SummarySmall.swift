@@ -12,23 +12,27 @@ struct SummarySmall: View {
     let filteredApps: [ACApp]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(data.latestReportingDate())
-                .font(.subheadline)
-                .foregroundColor(.gray)
+        ZStack(alignment: .topTrailing) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(data.latestReportingDate())
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
 
-            UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: filteredApps), metricSymbol: "square.and.arrow.down")
-            UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: filteredApps), metric: data.displayCurrency.symbol)
+                UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: filteredApps), metricSymbol: "square.and.arrow.down")
+                UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: filteredApps), metric: data.displayCurrency.symbol)
 
-            Spacer()
-                .frame(minHeight: 0)
+                Spacer()
+                    .frame(minHeight: 0)
 
-            DescribedValueView(description: "LAST_SEVEN_DAYS",
-                               value: data.getAsString(.proceeds, lastNDays: 7, size: .compact, filteredApps: filteredApps).appending(data.displayCurrency.symbol))
-            DescribedValueView(description: "LAST_THIRTY_DAYS",
-                               value: data.getAsString(.proceeds, lastNDays: 30, size: .compact, filteredApps: filteredApps).appending(data.displayCurrency.symbol))
+                DescribedValueView(description: "LAST_SEVEN_DAYS",
+                                   value: data.getAsString(.proceeds, lastNDays: 7, size: .compact, filteredApps: filteredApps).appending(data.displayCurrency.symbol))
+                DescribedValueView(description: "LAST_THIRTY_DAYS",
+                                   value: data.getAsString(.proceeds, lastNDays: 30, size: .compact, filteredApps: filteredApps).appending(data.displayCurrency.symbol))
+            }
+            .padding()
+            AppIconStack(apps: filteredApps)
+                .padding(12)
         }
-        .padding()
     }
 }
 

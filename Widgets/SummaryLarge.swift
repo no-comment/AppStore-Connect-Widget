@@ -15,10 +15,15 @@ struct SummaryLarge: View {
     let filteredApps: [ACApp]
 
     var body: some View {
-        VStack {
-            dateSection
-            informationSection
-                .padding([.horizontal, .bottom], 14)
+        ZStack(alignment: .topTrailing) {
+            VStack {
+                dateSection
+                informationSection
+                    .padding([.horizontal, .bottom], 14)
+            }
+            AppIconStack(apps: filteredApps)
+                .padding(.top, 7.5)
+                .padding(.trailing, 18)
         }
     }
 
@@ -116,7 +121,7 @@ struct SummaryLarge: View {
 struct SummaryLarge_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryLarge(data: ACData.example, filteredApps: [])
+            SummaryLarge(data: ACData.example, filteredApps: [ACApp.mockApp])
                 .previewContext(WidgetPreviewContext(family: .systemLarge))
 
             SummaryLarge(data: ACData.example, filteredApps: [])

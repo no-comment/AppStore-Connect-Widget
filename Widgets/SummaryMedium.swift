@@ -14,10 +14,14 @@ struct SummaryMedium: View {
     let filteredApps: [ACApp]
 
     var body: some View {
-        HStack(spacing: 0) {
-            dateSection
-            informationSection
-                .padding([.vertical, .trailing], 12)
+        ZStack(alignment: .topTrailing) {
+            HStack(spacing: 0) {
+                dateSection
+                informationSection
+                    .padding([.vertical, .trailing], 12)
+            }
+            AppIconStack(apps: filteredApps)
+                .padding(12)
         }
     }
 
@@ -74,7 +78,7 @@ struct SummaryMedium: View {
 struct SummaryMedium_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryMedium(data: ACData.example, filteredApps: [])
+            SummaryMedium(data: ACData.example, filteredApps: [ACApp.mockApp, ACApp.mockApp, ACApp.mockApp])
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
 
             SummaryMedium(data: ACData.example, filteredApps: [])
