@@ -32,7 +32,7 @@ extension ACData {
                            date: entry.date,
                            countryCode: entry.countryCode,
                            device: entry.device,
-                           appIdentifier: "",
+                           appIdentifier: entry.device,
                            type: entry.type)
         })
 
