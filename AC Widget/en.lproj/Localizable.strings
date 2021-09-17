@@ -101,6 +101,10 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "CHANGE_PERCENT" = "Change:";
 "TOP_COUNTRIES" = "Top Countries";
 
+"1D" = "1D";
+"7D" = "7D";
+"30D" = "30D";
+
 "NO_DATA" = "No Data";
 
 "SYSTEM" = "System";

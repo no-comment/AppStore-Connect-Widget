@@ -100,6 +100,10 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "CHANGE_PERCENT" = "Verlauf:";
 "TOP_COUNTRIES" = "Top Länder";
 
+"1D" = "1T";
+"7D" = "7T";
+"30D" = "30T";
+
 "NO_DATA" = "Keine Daten";
 
 "SYSTEM" = "System";

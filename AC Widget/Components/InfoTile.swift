@@ -64,7 +64,7 @@ struct InfoTile: View {
                 Text("1D").tag(0)
                 Text("7D").tag(1)
                 Text("30D").tag(2)
-                Text(Date.now.toString(format: "MMM")).tag(3)
+                Text(data.latestReportingDate().toString(format: "MMM")).tag(3)
             }
             .pickerStyle(.segmented)
             ScrollView(showsIndicators: false) {
