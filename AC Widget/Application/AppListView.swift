@@ -12,12 +12,15 @@ struct AppListView: View {
         if apps.isEmpty {
             Text("NO_APPS")
         } else {
-            List(apps) { app in
+            List(apps) { (app: ACApp) in
                 HStack {
-                    AsyncImage(url: URL(string: app.artworkUrl60)) { image in
-                        image.resizable()
-                    } placeholder: {
-                        Rectangle().foregroundColor(.secondary)
+                    Group {
+                        if let data = app.artwork60ImgData, let uiImg = UIImage(data: data) {
+                            Image(uiImage: uiImg)
+                                .resizable()
+                        } else {
+                            Rectangle().foregroundColor(.secondary)
+                        }
                     }
                     .frame(width: 30, height: 30)
                     .cornerRadius(7)
@@ -38,11 +41,11 @@ struct AppSelectionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             AppListView(apps: [
-                ACApp(appstoreId: "1", name: "My first App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
+                ACApp(appstoreId: "1", name: "My first App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: "", artwork60ImgData: nil),
                 ACApp.mockApp,
-                ACApp(appstoreId: "3", name: "My pretty App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
-                ACApp(appstoreId: "4", name: "My ugly App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
-                ACApp(appstoreId: "5", name: "My awesome App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: ""),
+                ACApp(appstoreId: "3", name: "My pretty App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: "", artwork60ImgData: nil),
+                ACApp(appstoreId: "4", name: "My ugly App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: "", artwork60ImgData: nil),
+                ACApp(appstoreId: "5", name: "My awesome App", sku: "", version: "", currentVersionReleaseDate: "", artworkUrl60: "", artworkUrl100: "", artwork60ImgData: nil),
             ])
         }
     }

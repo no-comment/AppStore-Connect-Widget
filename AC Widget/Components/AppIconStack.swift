@@ -11,10 +11,13 @@ struct AppIconStack: View {
     var body: some View {
         ZStack {
             ForEach(0..<min(apps.count, 3)) { index in
-                AsyncImage(url: URL(string: apps[index].artworkUrl60)) { image in
-                    image.resizable()
-                } placeholder: {
-                    Rectangle().foregroundColor(.secondaryCardColor)
+                Group {
+                    if let data = apps[index].artwork60ImgData, let uiImg = UIImage(data: data) {
+                        Image(uiImage: uiImg)
+                            .resizable()
+                    } else {
+                        Rectangle().foregroundColor(.secondary)
+                    }
                 }
                 .frame(width: 15, height: 15)
                 .cornerRadius(3)
@@ -41,6 +44,6 @@ struct AppIconStack: View {
 
 struct AppIconStack_Previews: PreviewProvider {
     static var previews: some View {
-        AppIconStack(apps: [ACData.example.apps[0], ACData.example.apps[0], ACData.example.apps[0], ACData.example.apps[0], ACData.example.apps[0]])
+        AppIconStack(apps: [.mockApp, .mockApp, .mockApp, .mockApp, .mockApp])
     }
 }

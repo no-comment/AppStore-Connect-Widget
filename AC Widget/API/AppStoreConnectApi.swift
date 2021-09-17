@@ -274,6 +274,12 @@ class AppStoreConnectApi {
                 promise.reject(APIError.unknown)
                 return promise
             }
+
+            var imageData: Data?
+            if let imgUrl = URL(string: appData.artworkUrl60) {
+                imageData = try? Data(contentsOf: imgUrl)
+            }
+
             promise.fulfill(
                 ACApp(appstoreId: app.appstoreId,
                       name: app.name,
@@ -281,7 +287,8 @@ class AppStoreConnectApi {
                       version: appData.version,
                       currentVersionReleaseDate: appData.currentVersionReleaseDate,
                       artworkUrl60: appData.artworkUrl60,
-                      artworkUrl100: appData.artworkUrl100)
+                      artworkUrl100: appData.artworkUrl100,
+                      artwork60ImgData: imageData)
             )
         } else {
             promise.reject(APIError.unknown)

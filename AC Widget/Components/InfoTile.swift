@@ -87,10 +87,13 @@ struct InfoTile: View {
     private func appDetail(for app: ACApp) -> some View {
         Card(alignment: .leading, spacing: 5, innerPadding: 10, color: .secondaryCardColor) {
             HStack(spacing: 4) {
-                AsyncImage(url: URL(string: app.artworkUrl60)) { image in
-                    image.resizable()
-                } placeholder: {
-                    Rectangle().foregroundColor(.secondary)
+                Group {
+                    if let data = app.artwork60ImgData, let uiImg = UIImage(data: data) {
+                        Image(uiImage: uiImg)
+                            .resizable()
+                    } else {
+                        Rectangle().foregroundColor(.secondary)
+                    }
                 }
                 .frame(width: 15, height: 15)
                 .cornerRadius(3)
