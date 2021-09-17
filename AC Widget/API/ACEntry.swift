@@ -3,7 +3,7 @@
 //  AC Widget by NO-COMMENT
 //
 
-import Foundation
+import SwiftUI
 
 struct ACEntry: Codable {
     let appTitle: String
@@ -48,6 +48,77 @@ enum ACEntryType: String, CaseIterable, Codable {
             self = .update
         default:
             self = .unknown
+        }
+    }
+}
+
+enum ACDevice: String, CaseIterable, Identifiable {
+    case desktop
+    case iPhone
+    case iPad
+    case appleWatch
+    case appleTV
+    case iPod
+    case unknown
+
+    init(_ deviceString: String?) {
+        switch deviceString {
+        case "iPhone":
+            self = .iPhone
+        case "iPad":
+            self = .iPad
+        case "Desktop":
+            self = .desktop
+        case "Apple Watch":
+            self = .appleWatch
+        case "Apple TV":
+            self = .appleTV
+        case "iPod":
+            self = .iPod
+        default:
+            self = .unknown
+        }
+    }
+
+    var id: String {
+        self.rawValue
+    }
+
+    var symbol: String {
+        switch self {
+        case .iPhone:
+            return "iphone"
+        case .iPad:
+            return "ipad"
+        case .desktop:
+            return "desktopcomputer"
+        case .appleWatch:
+            return "applewatch"
+        case .appleTV:
+            return "appletv"
+        case .iPod:
+            return "ipodtouch"
+        case .unknown:
+            return "questionmark"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .desktop:
+            return Color("ChartColor1")
+        case .iPhone:
+            return Color("ChartColor2")
+        case .iPad:
+            return Color("ChartColor3")
+        case .appleWatch:
+            return Color("ChartColor4")
+        case .appleTV:
+            return Color("ChartColor5")
+        case .iPod:
+            return Color("ChartColor6")
+        case .unknown:
+            return .gray
         }
     }
 }

@@ -96,7 +96,7 @@ struct InfoTile: View {
                     }
                 }
                 .frame(width: 15, height: 15)
-                .cornerRadius(3)
+                .cornerRadius(4)
 
                 Text(app.name)
                     .lineLimit(1)
