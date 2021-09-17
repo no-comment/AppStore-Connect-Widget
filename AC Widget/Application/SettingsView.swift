@@ -11,6 +11,8 @@ struct SettingsView: View {
     @AppStorage(UserDefaultsKey.includeRedownloads, store: UserDefaults.shared) var includeRedownloads: Bool = false
     @State private var addKeySheet: Bool = false
 
+    @State private var cachedEntries: Int = 0
+
     var apiKeys: [APIKey] {
         guard let data = keysData else { return [] }
         return APIKey.getKeysFromData(data) ?? []
@@ -81,12 +83,16 @@ struct SettingsView: View {
 
     var storageSection: some View {
         Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
-            Text("ALL_CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached())")
+            Text("ALL_CACHED_ENTRIES:\(cachedEntries)")
+                .onAppear {
+                    self.cachedEntries = ACDataCache.numberOfEntriesCached()
+                }
 
             Button("CLEAR_ALL_CACHE") {
                 AppStoreConnectApi.clearInMemoryCache()
                 APIKey.clearInMemoryCache()
                 ACDataCache.clearCache()
+                self.cachedEntries = ACDataCache.numberOfEntriesCached()
             }
             .foregroundColor(.orange)
         }

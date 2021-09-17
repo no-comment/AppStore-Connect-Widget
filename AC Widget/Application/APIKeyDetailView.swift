@@ -16,7 +16,8 @@ struct APIKeyDetailView: View {
 
     @State private var status: APIError?
 
-    @State var apps: [ACApp] = []
+    @State private var apps: [ACApp] = []
+    @State private var cachedEntries: Int
 
     init(_ key: APIKey) {
         self.key = key
@@ -26,6 +27,7 @@ struct APIKeyDetailView: View {
         self.privateKeyID = key.privateKeyID
         self.privateKey = key.privateKey
         self.vendorNumber = key.vendorNumber
+        self.cachedEntries = ACDataCache.numberOfEntriesCached(apiKey: key)
     }
 
     var body: some View {
@@ -126,12 +128,13 @@ struct APIKeyDetailView: View {
 
     var storageSection: some View {
         Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
-            Text("CACHED_ENTRIES:\(ACDataCache.numberOfEntriesCached(apiKey: key))")
+            Text("CACHED_ENTRIES:\(cachedEntries)")
 
             Button("CLEAR_CACHE") {
                 AppStoreConnectApi.clearInMemoryCache()
                 APIKey.clearInMemoryCache()
                 ACDataCache.clearCache(apiKey: key)
+                self.cachedEntries = ACDataCache.numberOfEntriesCached(apiKey: key)
             }
             .foregroundColor(.orange)
         }
