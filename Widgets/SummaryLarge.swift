@@ -104,7 +104,7 @@ struct SummaryLarge: View {
     }
 
     var appList: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: fewApps ? 300 : 150))], spacing: 8) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: fewApps ? 300 : 100))], spacing: 8) {
             ForEach((filteredApps.isEmpty ? data.apps : filteredApps).prefix(4)) { app in
                 Card(alignment: .leading, spacing: 3, innerPadding: 8, color: .cardColor) {
                     HStack(spacing: 4) {
