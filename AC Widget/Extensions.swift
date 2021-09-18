@@ -125,6 +125,9 @@ struct ShowAsWidget: ViewModifier {
         case .systemLarge:
             width = 329
             height = 345
+        case .systemExtraLarge:
+            width = 660
+            height = 345
         @unknown default:
             width = 329
             height = 141

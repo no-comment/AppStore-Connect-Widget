@@ -96,7 +96,7 @@ struct DeviceTile: View {
             }
             Group {
                 HStack {
-                    Image(systemName: "square.and.arrow.down")
+                    Image(systemName: InfoType.downloads.systemImage)
                         .foregroundColor(.gray)
                     PercentStackedBarChart(data:
                                             data.getDevices(.downloads, lastNDays: 30, filteredApps: [app])
@@ -120,7 +120,7 @@ struct DeviceTile: View {
                         .frame(height: 7)
                 }
                 HStack {
-                    Image(systemName: "arrow.triangle.2.circlepath")
+                    Image(systemName: InfoType.updates.systemImage)
                         .foregroundColor(.gray)
                     PercentStackedBarChart(data:
                                             data.getDevices(.updates, lastNDays: 30, filteredApps: [app])
