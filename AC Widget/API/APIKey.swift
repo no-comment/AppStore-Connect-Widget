@@ -21,11 +21,11 @@ class APIKeyProvider: ObservableObject {
             }
             apiKeys = try APIKeyProvider.getKeysFromData(data)
         } catch {
+            print(error.localizedDescription)
+            apiKeys = []
             #if DEBUG
             fatalError(error.localizedDescription)
             #endif
-            print(error.localizedDescription)
-            apiKeys = []
         }
     }
 
