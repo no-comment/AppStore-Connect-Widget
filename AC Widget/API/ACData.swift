@@ -15,7 +15,7 @@ struct ACData: Codable {
     init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
         self.entries = entries
         self.displayCurrency = currency
-        self.apps = apps
+        self.apps = apps.sorted { entries.filterApps([$0]).count > entries.filterApps([$1]).count }
     }
 }
 

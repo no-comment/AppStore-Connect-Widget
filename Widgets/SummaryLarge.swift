@@ -43,7 +43,11 @@ struct SummaryLarge: View {
                 Spacer()
                 proceedsSection
             }
-            countriesSection
+            if filteredApps.count == 1 || data.apps.count <= 1 {
+                countriesSection
+            } else {
+                appList
+            }
         }
     }
 
@@ -92,6 +96,48 @@ struct SummaryLarge: View {
             DescribedValueView(description: countryName(placement: 0), value: countryProceeds(placement: 0))
             DescribedValueView(description: countryName(placement: 1), value: countryProceeds(placement: 1))
             DescribedValueView(description: countryName(placement: 2), value: countryProceeds(placement: 2))
+        }
+    }
+
+    var fewApps: Bool {
+        filteredApps.count == 2 || (filteredApps.count == 0 && data.apps.count == 2)
+    }
+
+    var appList: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: fewApps ? 300 : 150))], spacing: 8) {
+            ForEach((filteredApps.isEmpty ? data.apps : filteredApps).prefix(4)) { app in
+                Card(alignment: .leading, spacing: 3, innerPadding: 8, color: .cardColor) {
+                    HStack(spacing: 4) {
+                        Group {
+                            if let data = app.artwork60ImgData, let uiImg = UIImage(data: data) {
+                                Image(uiImage: uiImg)
+                                    .resizable()
+                            } else {
+                                Rectangle().foregroundColor(.secondary)
+                            }
+                        }
+                        .frame(width: 15, height: 15)
+                        .cornerRadius(4)
+
+                        Text(app.name)
+                            .lineLimit(1)
+                        Spacer()
+                    }
+
+                    HStack(alignment: .bottom) {
+                        UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: [app]), metricSymbol: InfoType.downloads.systemImage)
+                            .fontSize(fewApps ? 25 : 19)
+                        Spacer()
+                        UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: [app]), metric: data.displayCurrency.symbol)
+                            .fontSize(fewApps ? 25 : 19)
+                        if fewApps {
+                            Spacer()
+                            UnitText(data.getAsString(.iap, lastNDays: 1, filteredApps: [app]), metricSymbol: InfoType.iap.systemImage)
+                                .fontSize(25)
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -96,6 +96,7 @@
 		CBB4A60726F3E6130064EE9E /* AppIconStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB4A60626F3E6130064EE9E /* AppIconStack.swift */; };
 		CBB4A60826F3E9A10064EE9E /* AppIconStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB4A60626F3E6130064EE9E /* AppIconStack.swift */; };
 		CBB4A60926F3E9A10064EE9E /* AppIconStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB4A60626F3E6130064EE9E /* AppIconStack.swift */; };
+		CBB4A60A26F668510064EE9E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9C4CAA262A136A007E38F1 /* Card.swift */; };
 		CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA496261E52F200719CC1 /* DynamicColor */; };
 		CBDFA49F261E55EE00719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA49E261E55EE00719CC1 /* DynamicColor */; };
 		CBDFA4A1261E55F500719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA4A0261E55F500719CC1 /* DynamicColor */; };
@@ -606,6 +607,7 @@
 				CBAB7297261B338600ED0F94 /* APIKey.swift in Sources */,
 				CBAB7299261B338600ED0F94 /* AppStoreConnectApi.swift in Sources */,
 				45C1A3F42619AC28006C1650 /* Widgets.intentdefinition in Sources */,
+				CBB4A60A26F668510064EE9E /* Card.swift in Sources */,
 				CB28AF0A26161D5E00B48215 /* DescribedValueView.swift in Sources */,
 				45E8C49C2612531D007F9B0E /* Widgets.swift in Sources */,
 				4552EE9F261CF400006C30B9 /* ACEntry.swift in Sources */,
