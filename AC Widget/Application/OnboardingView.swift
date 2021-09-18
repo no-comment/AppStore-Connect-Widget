@@ -9,6 +9,8 @@ struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var alert: AddAPIKeyAlert?
 
+    @EnvironmentObject var apiKeysProvider: APIKeyProvider
+
     let showsWelcome: Bool
 
     @State private var name: String = ""
@@ -158,14 +160,14 @@ struct OnboardingView: View {
     private func onFinishPressed() {
         let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
 
-        if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
+        if apiKeysProvider.getApiKey(apiKeyId: apiKey.id) != nil {
             alert = .duplicateKey
             return
         }
 
         apiKey.checkKey()
             .then {
-                APIKey.addApiKey(apiKey: apiKey)
+                try? apiKeysProvider.addApiKey(apiKey: apiKey)
                 finishOnboarding()
             }
             .catch { err in

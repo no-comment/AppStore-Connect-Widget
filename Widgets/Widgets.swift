@@ -92,7 +92,7 @@ struct Provider: IntentTimelineProvider {
 
     func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) -> Promise<ACData> {
         guard let apiKey = apiKeyParam?.toApiKey(),
-              APIKey.getApiKey(apiKeyId: apiKey.id) != nil else {
+              APIKeyProvider().getApiKey(apiKeyId: apiKey.id) != nil else {
                   let promise = Promise<ACData>.pending()
                   promise.reject(APIError.invalidCredentials)
                   return promise

@@ -7,16 +7,12 @@ import SwiftUI
 import WidgetKit
 
 struct SettingsView: View {
-    @AppStorage(UserDefaultsKey.apiKeys, store: UserDefaults.shared) var keysData: Data?
     @AppStorage(UserDefaultsKey.includeRedownloads, store: UserDefaults.shared) var includeRedownloads: Bool = false
+    @EnvironmentObject var apiKeysProvider: APIKeyProvider
+
     @State private var addKeySheet: Bool = false
 
     @State private var cachedEntries: Int = 0
-
-    var apiKeys: [APIKey] {
-        guard let data = keysData else { return [] }
-        return APIKey.getKeysFromData(data) ?? []
-    }
 
     var body: some View {
         Form {
@@ -33,7 +29,7 @@ struct SettingsView: View {
 
     var keySection: some View {
         Section(header: Label("API_KEYS", systemImage: "key.fill"), footer: keySectionFooter) {
-            ForEach(apiKeys) { key in
+            ForEach(apiKeysProvider.apiKeys) { key in
                 NavigationLink(destination: APIKeyDetailView(key),
                                label: {
                                 HStack {
@@ -136,9 +132,9 @@ struct SettingsView: View {
     }
 
     private func deleteKey(at offsets: IndexSet) {
-        let keys = offsets.map({ apiKeys[$0] })
+        let keys = offsets.map({ apiKeysProvider.apiKeys[$0] })
         keys.forEach { ACDataCache.clearCache(apiKey: $0) }
-        APIKey.deleteApiKeys(apiKeys: keys)
+        apiKeysProvider.deleteApiKeys(keys: keys)
     }
 }
 

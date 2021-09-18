@@ -14,7 +14,7 @@ class IntentHandler: INExtension, WidgetConfigurationIntentHandling {
     }
 
     func provideApiKeyOptionsCollection(for intent: WidgetConfigurationIntent) async throws -> INObjectCollection<ApiKeyParam> {
-        let keys = APIKey.getApiKeys()
+        let keys = APIKeyProvider().apiKeys
         return .init(items: keys.map({ ApiKeyParam(key: $0) }))
     }
 
@@ -35,7 +35,7 @@ class IntentHandler: INExtension, WidgetConfigurationIntentHandling {
     }
 
     func defaultApiKey(for intent: WidgetConfigurationIntent) -> ApiKeyParam? {
-        guard let key = APIKey.getApiKeys().first else { return nil }
+        guard let key = APIKeyProvider().apiKeys.first else { return nil }
         return ApiKeyParam(key: key)
     }
 

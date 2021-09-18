@@ -13,10 +13,12 @@ struct HomeView: View {
 
     @State var showSettings = false
 
+    @EnvironmentObject var apiKeysProvider: APIKeyProvider
+
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
-        return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
+        return apiKeysProvider.getApiKey(apiKeyId: keyID) ?? apiKeysProvider.apiKeys.first
     }
 
     @State var tiles: [TileType] = []

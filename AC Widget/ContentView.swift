@@ -7,11 +7,10 @@ import SwiftUI
 import AppStoreConnect_Swift_SDK
 
 struct ContentView: View {
-    @AppStorage(UserDefaultsKey.apiKeys, store: UserDefaults.shared) var keysData: Data?
+    @EnvironmentObject var apiKeysProvider: APIKeyProvider
 
     var completedOnboarding: Bool {
-        guard let data = keysData, let keys = APIKey.getKeysFromData(data) else { return false }
-        return !keys.isEmpty
+        return !apiKeysProvider.apiKeys.isEmpty
     }
 
     var body: some View {

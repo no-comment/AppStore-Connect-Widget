@@ -15,6 +15,9 @@
 		4552EE9F261CF400006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
 		4552EEA0261CFB99006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
 		455B4AA02613BAA80061785A /* Promises in Frameworks */ = {isa = PBXBuildFile; productRef = 455B4A9F2613BAA80061785A /* Promises */; };
+		456187F426F66FE400FAE4F8 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 456187F326F66FE400FAE4F8 /* KeychainAccess */; };
+		456187F626F6741A00FAE4F8 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 456187F526F6741A00FAE4F8 /* KeychainAccess */; };
+		456187F826F6742100FAE4F8 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 456187F726F6742100FAE4F8 /* KeychainAccess */; };
 		4570D39A261EE1FC006F50AA /* ACDataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4570D399261EE1FC006F50AA /* ACDataCache.swift */; };
 		4570D39B261EE1FC006F50AA /* ACDataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4570D399261EE1FC006F50AA /* ACDataCache.swift */; };
 		457E715C268D12E5000AEBF6 /* RearrangeTilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457E715B268D12E5000AEBF6 /* RearrangeTilesView.swift */; };
@@ -201,6 +204,7 @@
 			files = (
 				CB77BBB22691F19A006D4EC4 /* BetterToStrings in Frameworks */,
 				45E8C4C0261268D4007F9B0E /* SwiftCSV in Frameworks */,
+				456187F426F66FE400FAE4F8 /* KeychainAccess in Frameworks */,
 				CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */,
 				45E8C4BD261267FB007F9B0E /* Gzip in Frameworks */,
 				45CAC1092615CB8100FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */,
@@ -214,6 +218,7 @@
 			files = (
 				45E8C4992612531D007F9B0E /* SwiftUI.framework in Frameworks */,
 				45CAC10F2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */,
+				456187F626F6741A00FAE4F8 /* KeychainAccess in Frameworks */,
 				CB77BBB42691F3EC006D4EC4 /* BetterToStrings in Frameworks */,
 				45CAC1112615CBD000FF63E7 /* Promises in Frameworks */,
 				CBDFA49F261E55EE00719CC1 /* DynamicColor in Frameworks */,
@@ -229,6 +234,7 @@
 			files = (
 				CB77BBB62691F3F2006D4EC4 /* BetterToStrings in Frameworks */,
 				CBAB72AD261B33DF00ED0F94 /* AppStoreConnect-Swift-SDK in Frameworks */,
+				456187F826F6742100FAE4F8 /* KeychainAccess in Frameworks */,
 				CBDFA4A1261E55F500719CC1 /* DynamicColor in Frameworks */,
 				CBAB72B4261B340C00ED0F94 /* SwiftCSV in Frameworks */,
 				45C1A3DD26191997006C1650 /* Promises in Frameworks */,
@@ -395,6 +401,7 @@
 				45CAC1082615CB8100FF63E7 /* AppStoreConnect-Swift-SDK */,
 				CBDFA496261E52F200719CC1 /* DynamicColor */,
 				CB77BBB12691F19A006D4EC4 /* BetterToStrings */,
+				456187F326F66FE400FAE4F8 /* KeychainAccess */,
 			);
 			productName = "AC Widget";
 			productReference = 45E8C47D2612512E007F9B0E /* AC Widget.app */;
@@ -420,6 +427,7 @@
 				45CAC1102615CBD000FF63E7 /* Promises */,
 				CBDFA49E261E55EE00719CC1 /* DynamicColor */,
 				CB77BBB32691F3EC006D4EC4 /* BetterToStrings */,
+				456187F526F6741A00FAE4F8 /* KeychainAccess */,
 			);
 			productName = WidgetsExtension;
 			productReference = 45E8C4942612531D007F9B0E /* WidgetsExtension.appex */;
@@ -445,6 +453,7 @@
 				CBAB72B3261B340C00ED0F94 /* SwiftCSV */,
 				CBDFA4A0261E55F500719CC1 /* DynamicColor */,
 				CB77BBB52691F3F2006D4EC4 /* BetterToStrings */,
+				456187F726F6742100FAE4F8 /* KeychainAccess */,
 			);
 			productName = WidgetIntentExtension;
 			productReference = 45FD5191261915F200603D8A /* WidgetIntentExtension.appex */;
@@ -487,6 +496,7 @@
 				45CAC1072615CB8100FF63E7 /* XCRemoteSwiftPackageReference "appstoreconnect-swift-sdk" */,
 				CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */,
 				CB77BBB02691F19A006D4EC4 /* XCRemoteSwiftPackageReference "BetterToStrings" */,
+				456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = 45E8C47E2612512E007F9B0E /* Products */;
 			projectDirPath = "";
@@ -1014,6 +1024,14 @@
 				minimumVersion = 1.2.12;
 			};
 		};
+		456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		45CAC1072615CB8100FF63E7 /* XCRemoteSwiftPackageReference "appstoreconnect-swift-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AvdLee/appstoreconnect-swift-sdk.git";
@@ -1061,6 +1079,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */;
 			productName = Promises;
+		};
+		456187F326F66FE400FAE4F8 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		456187F526F6741A00FAE4F8 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		456187F726F6742100FAE4F8 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 		45C1A3DC26191997006C1650 /* Promises */ = {
 			isa = XCSwiftPackageProductDependency;

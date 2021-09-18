@@ -91,18 +91,18 @@ class AppStoreConnectApi {
                         continue
                     }
                     guard let decompressedData = try? resultValue.gunzipped() else {
-#if DEBUG
+                        #if DEBUG
                         fatalError()
-#endif
+                        #endif
                         continue
                     }
 
                     let str = String(decoding: decompressedData, as: UTF8.self)
 
                     guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
-#if DEBUG
+                        #if DEBUG
                         fatalError()
-#endif
+                        #endif
                         continue
                     }
 
