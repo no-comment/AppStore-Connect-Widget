@@ -81,7 +81,7 @@ struct SummaryLarge: View {
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
                                    value: data
-                                    .getAsString(.proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact)
+                                    .getAsString(.proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps)
                                     .appending(data.displayCurrency.symbol))
             }
         }

@@ -50,6 +50,8 @@ struct SummaryExtraLarge: View {
                 }
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(.downloads, lastNDays: 7, size: .compact, filteredApps: filteredApps))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(.downloads, lastNDays: 30, size: .compact, filteredApps: filteredApps))
+                DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
+                                   value: data.getAsString(.downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps))
             }
             GraphView(data.getRawData(.downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
 
@@ -64,6 +66,10 @@ struct SummaryExtraLarge: View {
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
                                     .getAsString(.proceeds, lastNDays: 30, size: .compact, filteredApps: filteredApps)
+                                    .appending(data.displayCurrency.symbol))
+                DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
+                                   value: data
+                                    .getAsString(.proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps)
                                     .appending(data.displayCurrency.symbol))
             }
             GraphView(data.getRawData(.proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
@@ -132,7 +138,7 @@ struct SummaryExtraLarge: View {
                     HStack {
                         ZStack {
                             Image(systemName: "circle.fill")
-                                .foregroundColor(.secondaryCardColor)
+                                .foregroundColor(.clear)
                             Text(data.displayCurrency.symbol)
                                 .foregroundColor(.gray)
                         }

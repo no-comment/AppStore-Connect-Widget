@@ -62,7 +62,7 @@ extension ACData {
 
     private func getProceedsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
         let num: Float = getProceedsSum(lastNDays, filteredApps: filteredApps)
-        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 4 : nil, maxFractionDigits: 2)
+        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 3 : nil, maxFractionDigits: 2)
     }
 
     private func getUpdatesString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
