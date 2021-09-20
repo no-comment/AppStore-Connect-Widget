@@ -8,9 +8,18 @@ import SwiftUI
 struct AppIconStack: View {
     var apps: [ACApp]
 
+    var maxAppCount: Int = 4
+
+    private var showAppCount: Int {
+        if apps.count <= maxAppCount {
+            return apps.count
+        }
+        return maxAppCount - 1
+    }
+
     var body: some View {
         ZStack {
-            ForEach(0..<min(apps.count, 3)) { index in
+            ForEach(0..<showAppCount) { index in
                 Group {
                     if let data = apps[index].artwork60ImgData, let uiImg = UIImage(data: data) {
                         Image(uiImage: uiImg)
@@ -22,12 +31,13 @@ struct AppIconStack: View {
                 .frame(width: 15, height: 15)
                 .cornerRadius(3)
                 .overlay(
-                        RoundedRectangle(cornerRadius: 3)
-                            .stroke(Color.secondaryCardColor, lineWidth: 0.3)
-                    )
-                .padding(.leading, 12*CGFloat(index))
+                    RoundedRectangle(cornerRadius: 3)
+                        .stroke(Color.secondaryCardColor, lineWidth: 0.3)
+                )
+                .padding(.leading, 12 * CGFloat(index))
             }
-            if apps.count > 3 {
+
+            if apps.count > maxAppCount {
                 ZStack {
                     Image(systemName: "app.fill")
                         .foregroundColor(.secondaryCardColor)
