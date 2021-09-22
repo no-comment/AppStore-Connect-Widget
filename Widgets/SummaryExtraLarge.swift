@@ -27,7 +27,7 @@ struct SummaryExtraLarge: View {
             }
             AppIconStack(apps: filteredApps)
                 .padding(.top, 10)
-                .padding(.leading, 25)
+                .padding(.leading, 32)
         }
     }
 
@@ -53,7 +53,20 @@ struct SummaryExtraLarge: View {
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
                                    value: data.getAsString(.downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps))
             }
-            GraphView(data.getRawData(.downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+
+            VStack(alignment: .trailing) {
+                HStack {
+                    if data.getChange(.downloads).contains("-") {
+                        Image(systemName: "arrow.down.right")
+                    } else {
+                        Image(systemName: "arrow.up.right")
+                    }
+                    Text(data.getChange(.downloads).appending("%"))
+                }
+                .foregroundColor(data.getChange(.downloads).contains("-") ? .red : .green)
+                .font(.system(size: 12))
+                GraphView(data.getRawData(.downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+            }
 
             VStack {
                 Spacer()
@@ -72,12 +85,24 @@ struct SummaryExtraLarge: View {
                                     .getAsString(.proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps)
                                     .appending(data.displayCurrency.symbol))
             }
-            GraphView(data.getRawData(.proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+            VStack(alignment: .trailing) {
+                HStack {
+                    if data.getChange(.proceeds).contains("-") {
+                        Image(systemName: "arrow.down.right")
+                    } else {
+                        Image(systemName: "arrow.up.right")
+                    }
+                    Text(data.getChange(.proceeds).appending("%"))
+                }
+                .foregroundColor(data.getChange(.proceeds).contains("-") ? .red : .green)
+                .font(.system(size: 12))
+                GraphView(data.getRawData(.proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+            }
         }
     }
 
     var appDetailSection: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             ForEach((filteredApps.isEmpty ? data.apps : filteredApps).prefix(4)) { app in
                 Card(alignment: .leading, spacing: 3, innerPadding: 8, color: .cardColor) {
                     HStack(spacing: 4) {

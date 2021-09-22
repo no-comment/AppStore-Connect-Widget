@@ -15,10 +15,10 @@ struct DeviceTile: View {
 
     init(data: ACData, colors: [Color] = [.accentColor, .red, .yellow, .green, .purple, .pink]) {
         self.data = data
-        self.downloadData = data.getDevices(.downloads, lastNDays: 30).sorted(by: { $0.0 < $1.0 })
-        self.proceedData = data.getDevices(.proceeds, lastNDays: 30).sorted(by: { $0.0 < $1.0 })
-        self.updateData = data.getDevices(.updates, lastNDays: 30).sorted(by: { $0.0 < $1.0 })
-        self.iapData = data.getDevices(.iap, lastNDays: 30).sorted(by: { $0.0 < $1.0 })
+        self.downloadData = data.getDevices(.downloads, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        self.proceedData = data.getDevices(.proceeds, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        self.updateData = data.getDevices(.updates, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        self.iapData = data.getDevices(.iap, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
     }
 
     var body: some View {
@@ -100,7 +100,7 @@ struct DeviceTile: View {
                         .foregroundColor(.gray)
                     PercentStackedBarChart(data:
                                             data.getDevices(.downloads, lastNDays: 30, filteredApps: [app])
-                                            .sorted(by: { $0.0 < $1.0 })
+                                            .sorted(by: { $0.1 > $1.1 })
                                             .map({ ($0.1, ACDevice($0.0).color) })
                     )
                         .frame(height: 7)
@@ -114,7 +114,7 @@ struct DeviceTile: View {
                     }
                     PercentStackedBarChart(data:
                                             data.getDevices(.proceeds, lastNDays: 30, filteredApps: [app])
-                                            .sorted(by: { $0.0 < $1.0 })
+                                            .sorted(by: { $0.1 > $1.1 })
                                             .map({ ($0.1, ACDevice($0.0).color) })
                     )
                         .frame(height: 7)
@@ -124,7 +124,7 @@ struct DeviceTile: View {
                         .foregroundColor(.gray)
                     PercentStackedBarChart(data:
                                             data.getDevices(.updates, lastNDays: 30, filteredApps: [app])
-                                            .sorted(by: { $0.0 < $1.0 })
+                                            .sorted(by: { $0.1 > $1.1 })
                                             .map({ ($0.1, ACDevice($0.0).color) })
                     )
                         .frame(height: 7)
