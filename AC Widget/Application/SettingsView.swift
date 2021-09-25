@@ -98,19 +98,13 @@ struct SettingsView: View {
         Section(header: Label("Links", systemImage: "link")) {
             if let destination = URL(string: "https://github.com/no-comment/AppStore-Connect-Widget") {
                 Link(destination: destination, label: {
-                    Text("GitHub")
-                })
-            }
-
-            if let destination = URL(string: "https://github.com/no-comment/AppStore-Connect-Widget/issues") {
-                Link(destination: destination, label: {
-                    Text("SUPPORT")
+                    Label("GitHub", image: "logo.github")
                 })
             }
 
             if let destination = URL(string: "https://www.buymeacoffee.com/nocomment") {
                 Link(destination: destination, label: {
-                    Text("Buy me a coffee")
+                    Label("Buy me a Coffee", image: "logo.buymeacoffee")
                 })
             }
         }
