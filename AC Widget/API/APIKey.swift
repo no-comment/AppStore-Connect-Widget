@@ -35,7 +35,7 @@ class APIKeyProvider: ObservableObject {
 
     static private func getKeysFromData(_ data: Data) throws -> [APIKey] {
         let keys = try JSONDecoder().decode([APIKey].self, from: data)
-        return keys
+        return keys.map(\.id).compactMap({ keyId in keys.first(where: { $0.id == keyId }) })
     }
 
     func getApiKey(apiKeyId: String) -> APIKey? {
