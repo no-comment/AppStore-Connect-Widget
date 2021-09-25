@@ -53,9 +53,9 @@ struct DeviceTile: View {
             PercentStackedBarChart(data: proceedData.map({ ($0.1, ACDevice($0.0).color) }))
                 .frame(height: 10)
 
-            Text("IN-APP-PURCHASES")
-            PercentStackedBarChart(data: iapData.map({ ($0.1, ACDevice($0.0).color) }))
-                .frame(height: 10)
+//            Text("IN-APP-PURCHASES")
+//            PercentStackedBarChart(data: iapData.map({ ($0.1, ACDevice($0.0).color) }))
+//                .frame(height: 10)
 
             Text("UPDATES")
             PercentStackedBarChart(data: updateData.map({ ($0.1, ACDevice($0.0).color) }))
