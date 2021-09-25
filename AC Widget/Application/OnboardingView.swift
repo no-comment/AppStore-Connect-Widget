@@ -114,13 +114,9 @@ struct OnboardingView: View {
 
     var privateKeySection: some View {
         GroupBox(label: Text("PRIVATE_KEY"), content: {
-            TextEditor(text: $key)
-                .frame(minHeight: 30, maxHeight: 250)
+            TextField("PRIVATE_KEY", text: $key)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
-                .background(Color.systemWhite.cornerRadius(5))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 5).stroke(Color(.systemGray4), lineWidth: 0.3)
-                )
 
             Text("ONBOARD_PRIVATE_KEY")
                 .fixedSize(horizontal: false, vertical: true)
