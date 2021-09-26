@@ -1,8 +1,6 @@
 //
 //  UpdateView.swift
-//  AC Widget
-//
-//  Created by Miká Kruschel on 26.09.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI

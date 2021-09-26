@@ -117,7 +117,7 @@ struct SettingsView: View {
             if let destination = URL(string: "itms-apps://itunes.apple.com/app/id1562025981?mt=8&action=write-review") {
                 Link(destination: destination, label: {
                     HStack {
-                        Label("Rate ACWidget", systemImage: "star")
+                        Label("RATE_ACWIDGET", systemImage: "star")
                             .foregroundColor(.primary)
                         Spacer()
                         Image(systemName: "arrow.up.forward.app")

@@ -65,7 +65,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
 "UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at around 5am Pacific Time.";
-"SUPPORT" = "Support";
+"RATE_ACWIDGET" = "Rate AC Widget";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Color";
@@ -131,7 +131,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "UPDATE_TITLE_1" = "iCloud Sync";
 "UPDATE_SUBTITLE_1" = "From now on your API keys will automatically be synced across all your devices.";
 "UPDATE_TITLE_2" = "Extra Large Widget";
-"UPDATE_SUBTITLE_2" = "This new size shows even more details on your homescreen.";
+"UPDATE_SUBTITLE_2" = "This new size shows even more details on your home screen.";
 "UPDATE_TITLE_3" = "Filter by Apps";
 "UPDATE_SUBTITLE_3" = "You can now filter what apps the metrics are based on.";
 "UPDATE_TITLE_4" = "Statistic Breakdown";
