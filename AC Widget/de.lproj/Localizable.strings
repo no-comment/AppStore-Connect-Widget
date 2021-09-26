@@ -43,6 +43,11 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "APPLICATIONS" = "Applikationen";
 "CURRENCY" = "Währung";
 
+"APPSTORE_NOTICE" = "AppStore Version Verfügbar";
+"APPSTORE_NOTICE_TEXT" = "ACWidget ist jetzt im AppStore. Wenn du die Release-Version herunterlädst, würden wir uns über eine Bewertung freuen.";
+"APPSTORE_NOTICE_PROMPT" = "Download from the AppStore";
+"APPSTORE_NOTICE_TOGGLE" = "AppStore Banner anzeigen";
+
 // MARK: Settings
 "SETTINGS" = "Einstellungen";
 "API_KEYS" = "API Keys";

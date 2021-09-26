@@ -72,6 +72,7 @@ enum UserDefaultsKey {
     static let homeSelectedKey = "homeSelectedKey"
     static let homeCurrency = "homeCurrency"
     static let tilesInHome = "tilesInHome"
+    static let appStoreNotice = "appStoreNotice"
 }
 
 // MARK: Editing Strings

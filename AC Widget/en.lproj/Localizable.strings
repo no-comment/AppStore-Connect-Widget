@@ -43,6 +43,11 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "APPLICATIONS" = "Applications";
 "CURRENCY" = "Currency";
 
+"APPSTORE_NOTICE" = "AppStore Version Available";
+"APPSTORE_NOTICE_TEXT" = "ACWidget is now available on the AppStore. If you decide to download the release version, we would appreciate a review.";
+"APPSTORE_NOTICE_PROMPT" = "Download from the AppStore";
+"APPSTORE_NOTICE_TOGGLE" = "Show AppStore banner";
+
 // MARK: Settings
 "SETTINGS" = "Settings";
 "API_KEYS" = "API Keys";

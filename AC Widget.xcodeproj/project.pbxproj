@@ -102,6 +102,7 @@
 		CBB4A60A26F668510064EE9E /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9C4CAA262A136A007E38F1 /* Card.swift */; };
 		CBB4A60D26F674880064EE9E /* SummaryExtraLarge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB4A60C26F674880064EE9E /* SummaryExtraLarge.swift */; };
 		CBB4A60E26F6779D0064EE9E /* PercentStackedBarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB77BBAC268D18E8006D4EC4 /* PercentStackedBarChart.swift */; };
+		CBBBE74C2700F17D00DF7942 /* AppStoreNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBBE74B2700F17D00DF7942 /* AppStoreNotice.swift */; };
 		CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA496261E52F200719CC1 /* DynamicColor */; };
 		CBDFA49F261E55EE00719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA49E261E55EE00719CC1 /* DynamicColor */; };
 		CBDFA4A1261E55F500719CC1 /* DynamicColor in Frameworks */ = {isa = PBXBuildFile; productRef = CBDFA4A0261E55F500719CC1 /* DynamicColor */; };
@@ -194,6 +195,7 @@
 		CBB4A60426F3D8E40064EE9E /* InfoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTile.swift; sourceTree = "<group>"; };
 		CBB4A60626F3E6130064EE9E /* AppIconStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconStack.swift; sourceTree = "<group>"; };
 		CBB4A60C26F674880064EE9E /* SummaryExtraLarge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryExtraLarge.swift; sourceTree = "<group>"; };
+		CBBBE74B2700F17D00DF7942 /* AppStoreNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreNotice.swift; sourceTree = "<group>"; };
 		CBEA7347262CD5B90095C39D /* KeySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeySelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -370,6 +372,7 @@
 				CB28AEDF2615D24400B48215 /* UnitText.swift */,
 				CB28AF0826161D5D00B48215 /* DescribedValueView.swift */,
 				CBB4A60626F3E6130064EE9E /* AppIconStack.swift */,
+				CBBBE74B2700F17D00DF7942 /* AppStoreNotice.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -594,6 +597,7 @@
 				CBB4A60726F3E6130064EE9E /* AppIconStack.swift in Sources */,
 				CB28AF012616163600B48215 /* SettingsView.swift in Sources */,
 				452A37F126161C97005CD1DA /* Extensions.swift in Sources */,
+				CBBBE74C2700F17D00DF7942 /* AppStoreNotice.swift in Sources */,
 				457E715C268D12E5000AEBF6 /* RearrangeTilesView.swift in Sources */,
 				CBAB729E261B338600ED0F94 /* AppStoreConnectApi.swift in Sources */,
 				CBAB729F261B338600ED0F94 /* ACData.swift in Sources */,

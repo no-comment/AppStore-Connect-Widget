@@ -15,6 +15,7 @@ struct HomeView: View {
 
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
 
+    @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) var appStoreNotice: Bool = true
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
@@ -27,6 +28,9 @@ struct HomeView: View {
         ScrollView {
             if let data = data {
                 lastChangeSubtitle
+                if appStoreNotice && AppStoreNotice.isTestFlight() {
+                    AppStoreNotice()
+                }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
 
                     ForEach(tiles) { tile in
