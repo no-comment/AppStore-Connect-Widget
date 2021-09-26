@@ -129,7 +129,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "START" = "Start";
 
 "UPDATE_TITLE_1" = "iCloud Sync";
-"UPDATE_SUBTITLE_1" = "From now on your api keys will automatically be synced across all your devices.";
+"UPDATE_SUBTITLE_1" = "From now on your API keys will automatically be synced across all your devices.";
 "UPDATE_TITLE_2" = "Extra Large Widget";
 "UPDATE_SUBTITLE_2" = "This new size shows even more details on your homescreen.";
 "UPDATE_TITLE_3" = "Filter by Apps";
