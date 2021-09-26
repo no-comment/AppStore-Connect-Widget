@@ -98,16 +98,25 @@ struct SettingsView: View {
         Section(header: Label("Links", systemImage: "link")) {
             if let destination = URL(string: "https://github.com/no-comment/AppStore-Connect-Widget") {
                 Link(destination: destination, label: {
-                    Label("GitHub", image: "logo.github")
-                })
+                    HStack {
+                        Label("GitHub", image: "logo.github")
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.app")
+                    }
+                }).contentShape(Rectangle())
             }
 
             if let destination = URL(string: "https://www.buymeacoffee.com/nocomment") {
                 Link(destination: destination, label: {
-                    Label("Buy me a Coffee", image: "logo.buymeacoffee")
+                    HStack {
+                        Label("Buy me a Coffee", image: "logo.buymeacoffee")
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.app")
+                    }.contentShape(Rectangle())
                 })
             }
         }
+        .buttonStyle(.plain)
     }
 
     var notes: some View {
