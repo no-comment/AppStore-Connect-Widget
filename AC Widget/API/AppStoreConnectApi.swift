@@ -9,6 +9,7 @@ import Gzip
 import SwiftCSV
 import Promises
 
+// swiftlint:disable:next type_body_length
 class AppStoreConnectApi {
     private let privateKeyMinLength = 100
 

@@ -76,6 +76,7 @@ struct DeviceTile: View {
     }
 
     @ViewBuilder
+    // swiftlint:disable:next function_body_length
     private func appDetail(for app: ACApp) -> some View {
         Card(alignment: .leading, spacing: 5, innerPadding: 10, color: .secondaryCardColor) {
             HStack(spacing: 4) {
