@@ -177,7 +177,7 @@ struct HomeView: View {
         let appVersion: String = UIApplication.appVersion ?? ""
         let buildVersion: String = UIApplication.buildVersion ?? ""
         let vString = "\(appVersion) (\(buildVersion))"
-        if vString != lastSeenVersion && !lastSeenVersion.isEmpty {
+        if vString != lastSeenVersion {
             lastSeenVersion = vString
             showsUpdateScreen = true
         }
