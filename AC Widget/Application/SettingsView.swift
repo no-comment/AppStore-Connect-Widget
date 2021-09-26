@@ -107,11 +107,22 @@ struct SettingsView: View {
                 Link(destination: destination, label: {
                     HStack {
                         Label("GitHub", image: "logo.github")
-                            .symbolRenderingMode(.multicolor)
+                            .foregroundColor(.primary)
                         Spacer()
                         Image(systemName: "arrow.up.forward.app")
                     }
                 }).contentShape(Rectangle())
+            }
+
+            if let destination = URL(string: "itms-apps://itunes.apple.com/app/id1562025981?mt=8&action=write-review") {
+                Link(destination: destination, label: {
+                    HStack {
+                        Label("Rate ACWidget", systemImage: "star")
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.app")
+                    }.contentShape(Rectangle())
+                })
             }
 
             if let destination = URL(string: "https://www.buymeacoffee.com/nocomment") {
