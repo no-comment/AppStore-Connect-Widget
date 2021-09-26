@@ -24,6 +24,9 @@ struct HomeView: View {
 
     @State var tiles: [TileType] = []
 
+    @AppStorage(UserDefaultsKey.lastSeenVersion, store: UserDefaults.shared) private var lastSeenVersion: String = ""
+    @State private var showsUpdateScreen = false
+
     var body: some View {
         ScrollView {
             if let data = data {
@@ -64,6 +67,9 @@ struct HomeView: View {
         .navigationTitle("HOME")
         .toolbar(content: toolbar)
         .sheet(isPresented: $showingSheet, content: sheet)
+        .sheet(isPresented: $showsUpdateScreen, content: {
+            UpdateView()
+        })
         .onChange(of: keyID, perform: { _ in onAppear() })
         .onChange(of: currency, perform: { _ in onAppear() })
         .onAppear(perform: { onAppear() })
@@ -166,6 +172,14 @@ struct HomeView: View {
                 return
             }
             self.error = apiErr
+        }
+
+        let appVersion: String = UIApplication.appVersion ?? ""
+        let buildVersion: String = UIApplication.buildVersion ?? ""
+        let vString = "\(appVersion) (\(buildVersion))"
+        if vString != lastSeenVersion && !lastSeenVersion.isEmpty {
+            lastSeenVersion = vString
+            showsUpdateScreen = true
         }
     }
 }

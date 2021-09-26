@@ -57,6 +57,16 @@ extension Date {
     }
 }
 
+// MARK: UIApplication
+extension UIApplication {
+    static var appVersion: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    }
+    static var buildVersion: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+    }
+}
+
 // MARK: User Defaults
 extension UserDefaults {
     static var shared: UserDefaults? {
@@ -73,6 +83,7 @@ enum UserDefaultsKey {
     static let homeCurrency = "homeCurrency"
     static let tilesInHome = "tilesInHome"
     static let appStoreNotice = "appStoreNotice"
+    static let lastSeenVersion = "lastSeenVersion"
 }
 
 // MARK: Editing Strings

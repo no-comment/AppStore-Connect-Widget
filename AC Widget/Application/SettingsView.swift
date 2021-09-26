@@ -15,6 +15,8 @@ struct SettingsView: View {
 
     @State private var cachedEntries: Int = 0
 
+    @State private var updateSheetVisible = false
+
     var body: some View {
         Form {
             keySection
@@ -22,6 +24,7 @@ struct SettingsView: View {
             widgetSection
             storageSection
             contactSection
+            versionSection
             notes
         }
         .navigationTitle("SETTINGS")
@@ -33,14 +36,14 @@ struct SettingsView: View {
             ForEach(apiKeysProvider.apiKeys) { key in
                 NavigationLink(destination: APIKeyDetailView(key),
                                label: {
-                                HStack {
-                                    Text("\(Image(systemName: "circle.fill"))")
-                                        .foregroundColor(key.color)
-                                    Text(key.name)
-                                    Spacer()
-                                    ApiKeyCheckIndicator(key: key)
-                                }
-                               })
+                    HStack {
+                        Text("\(Image(systemName: "circle.fill"))")
+                            .foregroundColor(key.color)
+                        Text(key.name)
+                        Spacer()
+                        ApiKeyCheckIndicator(key: key)
+                    }
+                })
             }
             .onDelete(perform: deleteKey)
 
@@ -50,16 +53,16 @@ struct SettingsView: View {
 
     var keySectionFooter: some View {
         Text("\(Image(systemName: "checkmark.circle")): ")
-            +
-            Text("VALID_KEY")
-            +
-            Text(" \(Image(systemName: "xmark.circle")): ")
-            +
-            Text("INVALID_KEY")
-            +
-            Text(" \(Image(systemName: "exclamationmark.circle")): ")
-            +
-            Text("PROBLEM_KEY")
+        +
+        Text("VALID_KEY")
+        +
+        Text(" \(Image(systemName: "xmark.circle")): ")
+        +
+        Text("INVALID_KEY")
+        +
+        Text(" \(Image(systemName: "exclamationmark.circle")): ")
+        +
+        Text("PROBLEM_KEY")
     }
 
     var generalSection: some View {
@@ -104,6 +107,7 @@ struct SettingsView: View {
                 Link(destination: destination, label: {
                     HStack {
                         Label("GitHub", image: "logo.github")
+                            .symbolRenderingMode(.multicolor)
                         Spacer()
                         Image(systemName: "arrow.up.forward.app")
                     }
@@ -114,6 +118,7 @@ struct SettingsView: View {
                 Link(destination: destination, label: {
                     HStack {
                         Label("Buy me a Coffee", image: "logo.buymeacoffee")
+                            .symbolRenderingMode(.multicolor)
                         Spacer()
                         Image(systemName: "arrow.up.forward.app")
                     }.contentShape(Rectangle())
@@ -121,6 +126,24 @@ struct SettingsView: View {
             }
         }
         .buttonStyle(.plain)
+    }
+
+    var versionSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "info.circle").frame(width: 25)
+                Text("VERSION")
+                Spacer()
+                Text(verbatim: UIApplication.appVersion ?? "")
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                updateSheetVisible.toggle()
+            }
+            .sheet(isPresented: $updateSheetVisible) {
+                UpdateView()
+            }
+        }
     }
 
     var notes: some View {

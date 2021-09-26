@@ -79,6 +79,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "DELETE_KEY" = "Key löschen";
 "CONFIRM_DELETE_KEY" = "Möchtest du wirklich diesen Key löschen?";
 "DELETE_NO_UNDO" = "Es gibt kein zurück";
+"VERSION" = "Version";
 
 // MARK: Rearrange Tiles
 "REARRANGE" = "Homebildschirm bearbeiten";
@@ -120,3 +121,17 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "ERROR_EXCEEDED_LIMIT" = "Du hast das tägliche Limit an API Zugriffen erreicht.";
 "ERROR_UNKNOWN" = "Es ist ein unbekannter Fehler aufgetreten.";
 "ERROR_NO_DATA_AVAILABLE" = "Zur Zeit sind keine Daten verfügbar.";
+
+// MARK: UpdateView
+"WHATS_NEW" = "Änderungen";
+"IDEA_BUG_LINK" = "Hast du eine Idee für ein neues Feature oder einen Fehler gefunden?";
+"START" = "Start";
+
+"UPDATE_TITLE_1" = "iCloud Syncronisation";
+"UPDATE_SUBTITLE_1" = "Deine API Keys werden jetzt automatisch über iCloud synchronisiert.";
+"UPDATE_TITLE_2" = "Extra großes Widget";
+"UPDATE_SUBTITLE_2" = "Die neue Größe zeigt nun noch mehr Details direkt auf dem Homescreen an.";
+"UPDATE_TITLE_3" = "Nach Apps filtern";
+"UPDATE_SUBTITLE_3" = "Du kannst jetzt filtern, auf welchen Apps die Statistiken basieren.";
+"UPDATE_TITLE_4" = "Statistische Aufschlüsselung";
+"UPDATE_SUBTITLE_4" = "Tippe auf die Boxen auf der Startseite, um eine detailierte Aufschlüsselung pro App anzuzeigen.";
