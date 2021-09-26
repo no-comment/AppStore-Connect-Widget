@@ -144,14 +144,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		451A530127010A100094B5D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Widgets.strings; sourceTree = "<group>"; };
+		451A530327010A110094B5D6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Widgets.strings; sourceTree = "<group>"; };
 		452A37F026161C97005CD1DA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4542C450261B912E00799E4B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4552EE9D261CF3FF006C30B9 /* ACEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACEntry.swift; sourceTree = "<group>"; };
 		4570D399261EE1FC006F50AA /* ACDataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACDataCache.swift; sourceTree = "<group>"; };
 		457E715B268D12E5000AEBF6 /* RearrangeTilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RearrangeTilesView.swift; sourceTree = "<group>"; };
 		4583A842261A3E3700368001 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
-		458C4F972681C44C00097F18 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Widgets.strings; sourceTree = "<group>"; };
-		458C4F992681C44F00097F18 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Widgets.strings; sourceTree = "<group>"; };
 		45B7C4592700F18300F3ECC4 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
 		45B7C45B2700F2E400F3ECC4 /* UpdateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDetailView.swift; sourceTree = "<group>"; };
 		45C1A3F62619AC28006C1650 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Widgets.intentdefinition; sourceTree = "<group>"; };
@@ -682,8 +682,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				45C1A3F62619AC28006C1650 /* Base */,
-				458C4F972681C44C00097F18 /* en */,
-				458C4F992681C44F00097F18 /* de */,
+				451A530127010A100094B5D6 /* en */,
+				451A530327010A110094B5D6 /* de */,
 			);
 			name = Widgets.intentdefinition;
 			sourceTree = "<group>";
