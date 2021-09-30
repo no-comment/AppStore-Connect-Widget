@@ -10,6 +10,9 @@
 [![Stars](https://img.shields.io/github/stars/no-comment/AppStore-Connect-Widget?style=social)](https://github.com/no-comment/AppStore-Connect-Widget/stargazers)
 [![Buy me a coffee](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/nocomment)
 
+> **For Hacktoberfest participants:**
+> As an fairly easy and meaningfull contribution, we would greatly appreciate any help with localizations for further languages.
+
 ## What is AppStoreConnect Widget ?
 
 AC Widget allows you to easily view your latest app sales on your Home Screen. Some of its main features are:
