@@ -6,10 +6,12 @@
 import SwiftUI
 
 struct KeySelectionView: View {
+    @EnvironmentObject var apiKeysProvider: APIKeyProvider
+
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = Currency.USD.rawValue
     private var selectedKey: APIKey? {
-        return APIKey.getApiKey(apiKeyId: keyID)
+        return apiKeysProvider.getApiKey(apiKeyId: keyID)
     }
 
     var body: some View {
@@ -22,7 +24,7 @@ struct KeySelectionView: View {
 
     var keySelection: some View {
         Section(header: Label("API_KEY", systemImage: "key.fill")) {
-            ForEach(APIKey.getApiKeys()) { key in
+            ForEach(apiKeysProvider.apiKeys) { key in
                 Button(action: { keyID = key.id }, label: {
                     HStack {
                         Text("\(Image(systemName: "circle.fill"))")

@@ -7,6 +7,7 @@ import Foundation
 import SwiftUI
 import WidgetKit
 import DynamicColor
+import KeychainAccess
 
 extension Date {
     var dayBefore: Date {
@@ -56,6 +57,16 @@ extension Date {
     }
 }
 
+// MARK: UIApplication
+extension UIApplication {
+    static var appVersion: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    }
+    static var buildVersion: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+    }
+}
+
 // MARK: User Defaults
 extension UserDefaults {
     static var shared: UserDefaults? {
@@ -64,12 +75,15 @@ extension UserDefaults {
 }
 
 enum UserDefaultsKey {
+    @available(*, deprecated)
     static let apiKeys = "apiKeys"
     static let dataCache = "dataCache"
     static let includeRedownloads = "includeRedownloads"
     static let homeSelectedKey = "homeSelectedKey"
     static let homeCurrency = "homeCurrency"
     static let tilesInHome = "tilesInHome"
+    static let appStoreNotice = "appStoreNotice"
+    static let lastSeenVersion = "lastSeenVersion"
 }
 
 // MARK: Editing Strings
@@ -125,6 +139,9 @@ struct ShowAsWidget: ViewModifier {
         case .systemLarge:
             width = 329
             height = 345
+        case .systemExtraLarge:
+            width = 660
+            height = 345
         @unknown default:
             width = 329
             height = 141
@@ -176,6 +193,7 @@ extension Color {
     static let widgetSecondary: Color = Color("WidgetSecondary")
     static let systemWhite: Color = Color("systemWhite")
     static let cardColor: Color = Color("CardColor")
+    static let secondaryCardColor: Color = Color("SecondaryCardColor")
 }
 
 // From: http://brunowernimont.me/howtos/make-swiftui-color-codable

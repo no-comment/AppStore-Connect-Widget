@@ -14,9 +14,9 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "ONBOARD_PRIVATE_KEY" = "Jetzt kannst du den Inhalt des eigentlichen Keys hier einfügen.";
 "ONBOARD_VENDOR_NR" = "Als letztes wird die 'Vendor Number' benötigt. Diese befindet sich auf AppStoreConnect in dem 'Reports' Tab. Oben links sollte hier deine 'Vendor #' stehen.";
 
-"RECHECK_INPUTS" = "Key Überprüfen";
+"RECHECK_INPUTS" = "Key überprüfen";
 "OK" = "Ok";
-"INVALID_KEY" = "Invalider Key";
+"INVALID_KEY" = "Ungültiger Key";
 "INVALID_KEY_MSG" = "Einige der Informationen sind inkorrekt.";
 "DUPLICATE_KEY" = "Duplizierter Key";
 "DUPLICATE_KEY_MSG" = "Du hast diesen Key bereits hinzugefügt. Bitte gebe einen anderen ein.";
@@ -43,22 +43,28 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "APPLICATIONS" = "Applikationen";
 "CURRENCY" = "Währung";
 
+"APPSTORE_NOTICE" = "App Store Version Verfügbar";
+"APPSTORE_NOTICE_TEXT" = "AC Widget ist jetzt im App Store. Wenn du die Release-Version herunterlädst, würden wir uns über eine Bewertung freuen.";
+"APPSTORE_NOTICE_PROMPT" = "Im App Store öffnen";
+"APPSTORE_NOTICE_TOGGLE" = "App Store Banner anzeigen";
+
 // MARK: Settings
 "SETTINGS" = "Einstellungen";
 "API_KEYS" = "API Keys";
 "ADD_KEY" = "Key hinzufügen";
-"VALID_KEY" = "Valider Key";
-"INVALID_KEY" = "Invalider Key";
-"PROBLEM_KEY" = "Dieser Key hat ein anderes Problem";
+"VALID_KEY" = "Gültiger Key";
+"PROBLEM_KEY" = "Fehlerhafter Key";
 "GENERAL" = "Allgemein";
 "INCLUDE_REDOWNLOADS" = "Redownloads mitzählen";
 "WIDGET" = "Widget";
 "FORCE_REFRESH_WIDGET" = "Widget aktualisieren erzwingen";
 "STORAGE" = "Speicher";
+"APP_LIST" = "Apps";
+"NO_APPS" = "Keine Apps verfügbar";
 "ALL_CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
 "CLEAR_ALL_CACHE" = "Gesamten Cache löschen";
-"UPDATE_FREQUENCY_NOTICE" = "Anmerkung: AppStoreConnect stellt die Daten vom Vortag erst gegen 14Uhr deutscher Zeit bereit.";
-"SUPPORT" = "Support";
+"UPDATE_FREQUENCY_NOTICE" = "Anmerkung: AppStoreConnect stellt die Daten vom Vortag erst gegen 14 Uhr deutscher Zeit bereit.";
+"RATE_ACWIDGET" = "AC Widget bewerten";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Farbe";
@@ -73,6 +79,7 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "DELETE_KEY" = "Key löschen";
 "CONFIRM_DELETE_KEY" = "Möchtest du wirklich diesen Key löschen?";
 "DELETE_NO_UNDO" = "Es gibt kein zurück";
+"VERSION" = "Version";
 
 // MARK: Rearrange Tiles
 "REARRANGE" = "Homebildschirm bearbeiten";
@@ -99,6 +106,10 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "CHANGE_PERCENT" = "Verlauf:";
 "TOP_COUNTRIES" = "Top Länder";
 
+"1D" = "1T";
+"7D" = "7T";
+"30D" = "30T";
+
 "NO_DATA" = "Keine Daten";
 
 "SYSTEM" = "System";
@@ -110,3 +121,17 @@ Ganz oben auf der Keys Seite, steht deine 'Issuer ID'. Kopiere diese in das ober
 "ERROR_EXCEEDED_LIMIT" = "Du hast das tägliche Limit an API Zugriffen erreicht.";
 "ERROR_UNKNOWN" = "Es ist ein unbekannter Fehler aufgetreten.";
 "ERROR_NO_DATA_AVAILABLE" = "Zur Zeit sind keine Daten verfügbar.";
+
+// MARK: UpdateView
+"WHATS_NEW" = "Änderungen";
+"IDEA_BUG_LINK" = "Hast du eine Idee für ein neues Feature oder einen Fehler gefunden?";
+"START" = "Start";
+
+"UPDATE_TITLE_1" = "iCloud Syncronisation";
+"UPDATE_SUBTITLE_1" = "Deine API Keys werden jetzt automatisch über iCloud synchronisiert.";
+"UPDATE_TITLE_2" = "Extra großes Widget";
+"UPDATE_SUBTITLE_2" = "Die neue Größe zeigt nun noch mehr Details direkt auf dem Homescreen an.";
+"UPDATE_TITLE_3" = "Nach Apps filtern";
+"UPDATE_SUBTITLE_3" = "Du kannst jetzt filtern, auf welchen Apps die Statistiken basieren.";
+"UPDATE_TITLE_4" = "Statistische Aufschlüsselung";
+"UPDATE_SUBTITLE_4" = "Tippe auf die Boxen auf der Startseite, um eine detailierte Aufschlüsselung pro App anzuzeigen.";

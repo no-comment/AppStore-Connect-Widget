@@ -6,67 +6,147 @@
 import SwiftUI
 
 struct DeviceTile: View {
+    private var data: ACData
     private var downloadData: [(String, Float)]
     private var proceedData: [(String, Float)]
+    private var iapData: [(String, Float)]
     private var updateData: [(String, Float)]
-    private var legendPairs: [String: Color]
+    @State private var isFlipped: Bool = false
 
     init(data: ACData, colors: [Color] = [.accentColor, .red, .yellow, .green, .purple, .pink]) {
-        self.downloadData = data.getDevices(.downloads, lastNDays: 30).sorted(by: { $0.0 < $1.0 })
-        self.proceedData = data.getDevices(.proceeds, lastNDays: 30).sorted(by: { $0.0 < $1.0 })
-        self.updateData = data.getDevices(.updates, lastNDays: 30).sorted(by: { $0.0 < $1.0 })
-
-        let allDevices: [String] = downloadData.map({ $0.0 })
-            + proceedData.map({ $0.0 })
-            + updateData.map({ $0.0 })
-
-        var i = 0
-        var deviceLegend: [String: Color] = [:]
-        for device in Set(allDevices).sorted() {
-            deviceLegend[device] = colors[i % colors.count]
-            i += 1
-        }
-        self.legendPairs = deviceLegend
+        self.data = data
+        self.downloadData = data.getDevices(.downloads, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        self.proceedData = data.getDevices(.proceeds, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        self.updateData = data.getDevices(.updates, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
+        self.iapData = data.getDevices(.iap, lastNDays: 30).sorted(by: { $0.1 > $1.1 })
     }
 
     var body: some View {
         Card(alignment: .leading, spacing: 7) {
-            Text("DEVICES")
-                .font(.system(size: 20))
-            charts
-            Spacer(minLength: 0)
-            legend
+            if isFlipped {
+                backSide
+                 .rotation3DEffect(Angle(degrees: 180), axis: (x: CGFloat(0), y: CGFloat(10), z: CGFloat(0)))
+            } else {
+                Text("DEVICES")
+                    .font(.system(size: 20))
+                charts
+                Spacer(minLength: 0)
+                legend
+            }
         }
         .frame(height: 250)
+        .rotation3DEffect(self.isFlipped ? Angle(degrees: 180): Angle(degrees: 0), axis: (x: CGFloat(0), y: CGFloat(10), z: CGFloat(0)))
+        .onTapGesture {
+            withAnimation {
+                self.isFlipped.toggle()
+            }
+        }
     }
 
     var charts: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text("DOWNLOADS")
-            PercentStackedBarChart(data: downloadData.map({ ($0.1, legendPairs[$0.0] ?? .gray) }))
+            PercentStackedBarChart(data: downloadData.map({ ($0.1, ACDevice($0.0).color) }))
                 .frame(height: 10)
 
             Text("PROCEEDS")
-            PercentStackedBarChart(data: proceedData.map({ ($0.1, legendPairs[$0.0] ?? .gray) }))
+            PercentStackedBarChart(data: proceedData.map({ ($0.1, ACDevice($0.0).color) }))
                 .frame(height: 10)
 
+//            Text("IN-APP-PURCHASES")
+//            PercentStackedBarChart(data: iapData.map({ ($0.1, ACDevice($0.0).color) }))
+//                .frame(height: 10)
+
             Text("UPDATES")
-            PercentStackedBarChart(data: updateData.map({ ($0.1, legendPairs[$0.0] ?? .gray) }))
+            PercentStackedBarChart(data: updateData.map({ ($0.1, ACDevice($0.0).color) }))
                 .frame(height: 10)
         }
         .font(.system(size: 15))
     }
 
-    var legend: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 4) {
-            ForEach(Array(legendPairs.keys).sorted(by: <), id: \.self) { key in
-                HStack {
-                    Image(systemName: "circle.fill")
-                        .foregroundColor(legendPairs[key] ?? .gray)
-                    Text(key)
-                    Spacer()
+    var backSide: some View {
+        VStack {
+            ScrollView(showsIndicators: false) {
+                ForEach(data.apps) { app in
+                    appDetail(for: app)
                 }
-                .font(.system(size: legendPairs.count > 4 ? 13 : 16))
+            }
+            legend
+        }
+    }
+
+    @ViewBuilder
+    // swiftlint:disable:next function_body_length
+    private func appDetail(for app: ACApp) -> some View {
+        Card(alignment: .leading, spacing: 5, innerPadding: 10, color: .secondaryCardColor) {
+            HStack(spacing: 4) {
+                Group {
+                    if let data = app.artwork60ImgData, let uiImg = UIImage(data: data) {
+                        Image(uiImage: uiImg)
+                            .resizable()
+                    } else {
+                        Rectangle().foregroundColor(.secondary)
+                    }
+                }
+                .frame(width: 15, height: 15)
+                .cornerRadius(4)
+
+                Text(app.name)
+                    .lineLimit(1)
+                Spacer()
+            }
+            Group {
+                HStack {
+                    Image(systemName: InfoType.downloads.systemImage)
+                        .foregroundColor(.gray)
+                    PercentStackedBarChart(data:
+                                            data.getDevices(.downloads, lastNDays: 30, filteredApps: [app])
+                                            .sorted(by: { $0.1 > $1.1 })
+                                            .map({ ($0.1, ACDevice($0.0).color) })
+                    )
+                        .frame(height: 7)
+                }
+                HStack {
+                    ZStack {
+                        Image(systemName: "circle.fill")
+                            .foregroundColor(.secondaryCardColor)
+                    Text(data.displayCurrency.symbol)
+                        .foregroundColor(.gray)
+                    }
+                    PercentStackedBarChart(data:
+                                            data.getDevices(.proceeds, lastNDays: 30, filteredApps: [app])
+                                            .sorted(by: { $0.1 > $1.1 })
+                                            .map({ ($0.1, ACDevice($0.0).color) })
+                    )
+                        .frame(height: 7)
+                }
+                HStack {
+                    Image(systemName: InfoType.updates.systemImage)
+                        .foregroundColor(.gray)
+                    PercentStackedBarChart(data:
+                                            data.getDevices(.updates, lastNDays: 30, filteredApps: [app])
+                                            .sorted(by: { $0.1 > $1.1 })
+                                            .map({ ($0.1, ACDevice($0.0).color) })
+                    )
+                        .frame(height: 7)
+                }
+            }
+            .font(.system(size: 12))
+        }
+    }
+
+    var legend: some View {
+        HStack {
+            Spacer()
+            ForEach(ACDevice.allCases) { device in
+                ZStack {
+                    Circle()
+                        .foregroundColor(device.color)
+                        .frame(width: 30, height: 30)
+                    Image(systemName: device.symbol)
+                        .font(.system(size: 16, weight: .bold))
+                }
+                Spacer()
             }
         }
     }
@@ -76,6 +156,7 @@ struct DeviceTile_Previews: PreviewProvider {
     static var previews: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
             DeviceTile(data: ACData.example)
+                .preferredColorScheme(.dark)
         }.padding()
     }
 }

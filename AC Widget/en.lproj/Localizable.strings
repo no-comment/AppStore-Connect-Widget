@@ -43,22 +43,29 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "APPLICATIONS" = "Applications";
 "CURRENCY" = "Currency";
 
+"APPSTORE_NOTICE" = "App Store Version Available";
+"APPSTORE_NOTICE_TEXT" = "AC Widget is now available on the App Store. If you decide to download the release version, we would appreciate a review.";
+"APPSTORE_NOTICE_PROMPT" = "Go to App Store";
+"APPSTORE_NOTICE_TOGGLE" = "Show App Store Banner";
+
 // MARK: Settings
 "SETTINGS" = "Settings";
 "API_KEYS" = "API Keys";
 "ADD_KEY" = "Add Key";
 "VALID_KEY" = "Valid Key";
 "INVALID_KEY" = "Invalid Key";
-"PROBLEM_KEY" = "This Key has some other problem";
+"PROBLEM_KEY" = "Faulty Key";
 "GENERAL" = "General";
 "INCLUDE_REDOWNLOADS" = "Include redownloads";
 "WIDGET" = "Widget";
 "FORCE_REFRESH_WIDGET" = "Force refresh widget";
 "STORAGE" = "Storage";
+"APP_LIST" = "Apps";
+"NO_APPS" = "No Apps available";
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
 "UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at around 5am Pacific Time.";
-"SUPPORT" = "Support";
+"RATE_ACWIDGET" = "Rate AC Widget";
 
 "KEY_NAME" = "Key Name";
 "KEY_COLOR" = "Key Color";
@@ -73,6 +80,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "DELETE_KEY" = "Delete Key";
 "CONFIRM_DELETE_KEY" = "Are you sure you want to delete this key?";
 "DELETE_NO_UNDO" = "There is no undo";
+"VERSION" = "Version";
 
 // MARK: Rearrange Tiles
 "REARRANGE" = "Rearrange tiles in home";
@@ -99,6 +107,10 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "CHANGE_PERCENT" = "Change:";
 "TOP_COUNTRIES" = "Top Countries";
 
+"1D" = "1D";
+"7D" = "7D";
+"30D" = "30D";
+
 "NO_DATA" = "No Data";
 
 "SYSTEM" = "System";
@@ -110,3 +122,17 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "ERROR_EXCEEDED_LIMIT" = "You have exceeded the daily limit of API requests.";
 "ERROR_UNKNOWN" = "An unknown error occurred. Please file a bug report.";
 "ERROR_NO_DATA_AVAILABLE" = "Data is not yet available.";
+
+// MARK: UpdateView
+"WHATS_NEW" = "What's New";
+"IDEA_BUG_LINK" = "Have an idea for a new feature or found a bug?";
+"START" = "Start";
+
+"UPDATE_TITLE_1" = "iCloud Sync";
+"UPDATE_SUBTITLE_1" = "From now on your API keys will automatically be synced across all your devices.";
+"UPDATE_TITLE_2" = "Extra Large Widget";
+"UPDATE_SUBTITLE_2" = "This new size shows even more details on your home screen.";
+"UPDATE_TITLE_3" = "Filter by Apps";
+"UPDATE_SUBTITLE_3" = "You can now filter what apps the metrics are based on.";
+"UPDATE_TITLE_4" = "Statistic Breakdown";
+"UPDATE_SUBTITLE_4" = "Tap the tiles in the home view to reveal a per-app breakdown.";

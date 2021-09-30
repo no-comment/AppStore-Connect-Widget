@@ -15,7 +15,7 @@ struct ACData: Codable {
     init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
         self.entries = entries
         self.displayCurrency = currency
-        self.apps = apps
+        self.apps = apps.sorted { entries.filterApps([$0]).count > entries.filterApps([$1]).count }
     }
 }
 
@@ -32,6 +32,7 @@ extension ACData {
                            date: entry.date,
                            countryCode: entry.countryCode,
                            device: entry.device,
+                           appIdentifier: entry.appIdentifier,
                            type: entry.type)
         })
 
@@ -61,7 +62,7 @@ extension ACData {
 
     private func getProceedsString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
         let num: Float = getProceedsSum(lastNDays, filteredApps: filteredApps)
-        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 4 : nil, maxFractionDigits: 2)
+        return num.toString(abbreviation: .intelligent, maxSize: size == .compact ? 3 : nil, maxFractionDigits: 2)
     }
 
     private func getUpdatesString(_ lastNDays: Int, size: NumberLength, filteredApps: [ACApp] = []) -> String {
@@ -328,6 +329,7 @@ extension ACData {
                                        proceeds: Float.random(in: 0...5),
                                        date: day, countryCode: countries.randomElement() ?? "US",
                                        device: devices.randomElement() ?? "iPhone",
+                                       appIdentifier: "",
                                        type: ACEntryType.allCases.randomElement() ?? .download))
             }
         }
