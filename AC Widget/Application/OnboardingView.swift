@@ -9,6 +9,8 @@ struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var alert: AddAPIKeyAlert?
 
+    @EnvironmentObject var apiKeysProvider: APIKeyProvider
+
     let showsWelcome: Bool
 
     @State private var name: String = ""
@@ -51,7 +53,7 @@ struct OnboardingView: View {
     // MARK: Pages
     var welcomeSection: some View {
         GroupBox(label: Text("WELCOME"), content: {
-            SummaryMedium(data: ACData.example, color: color)
+            SummaryMedium(data: ACData.example, color: color, filteredApps: [])
                 .showAsWidget(.systemMedium)
                 .padding(.vertical)
 
@@ -81,7 +83,7 @@ struct OnboardingView: View {
                 Text("KEY_COLOR")
                     .fixedSize()
             })
-            .frame(maxWidth: 250, maxHeight: 30)
+                .frame(maxWidth: 250, maxHeight: 30)
             Spacer()
         })
     }
@@ -112,13 +114,9 @@ struct OnboardingView: View {
 
     var privateKeySection: some View {
         GroupBox(label: Text("PRIVATE_KEY"), content: {
-            TextEditor(text: $key)
-                .frame(minHeight: 30, maxHeight: 250)
+            TextField("PRIVATE_KEY", text: $key)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
-                .background(Color.systemWhite.cornerRadius(5))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 5).stroke(Color(.systemGray4), lineWidth: 0.3)
-                )
 
             Text("ONBOARD_PRIVATE_KEY")
                 .fixedSize(horizontal: false, vertical: true)
@@ -150,22 +148,22 @@ struct OnboardingView: View {
                 .clipShape(Capsule())
                 .contentShape(Rectangle())
         })
-        .disabled(
-            name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
-        )
+            .disabled(
+                name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
+            )
     }
 
     private func onFinishPressed() {
         let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
 
-        if APIKey.getApiKeys().contains(where: { $0.id == apiKey.id }) {
+        if apiKeysProvider.getApiKey(apiKeyId: apiKey.id) != nil {
             alert = .duplicateKey
             return
         }
 
         apiKey.checkKey()
             .then {
-                APIKey.addApiKey(apiKey: apiKey)
+                try? apiKeysProvider.addApiKey(apiKey: apiKey)
                 finishOnboarding()
             }
             .catch { err in

@@ -7,22 +7,36 @@ import Intents
 import Foundation
 
 class IntentHandler: INExtension, WidgetConfigurationIntentHandling {
-    func provideApiKeyOptionsCollection(for intent: WidgetConfigurationIntent, with completion: @escaping (INObjectCollection<ApiKeyParam>?, Error?) -> Void) {
-        let keys = APIKey.getApiKeys()
-        let collection = INObjectCollection(items: keys.map({ ApiKeyParam(key: $0) }))
-        completion(collection, nil)
+    func provideCurrencyOptionsCollection(for intent: WidgetConfigurationIntent) async throws -> INObjectCollection<CurrencyParam> {
+        var items = Currency.sortedAllCases.map({ CurrencyParam(identifier: $0.rawValue, display: $0.rawValue) })
+        items.insert(.system, at: 0)
+        return .init(items: items)
+    }
+
+    func provideApiKeyOptionsCollection(for intent: WidgetConfigurationIntent) async throws -> INObjectCollection<ApiKeyParam> {
+        let keys = APIKeyProvider().apiKeys
+        return .init(items: keys.map({ ApiKeyParam(key: $0) }))
+    }
+
+    func provideFilteredAppsOptionsCollection(for intent: WidgetConfigurationIntent, with completion: @escaping (INObjectCollection<FilteredAppParam>?, Error?) -> Void) {
+        guard let apiKey = intent.apiKey?.toApiKey() else {
+            completion(.init(items: []), INIntentError(.missingInformation))
+            return
+        }
+
+        AppStoreConnectApi(apiKey: apiKey).getData()
+            .then { data in
+                let apps = data.apps
+                completion(.init(items: apps.map({ FilteredAppParam(identifier: $0.id, display: $0.name) })), nil)
+            }
+            .catch { _ in
+                completion(nil, INIntentError(.requestTimedOut))
+            }
     }
 
     func defaultApiKey(for intent: WidgetConfigurationIntent) -> ApiKeyParam? {
-        guard let key = APIKey.getApiKeys().first else { return nil }
+        guard let key = APIKeyProvider().apiKeys.first else { return nil }
         return ApiKeyParam(key: key)
-    }
-
-    func provideCurrencyOptionsCollection(for intent: WidgetConfigurationIntent, with completion: @escaping (INObjectCollection<CurrencyParam>?, Error?) -> Void) {
-        var items = Currency.sortedAllCases.map({ CurrencyParam(identifier: $0.rawValue, display: $0.rawValue) })
-        items.insert(.system, at: 0)
-        let collection = INObjectCollection(items: items)
-        completion(collection, nil)
     }
 
     func defaultCurrency(for intent: WidgetConfigurationIntent) -> CurrencyParam? {

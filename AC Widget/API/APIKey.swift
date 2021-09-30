@@ -8,6 +8,80 @@ import UIKit
 import SwiftUI
 import WidgetKit
 import Promises
+import KeychainAccess
+
+class APIKeyProvider: ObservableObject {
+    @Published private(set) var apiKeys: [APIKey]
+
+    init() {
+        do {
+            guard let data = try APIKeyProvider.keychain.getData(APIKeyProvider.keychainKey), !data.isEmpty else {
+                apiKeys = []
+                return
+            }
+            apiKeys = try APIKeyProvider.getKeysFromData(data)
+        } catch {
+            print(error.localizedDescription)
+            apiKeys = []
+            #if DEBUG
+            fatalError(error.localizedDescription)
+            #endif
+        }
+    }
+
+    private static let keychain = Keychain(service: "dev.kruschel.AC-Widget.AC", accessGroup: "E348R9JYR6.dev.kruschel.AC-Widget")
+        .synchronizable(true)
+    private static let keychainKey = "ac-api-key"
+
+    static private func getKeysFromData(_ data: Data) throws -> [APIKey] {
+        let keys = try JSONDecoder().decode([APIKey].self, from: data)
+        return keys.map(\.id).compactMap({ keyId in keys.first(where: { $0.id == keyId }) })
+    }
+
+    func getApiKey(apiKeyId: String) -> APIKey? {
+        return apiKeys.first(where: { $0.id == apiKeyId })
+    }
+
+    /// Saves APIKey to UserDefaults; Replaces any key with same id (PrivateKeyId)
+    /// - Parameter apiKey: new or updated APIKey
+    func addApiKey(apiKey: APIKey) throws {
+        apiKeys.removeAll(where: { $0.id == apiKey.id })
+        apiKeys.append(apiKey)
+        let encoded = try JSONEncoder().encode(apiKeys)
+        try APIKeyProvider.keychain.set(encoded, key: APIKeyProvider.keychainKey)
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    @discardableResult
+    func deleteApiKey(apiKey: APIKey) -> Bool {
+        apiKeys.removeAll(where: { $0.id == apiKey.id })
+        do {
+            let encoded = try JSONEncoder().encode(apiKeys)
+            try APIKeyProvider.keychain.set(encoded, key: APIKeyProvider.keychainKey)
+            WidgetCenter.shared.reloadAllTimelines()
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    @discardableResult
+    func deleteApiKeys(keys: [APIKey]) -> Bool {
+        apiKeys.removeAll(where: { del in
+            return keys.contains(where: { other in
+                return del.id == other.id
+            })
+        })
+        do {
+            let encoded = try JSONEncoder().encode(apiKeys)
+            try APIKeyProvider.keychain.set(encoded, key: APIKeyProvider.keychainKey)
+            WidgetCenter.shared.reloadAllTimelines()
+            return true
+        } catch {
+            return false
+        }
+    }
+}
 
 struct APIKey: Codable, Identifiable {
     var id: String { privateKeyID }
@@ -85,67 +159,6 @@ extension APIKey {
                                 privateKeyID: "AJDBS7K",
                                 privateKey: "sjgdsdjfvnjsdhvjshgs834zuegrh794zthweurhgeurh3479zhuewfheuwzrt97834ehgh34e9tn",
                                 vendorNumber: "94658")
-
-    static func getDataFromKeys(_ keys: [APIKey]) -> Data? {
-        let encoder = JSONEncoder()
-        let data = try? encoder.encode(keys)
-        return data
-    }
-
-    static func getKeysFromData(_ data: Data) -> [APIKey]? {
-        let decoder = JSONDecoder()
-        let keys = try? decoder.decode([APIKey].self, from: data)
-        return keys
-    }
-
-    static func getApiKeys() -> [APIKey] {
-        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return [] }
-        return getKeysFromData(data) ?? []
-    }
-
-    static func getApiKey(apiKeyId: String) -> APIKey? {
-        return getApiKeys().first(where: { $0.id == apiKeyId })
-    }
-
-    /// Saves APIKey to UserDefaults; Replaces any key with same id (PrivateKeyId)
-    /// - Parameter apiKey: new or updated APIKey
-    static func addApiKey(apiKey: APIKey) {
-        var keys: [APIKey] = []
-        if let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) {
-            keys = getKeysFromData(data) ?? []
-        }
-        keys.removeAll(where: { $0.id == apiKey.id })
-        keys.append(apiKey)
-        let newData = getDataFromKeys(keys)
-        UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
-        WidgetCenter.shared.reloadAllTimelines()
-    }
-
-    @discardableResult
-    static func deleteApiKey(apiKey: APIKey) -> Bool {
-        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
-        guard var keys = getKeysFromData(data) else { return false }
-        keys.removeAll(where: { $0.id == apiKey.id })
-        let newData = getDataFromKeys(keys)
-        UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
-        WidgetCenter.shared.reloadAllTimelines()
-        return true
-    }
-
-    @discardableResult
-    static func deleteApiKeys(apiKeys: [APIKey]) -> Bool {
-        guard let data: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.apiKeys) else { return false }
-        guard var keys = getKeysFromData(data) else { return false }
-        keys.removeAll(where: { del in
-            return apiKeys.contains(where: { other in
-                return del.id == other.id
-            })
-        })
-        let newData = getDataFromKeys(keys)
-        UserDefaults.shared?.setValue(newData, forKey: UserDefaultsKey.apiKeys)
-        WidgetCenter.shared.reloadAllTimelines()
-        return true
-    }
 }
 
 extension APIKey {
@@ -158,7 +171,7 @@ extension ApiKeyParam {
     }
 
     func toApiKey() -> APIKey? {
-        return APIKey.getApiKeys().first(where: { $0.id == self.identifier })
+        return APIKeyProvider().getApiKey(apiKeyId: self.identifier ?? "")
     }
 
     func getColor() -> Color? {

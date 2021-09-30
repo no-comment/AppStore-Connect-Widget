@@ -10,7 +10,7 @@ import Promises
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
-        ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent())
+        ACStatEntry(date: Date(), data: .example, filteredApps: [], color: .accentColor, configuration: WidgetConfigurationIntent())
     }
 
     func getSnapshot(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (ACStatEntry) -> Void) {
@@ -21,14 +21,21 @@ struct Provider: IntentTimelineProvider {
                 .then { data in
                     let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
-                            Calendar.current.isDateInYesterday(proceed.1)
+                        Calendar.current.isDateInYesterday(proceed.1)
                     }
 
-                    let entry = ACStatEntry(date: Date(), data: data, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: isNewData ? .high : .medium)
+                    let entry = ACStatEntry(
+                        date: Date(),
+                        data: data,
+                        filteredApps: configuration.filteredApps?.compactMap({ $0.toACApp(data: data) }) ?? [],
+                        color: configuration.apiKey?.getColor() ?? .accentColor,
+                        configuration: configuration,
+                        relevance: isNewData ? .high : .medium
+                    )
                     completion(entry)
                 }
                 .catch { err in
-                    let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: .low)
+                    let entry = ACStatEntry(date: Date(), data: nil, filteredApps: [], error: err as? APIError, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: .low)
                     completion(entry)
                 }
         }
@@ -41,11 +48,12 @@ struct Provider: IntentTimelineProvider {
             .then { data in
                 let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
-                        Calendar.current.isDateInYesterday(proceed.1)
+                    Calendar.current.isDateInYesterday(proceed.1)
                 }
 
                 let entry = ACStatEntry(date: Date(),
                                         data: data,
+                                        filteredApps: configuration.filteredApps?.compactMap({ $0.toACApp(data: data) }) ?? [],
                                         color: configuration.apiKey?.getColor() ?? .accentColor,
                                         configuration: configuration,
                                         relevance: isNewData ? .high : .medium)
@@ -66,7 +74,7 @@ struct Provider: IntentTimelineProvider {
                 completion(timeline)
             }
             .catch { err in
-                let entry = ACStatEntry(date: Date(), data: nil, error: err as? APIError, color: .accentColor, configuration: configuration)
+                let entry = ACStatEntry(date: Date(), data: nil, filteredApps: [], error: err as? APIError, color: .accentColor, configuration: configuration)
                 entries.append(entry)
 
                 var nextUpdateDate = Date()
@@ -84,11 +92,11 @@ struct Provider: IntentTimelineProvider {
 
     func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) -> Promise<ACData> {
         guard let apiKey = apiKeyParam?.toApiKey(),
-              APIKey.getApiKey(apiKeyId: apiKey.id) != nil else {
-            let promise = Promise<ACData>.pending()
-            promise.reject(APIError.invalidCredentials)
-            return promise
-        }
+              APIKeyProvider().getApiKey(apiKeyId: apiKey.id) != nil else {
+                  let promise = Promise<ACData>.pending()
+                  promise.reject(APIError.invalidCredentials)
+                  return promise
+              }
         let api = AppStoreConnectApi(apiKey: apiKey)
         return api.getData(currency: currencyParam)
     }
@@ -97,6 +105,7 @@ struct Provider: IntentTimelineProvider {
 struct ACStatEntry: TimelineEntry {
     let date: Date
     let data: ACData?
+    let filteredApps: [ACApp]
     var error: APIError?
     let color: Color
     let configuration: WidgetConfigurationIntent
@@ -104,7 +113,7 @@ struct ACStatEntry: TimelineEntry {
 }
 
 extension ACStatEntry {
-    static let placeholder = ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent())
+    static let placeholder = ACStatEntry(date: Date(), data: .example, filteredApps: [], color: .accentColor, configuration: WidgetConfigurationIntent())
 }
 
 extension TimelineEntryRelevance {
@@ -122,11 +131,13 @@ struct WidgetsEntryView: View {
         if let data = entry.data {
             switch size {
             case .systemSmall:
-                SummarySmall(data: data, color: entry.color)
+                SummarySmall(data: data, color: entry.color, filteredApps: entry.filteredApps)
             case .systemMedium:
-                SummaryMedium(data: data, color: entry.color)
+                SummaryMedium(data: data, color: entry.color, filteredApps: entry.filteredApps)
             case .systemLarge:
-                SummaryLarge(data: data, color: entry.color)
+                SummaryLarge(data: data, color: entry.color, filteredApps: entry.filteredApps)
+            case .systemExtraLarge:
+                SummaryExtraLarge(data: data, color: entry.color, filteredApps: entry.filteredApps)
             default:
                 ErrorWidget(error: .unknown)
             }
@@ -148,16 +159,16 @@ struct Widgets: Widget {
         }
         .configurationDisplayName("WIDGET_NAME")
         .description("WIDGET_DESC")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
     }
 }
 
 struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, filteredApps: [.mockApp], color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
 
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, color: .accentColor, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, filteredApps: [.mockApp], color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

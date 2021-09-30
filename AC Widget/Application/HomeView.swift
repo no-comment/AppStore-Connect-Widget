@@ -13,18 +13,27 @@ struct HomeView: View {
 
     @State var showSettings = false
 
+    @EnvironmentObject var apiKeysProvider: APIKeyProvider
+
+    @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) var appStoreNotice: Bool = true
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
     private var selectedKey: APIKey? {
-        return APIKey.getApiKey(apiKeyId: keyID) ?? APIKey.getApiKeys().first
+        return apiKeysProvider.getApiKey(apiKeyId: keyID) ?? apiKeysProvider.apiKeys.first
     }
 
     @State var tiles: [TileType] = []
+
+    @AppStorage(UserDefaultsKey.lastSeenVersion, store: UserDefaults.shared) private var lastSeenVersion: String = ""
+    @State private var showsUpdateScreen = false
 
     var body: some View {
         ScrollView {
             if let data = data {
                 lastChangeSubtitle
+                if appStoreNotice && AppStoreNotice.isTestFlight() {
+                    AppStoreNotice()
+                }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
 
                     ForEach(tiles) { tile in
@@ -58,6 +67,9 @@ struct HomeView: View {
         .navigationTitle("HOME")
         .toolbar(content: toolbar)
         .sheet(isPresented: $showingSheet, content: sheet)
+        .sheet(isPresented: $showsUpdateScreen, content: {
+            UpdateView()
+        })
         .onChange(of: keyID, perform: { _ in onAppear() })
         .onChange(of: currency, perform: { _ in onAppear() })
         .onAppear(perform: { onAppear() })
@@ -160,6 +172,14 @@ struct HomeView: View {
                 return
             }
             self.error = apiErr
+        }
+
+        let appVersion: String = UIApplication.appVersion ?? ""
+        let buildVersion: String = UIApplication.buildVersion ?? ""
+        let vString = "\(appVersion) (\(buildVersion))"
+        if vString != lastSeenVersion {
+            lastSeenVersion = vString
+            showsUpdateScreen = true
         }
     }
 }
