@@ -46,12 +46,12 @@ struct SummaryExtraLarge: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: filteredApps), metricSymbol: "square.and.arrow.down")
+                    UnitText(data.getRawData(for: .downloads, lastNDays: 1, filteredApps: filteredApps).toString(), metricSymbol: "square.and.arrow.down")
                 }
-                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(.downloads, lastNDays: 7, size: .compact, filteredApps: filteredApps))
-                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(.downloads, lastNDays: 30, size: .compact, filteredApps: filteredApps))
+                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getRawData(for: .downloads, lastNDays: 7, filteredApps: filteredApps).toString(size: .compact))
+                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getRawData(for: .downloads, lastNDays: 30, filteredApps: filteredApps).toString(size: .compact))
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
-                                   value: data.getAsString(.downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps))
+                                   value: data.getRawData(for: .downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), filteredApps: filteredApps).toString(size: .compact))
             }
 
             VStack(alignment: .trailing) {
@@ -65,24 +65,27 @@ struct SummaryExtraLarge: View {
                 }
                 .foregroundColor(data.getChange(.downloads).contains("-") ? .red : .green)
                 .font(.system(size: 12))
-                GraphView(data.getRawData(.downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+                GraphView(data.getRawData(for: .downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
             }
 
             VStack {
                 Spacer()
                 HStack {
                     Spacer()
-                    UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: filteredApps), metric: data.displayCurrency.symbol)
+                    UnitText(data.getRawData(for: .proceeds, lastNDays: 1, filteredApps: filteredApps).toString(), metric: data.displayCurrency.symbol)
                 }
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data
-                                    .getAsString(.proceeds, lastNDays: 7, size: .compact, filteredApps: filteredApps)
+                                    .getRawData(for: .proceeds, lastNDays: 7, filteredApps: filteredApps)
+                                    .toString(size: .compact)
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
-                                    .getAsString(.proceeds, lastNDays: 30, size: .compact, filteredApps: filteredApps)
+                                    .getRawData(for: .proceeds, lastNDays: 30, filteredApps: filteredApps)
+                                    .toString(size: .compact)
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
                                    value: data
-                                    .getAsString(.proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps)
+                                    .getRawData(for: .proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), filteredApps: filteredApps)
+                                    .toString(size: .compact)
                                     .appending(data.displayCurrency.symbol))
             }
             VStack(alignment: .trailing) {
@@ -96,7 +99,7 @@ struct SummaryExtraLarge: View {
                 }
                 .foregroundColor(data.getChange(.proceeds).contains("-") ? .red : .green)
                 .font(.system(size: 12))
-                GraphView(data.getRawData(.proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+                GraphView(data.getRawData(for: .proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
             }
         }
     }
@@ -124,19 +127,19 @@ struct SummaryExtraLarge: View {
 
                     HStack(alignment: .bottom) {
                         Spacer()
-                        UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: [app]), metricSymbol: InfoType.downloads.systemImage)
+                        UnitText(data.getRawData(for: .downloads, lastNDays: 1, filteredApps: [app]).toString(), metricSymbol: InfoType.downloads.systemImage)
                             .fontSize(19)
                         Spacer()
-                        UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: [app]), metric: data.displayCurrency.symbol)
+                        UnitText(data.getRawData(for: .proceeds, lastNDays: 1, filteredApps: [app]).toString(), metric: data.displayCurrency.symbol)
                             .fontSize(19)
                         if (filteredApps.count != 0 && filteredApps.count <= 3) || (filteredApps.count == 0 && data.apps.count <= 3) {
                             Spacer()
-                            UnitText(data.getAsString(.iap, lastNDays: 1, filteredApps: [app]), metricSymbol: InfoType.iap.systemImage)
+                            UnitText(data.getRawData(for: .iap, lastNDays: 1, filteredApps: [app]).toString(), metricSymbol: InfoType.iap.systemImage)
                                 .fontSize(19)
                         }
                         if (filteredApps.count != 0 && filteredApps.count <= 2) || (filteredApps.count == 0 && data.apps.count <= 2) {
                             Spacer()
-                            UnitText(data.getAsString(.updates, lastNDays: 1, filteredApps: [app]), metricSymbol: InfoType.updates.systemImage)
+                            UnitText(data.getRawData(for: .updates, lastNDays: 1, filteredApps: [app]).toString(), metricSymbol: InfoType.updates.systemImage)
                                 .fontSize(19)
                         }
                     }
@@ -225,7 +228,7 @@ struct SummaryExtraLarge: View {
 
             VStack(alignment: .leading) {
                 Text("UPDATES")
-                GraphView(data.getRawData(.updates, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+                GraphView(data.getRawData(for: .updates, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
             }
         }
     }

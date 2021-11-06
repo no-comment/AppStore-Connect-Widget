@@ -104,9 +104,9 @@ struct InfoTile: View {
             }
 
             if currencySymbol.isEmpty {
-                UnitText(data.getAsString(type, lastNDays: lastNDays, filteredApps: [app]), metricSymbol: type.systemImage)
+                UnitText(data.getRawData(for: type, lastNDays: lastNDays, filteredApps: [app]).toString(), metricSymbol: type.systemImage)
             } else {
-                UnitText(data.getAsString(type, lastNDays: lastNDays, filteredApps: [app]), metric: currencySymbol)
+                UnitText(data.getRawData(for: type, lastNDays: lastNDays, filteredApps: [app]).toString(), metric: currencySymbol)
             }
         }
     }
