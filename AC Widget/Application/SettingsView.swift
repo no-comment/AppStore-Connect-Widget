@@ -211,13 +211,14 @@ struct ApiKeyCheckIndicator: View {
             }
         }
         .onAppear(perform: {
-            key.checkKey()
-                .catch { err in
+            Task(priority: .background) {
+                do {
+                    try await key.checkKey()
+                } catch let err {
                     status = (err as? APIError) ?? .unknown
                 }
-                .always {
-                    loading = false
-                }
+                loading = false
+            }
         })
     }
 }

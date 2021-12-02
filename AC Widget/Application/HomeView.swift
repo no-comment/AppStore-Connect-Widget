@@ -72,7 +72,12 @@ struct HomeView: View {
         })
         .onChange(of: keyID, perform: { _ in onAppear() })
         .onChange(of: currency, perform: { _ in onAppear() })
-        .onAppear(perform: { onAppear() })
+        .onAppear(perform: {
+            onAppear()
+        })
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            onAppear()
+        }
     }
 
     var loadingIndicator: some View {
@@ -165,13 +170,12 @@ struct HomeView: View {
 
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
-        api.getData(currency: Currency(rawValue: currency), useCache: useCache).then { (data) in
-            self.data = data
-        }.catch { (err) in
-            guard let apiErr = err as? APIError else {
-                return
-            }
-            self.error = apiErr
+        Task {
+            do {
+                self.data = try await api.getData(currency: Currency(rawValue: currency), useCache: useCache)
+            } catch let err as APIError {
+                self.error = err
+            } catch {}
         }
 
         let appVersion: String = UIApplication.appVersion ?? ""

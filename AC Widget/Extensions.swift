@@ -75,7 +75,7 @@ extension UserDefaults {
 }
 
 enum UserDefaultsKey {
-    @available(*, deprecated)
+    @available(*, unavailable)
     static let apiKeys = "apiKeys"
     static let dataCache = "dataCache"
     static let includeRedownloads = "includeRedownloads"
@@ -103,23 +103,23 @@ extension String {
 }
 
 // MARK: View Modifier
-// Hide Redacted
-struct HideViewRedacted: ViewModifier {
+// hide view if redacted as placeholder (for loading widget)
+private struct HideViewPlaceholderRedacted: ViewModifier {
     @Environment(\.redactionReasons) private var reasons
 
     @ViewBuilder
     func body(content: Content) -> some View {
-        if reasons.isEmpty {
-            content
-        } else {
+        if reasons == .placeholder {
             EmptyView()
+        } else {
+            content
         }
     }
 }
 
 extension View {
-    func hideWhenRedacted() -> some View {
-        self.modifier(HideViewRedacted())
+    func hidePlaceholderRedacted() -> some View {
+        self.modifier(HideViewPlaceholderRedacted())
     }
 }
 

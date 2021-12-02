@@ -7,7 +7,6 @@ import Foundation
 import UIKit
 import SwiftUI
 import WidgetKit
-import Promises
 import KeychainAccess
 
 class APIKeyProvider: ObservableObject {
@@ -114,43 +113,35 @@ extension APIKey {
 
 extension APIKey {
     // swiftlint:disable:next large_tuple
-    static private var lastChecks: [(key: APIKey, date: Date, result: Promise<Void>)] = []
+//    static private var lastChecks: [(key: APIKey, date: Date, success: Promise<Void>)] = []
 
     static func clearInMemoryCache() {
-        lastChecks = []
+//        lastChecks = []
     }
 
-    func checkKey() -> Promise<Void> {
-        if let last = APIKey.lastChecks.first(where: { self.equalsKeyDetails(other: $0.key) }) {
-            if last.date.timeIntervalSinceNow > -30 {
-                return last.result
-            } else {
-                APIKey.lastChecks.removeAll(where: { $0.key.id == self.id })
-            }
-        }
-
-        let promise = Promise<Void>.pending()
+    func checkKey() async throws {
+//        if let last = APIKey.lastChecks.first(where: { self.equalsKeyDetails(other: $0.key) }) {
+//            if last.date.timeIntervalSinceNow > -30 {
+//                return last.result
+//            } else {
+//                APIKey.lastChecks.removeAll(where: { $0.key.id == self.id })
+//            }
+//        }
 
         let api = AppStoreConnectApi(apiKey: self)
-        api.getData(currency: .system, numOfDays: 1, useCache: false)
-            .then { _ in
-                promise.fulfill(())
-            }
-            .catch { error in
-                if let error = error as? APIError {
-                    if error == .noDataAvailable {
-                        promise.fulfill(())
-                    } else {
-                        promise.reject(error)
-                    }
-                } else {
-                    promise.reject(APIError.unknown)
-                }
-            }
+        do {
+            _ = try await api.getData(currency: .system, numOfDays: 1, useCache: false)
+        } catch APIError.noDataAvailable {
+            return
+        } catch let error as APIError {
+            throw error
+        } catch {
+            throw APIError.unknown
+        }
 
-        APIKey.lastChecks.append((key: self, date: Date(), result: promise))
+//        APIKey.lastChecks.append((key: self, date: Date(), result: promise))
 
-        return promise
+//        return promise
     }
 
     static let example = APIKey(name: "Example Key",

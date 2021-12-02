@@ -161,17 +161,18 @@ struct OnboardingView: View {
             return
         }
 
-        apiKey.checkKey()
-            .then {
-                try? apiKeysProvider.addApiKey(apiKey: apiKey)
+        Task(priority: .userInitiated) {
+            do {
+                try await apiKey.checkKey()
+                try apiKeysProvider.addApiKey(apiKey: apiKey)
                 finishOnboarding()
-            }
-            .catch { err in
+            } catch let err {
                 let apiErr: APIError = (err as? APIError) ?? .unknown
                 if apiErr == .invalidCredentials {
                     alert = .invalidKey
                 }
             }
+        }
     }
 
     private func finishOnboarding() {

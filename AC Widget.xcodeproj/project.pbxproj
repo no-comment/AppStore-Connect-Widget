@@ -14,7 +14,6 @@
 		4552EE9E261CF3FF006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
 		4552EE9F261CF400006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
 		4552EEA0261CFB99006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
-		455B4AA02613BAA80061785A /* Promises in Frameworks */ = {isa = PBXBuildFile; productRef = 455B4A9F2613BAA80061785A /* Promises */; };
 		456187F426F66FE400FAE4F8 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 456187F326F66FE400FAE4F8 /* KeychainAccess */; };
 		456187F626F6741A00FAE4F8 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 456187F526F6741A00FAE4F8 /* KeychainAccess */; };
 		456187F826F6742100FAE4F8 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 456187F726F6742100FAE4F8 /* KeychainAccess */; };
@@ -24,7 +23,6 @@
 		4583A87F261A43FE00368001 /* Widgets.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45C1A3F72619AC28006C1650 /* Widgets.intentdefinition */; settings = {ATTRIBUTES = (codegen, ); }; };
 		45B7C45A2700F18300F3ECC4 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7C4592700F18300F3ECC4 /* UpdateView.swift */; };
 		45B7C45C2700F2E400F3ECC4 /* UpdateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7C45B2700F2E400F3ECC4 /* UpdateDetailView.swift */; };
-		45C1A3DD26191997006C1650 /* Promises in Frameworks */ = {isa = PBXBuildFile; productRef = 45C1A3DC26191997006C1650 /* Promises */; };
 		45C1A3F32619AC28006C1650 /* Widgets.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45C1A3F72619AC28006C1650 /* Widgets.intentdefinition */; };
 		45C1A3F42619AC28006C1650 /* Widgets.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45C1A3F72619AC28006C1650 /* Widgets.intentdefinition */; };
 		45C1A3FC2619B035006C1650 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB436DEE2618E80200A432B1 /* Localizable.strings */; };
@@ -33,7 +31,6 @@
 		45CAC10B2615CBC200FF63E7 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC10A2615CBC200FF63E7 /* Gzip */; };
 		45CAC10D2615CBC700FF63E7 /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC10C2615CBC700FF63E7 /* SwiftCSV */; };
 		45CAC10F2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC10E2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK */; };
-		45CAC1112615CBD000FF63E7 /* Promises in Frameworks */ = {isa = PBXBuildFile; productRef = 45CAC1102615CBD000FF63E7 /* Promises */; };
 		45CFAAAC261A6E2100E0E285 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FD5195261915F200603D8A /* IntentHandler.swift */; };
 		45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
 		45D2041E262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
@@ -214,7 +211,6 @@
 				CBDFA497261E52F200719CC1 /* DynamicColor in Frameworks */,
 				45E8C4BD261267FB007F9B0E /* Gzip in Frameworks */,
 				45CAC1092615CB8100FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */,
-				455B4AA02613BAA80061785A /* Promises in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,7 +222,6 @@
 				45CAC10F2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK in Frameworks */,
 				456187F626F6741A00FAE4F8 /* KeychainAccess in Frameworks */,
 				CB77BBB42691F3EC006D4EC4 /* BetterToStrings in Frameworks */,
-				45CAC1112615CBD000FF63E7 /* Promises in Frameworks */,
 				CBDFA49F261E55EE00719CC1 /* DynamicColor in Frameworks */,
 				45CAC10D2615CBC700FF63E7 /* SwiftCSV in Frameworks */,
 				45E8C4972612531D007F9B0E /* WidgetKit.framework in Frameworks */,
@@ -243,7 +238,6 @@
 				456187F826F6742100FAE4F8 /* KeychainAccess in Frameworks */,
 				CBDFA4A1261E55F500719CC1 /* DynamicColor in Frameworks */,
 				CBAB72B4261B340C00ED0F94 /* SwiftCSV in Frameworks */,
-				45C1A3DD26191997006C1650 /* Promises in Frameworks */,
 				CBAB72B2261B340C00ED0F94 /* Gzip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -406,7 +400,6 @@
 			packageProductDependencies = (
 				45E8C4BC261267FB007F9B0E /* Gzip */,
 				45E8C4BF261268D4007F9B0E /* SwiftCSV */,
-				455B4A9F2613BAA80061785A /* Promises */,
 				45CAC1082615CB8100FF63E7 /* AppStoreConnect-Swift-SDK */,
 				CBDFA496261E52F200719CC1 /* DynamicColor */,
 				CB77BBB12691F19A006D4EC4 /* BetterToStrings */,
@@ -433,7 +426,6 @@
 				45CAC10A2615CBC200FF63E7 /* Gzip */,
 				45CAC10C2615CBC700FF63E7 /* SwiftCSV */,
 				45CAC10E2615CBCB00FF63E7 /* AppStoreConnect-Swift-SDK */,
-				45CAC1102615CBD000FF63E7 /* Promises */,
 				CBDFA49E261E55EE00719CC1 /* DynamicColor */,
 				CB77BBB32691F3EC006D4EC4 /* BetterToStrings */,
 				456187F526F6741A00FAE4F8 /* KeychainAccess */,
@@ -456,7 +448,6 @@
 			);
 			name = WidgetIntentExtension;
 			packageProductDependencies = (
-				45C1A3DC26191997006C1650 /* Promises */,
 				CBAB72AC261B33DF00ED0F94 /* AppStoreConnect-Swift-SDK */,
 				CBAB72B1261B340C00ED0F94 /* Gzip */,
 				CBAB72B3261B340C00ED0F94 /* SwiftCSV */,
@@ -501,7 +492,6 @@
 			packageReferences = (
 				45E8C4BB261267FB007F9B0E /* XCRemoteSwiftPackageReference "GzipSwift" */,
 				45E8C4BE261268D4007F9B0E /* XCRemoteSwiftPackageReference "SwiftCSV" */,
-				455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */,
 				45CAC1072615CB8100FF63E7 /* XCRemoteSwiftPackageReference "appstoreconnect-swift-sdk" */,
 				CBDFA495261E52F200719CC1 /* XCRemoteSwiftPackageReference "DynamicColor" */,
 				CB77BBB02691F19A006D4EC4 /* XCRemoteSwiftPackageReference "BetterToStrings" */,
@@ -1028,14 +1018,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/promises";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.12;
-			};
-		};
 		456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
@@ -1087,11 +1069,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		455B4A9F2613BAA80061785A /* Promises */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */;
-			productName = Promises;
-		};
 		456187F326F66FE400FAE4F8 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
@@ -1106,11 +1083,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 456187F226F66FE400FAE4F8 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
-		};
-		45C1A3DC26191997006C1650 /* Promises */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */;
-			productName = Promises;
 		};
 		45CAC1082615CB8100FF63E7 /* AppStoreConnect-Swift-SDK */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1131,11 +1103,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45CAC1072615CB8100FF63E7 /* XCRemoteSwiftPackageReference "appstoreconnect-swift-sdk" */;
 			productName = "AppStoreConnect-Swift-SDK";
-		};
-		45CAC1102615CBD000FF63E7 /* Promises */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 455B4A9E2613BAA80061785A /* XCRemoteSwiftPackageReference "promises" */;
-			productName = Promises;
 		};
 		45E8C4BC261267FB007F9B0E /* Gzip */ = {
 			isa = XCSwiftPackageProductDependency;

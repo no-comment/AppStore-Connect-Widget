@@ -34,14 +34,14 @@ struct UnitText: View {
                         .font(.system(size: fontSize*0.5, weight: .semibold, design: .rounded) )
                         // .font(.system(size: fontSize*0.5))
                         .padding(.top, fontSize*0.1)
-                        .hideWhenRedacted()
+                        .hidePlaceholderRedacted()
                 }
 
                 if let metricImage = metricImage {
                     Image(systemName: metricImage)
                         .font(.system(size: fontSize*0.48, weight: .semibold, design: .default) )
                         .padding(.top, fontSize*0.1)
-                        .hideWhenRedacted()
+                        .hidePlaceholderRedacted()
                 }
             }
             .font(.system(size: fontSize, weight: .semibold, design: .rounded))

@@ -38,7 +38,7 @@ enum ACEntryType: String, CaseIterable, Codable {
         switch productTypeIdentifier {
         case "1", "1-B", "F1-B", "1E", "1EP", "1EU", "1F", "1T", "F1":
             self = .download
-        case "3", "3F":
+        case "3", "3F", "F3":
             self = .redownload
         case "FI1", "IA1", "IA1-M", "IA9", "IA9-M", "IAY", "IAY-M":
             self = .iap
