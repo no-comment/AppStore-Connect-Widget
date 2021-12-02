@@ -93,7 +93,7 @@ enum ACDevice: String, CaseIterable, Identifiable {
         case .desktop:
             return "desktopcomputer"
         case .appleWatch:
-            return "applewatch"
+            return "watchface.applewatch.case"
         case .appleTV:
             return "appletv"
         case .iPod:
