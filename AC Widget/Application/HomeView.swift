@@ -5,6 +5,7 @@
 
 import SwiftUI
 import AppStoreConnect_Swift_SDK
+import StoreKit
 
 struct HomeView: View {
     @State var data: ACData?
@@ -18,6 +19,7 @@ struct HomeView: View {
     @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) var appStoreNotice: Bool = true
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
+    @AppStorage(UserDefaultsKey.rateCount, store: UserDefaults.shared) var rateCount: Int = 0
     private var selectedKey: APIKey? {
         return apiKeysProvider.getApiKey(apiKeyId: keyID) ?? apiKeysProvider.apiKeys.first
     }
@@ -165,6 +167,8 @@ struct HomeView: View {
     }
 
     private func onAppear(useCache: Bool = true) {
+        askToRate()
+
         let selectedTiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
         tiles = selectedTiles.isEmpty ? TileType.allCases : selectedTiles
 
@@ -184,6 +188,20 @@ struct HomeView: View {
         if vString != lastSeenVersion {
             lastSeenVersion = vString
             showsUpdateScreen = true
+        }
+    }
+
+    func askToRate() {
+        let daysSinceInstall = Calendar.current.numberOfDaysBetween(Date.appInstallDate, and: .now)
+        if daysSinceInstall > (rateCount + 1) * 20 {
+            // equivalent to rateCount += 1 in most cases, except if app is installed a long time ago but no review done
+            rateCount = Int(ceil(Double(daysSinceInstall - 20) / 20))
+            let later = DispatchTime.now() + 5
+            DispatchQueue.main.asyncAfter(deadline: later) {
+                if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                    SKStoreReviewController.requestReview(in: scene)
+                }
+            }
         }
     }
 }
