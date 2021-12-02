@@ -8,7 +8,6 @@ import WidgetKit
 
 struct SettingsView: View {
     @AppStorage(UserDefaultsKey.includeRedownloads, store: UserDefaults.shared) var includeRedownloads: Bool = false
-    @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) var appStoreNotice: Bool = true
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
 
     @State private var addKeySheet: Bool = false
@@ -69,9 +68,6 @@ struct SettingsView: View {
         Section(header: Label("GENERAL", systemImage: "gearshape.fill")) {
             Toggle("INCLUDE_REDOWNLOADS", isOn: $includeRedownloads)
             NavigationLink("REARRANGE", destination: RearrangeTilesView())
-            if AppStoreNotice.isTestFlight() {
-                Toggle("APPSTORE_NOTICE_TOGGLE", isOn: $appStoreNotice)
-            }
         }
     }
 

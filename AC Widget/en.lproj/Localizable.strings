@@ -38,6 +38,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 
 // Key Selection Sheet
 "DONE" = "Done";
+"DISMISS" = "Dismiss";
 "SELECT_KEY" = "Select API Key";
 "API_KEY" = "API Key";
 "APPLICATIONS" = "Applications";
