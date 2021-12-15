@@ -201,6 +201,7 @@ class AppStoreConnectApi {
     }
 
     private func apiSalesAndTrendsWrapped(provider: APIProvider, vendorNumber: String, date: String) async throws -> Data {
+        print("Loading data for: \(date)")
         return try await withCheckedThrowingContinuation { continuation in
             provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
                 .frequency([.DAILY]),

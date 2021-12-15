@@ -96,6 +96,7 @@ extension UserDefaults {
 enum UserDefaultsKey {
     @available(*, unavailable)
     static let apiKeys = "apiKeys"
+    @available(*, unavailable)
     static let dataCache = "dataCache"
     static let includeRedownloads = "includeRedownloads"
     static let homeSelectedKey = "homeSelectedKey"
