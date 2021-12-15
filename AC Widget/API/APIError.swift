@@ -10,7 +10,6 @@ enum APIError: Error {
     case wrongPermissions
     case exceededLimit
     case noDataAvailable
-    case notPublic
     case unknown
 
     var userDescription: String {
@@ -25,8 +24,6 @@ enum APIError: Error {
             return NSLocalizedString("ERROR_NO_DATA_AVAILABLE", comment: "")
         case .unknown:
             return NSLocalizedString("ERROR_UNKNOWN", comment: "")
-        case .notPublic:
-            return "not public"
         }
     }
 }

@@ -68,6 +68,7 @@ class AppStoreConnectApi {
 
         let dates = Date().dayBefore.getLastNDates(numOfDays).map({ $0.acApiFormat() })
 
+        // TODO: differentiate between memoization and caching
         if useCache {
             let cachedData = ACDataCache.getData(apiKey: self.apiKey)?.changeCurrency(to: localCurrency)
             let cachedEntries: [ACEntry] = cachedData?.entries ?? []
@@ -78,17 +79,23 @@ class AppStoreConnectApi {
         let entriesDates = entries.map({ $0.date.acApiFormat() })
         let missingDates = dates.filter({ !entriesDates.contains($0) })
 
-        async let results: [Data] = withThrowingTaskGroup(of: Data.self) { group in
+        async let results: [Data] = withThrowingTaskGroup(of: Data?.self) { group in
             var data: [Data] = []
-            // FIXME: probably going to fail, take a look at catch in old code
+
             for date in missingDates {
                 group.addTask {
-                    return try await self.apiSalesAndTrendsWrapped(provider: provider, vendorNumber: self.vendorNumber, date: date)
+                    do {
+                        return try await self.apiSalesAndTrendsWrapped(provider: provider, vendorNumber: self.vendorNumber, date: date)
+                    } catch APIError.noDataAvailable {
+                        return nil
+                    }
                 }
             }
 
             for try await d in group {
-                data.append(d)
+                if let d = d {
+                    data.append(d)
+                }
             }
 
             return data
@@ -140,9 +147,9 @@ class AppStoreConnectApi {
         ACDataCache.saveData(data: acdata, apiKey: self.apiKey)
 
         // TODO: mem
-//        if useCache {
-//            AppStoreConnectApi.lastData.append((key: self.apiKey, date: Date(), result: ))
-//        }
+        //        if useCache {
+        //            AppStoreConnectApi.lastData.append((key: self.apiKey, date: Date(), result: ))
+        //        }
 
         return acdata
     }
@@ -177,8 +184,6 @@ class AppStoreConnectApi {
     }
 
     private func apiSalesAndTrendsWrapped(provider: APIProvider, vendorNumber: String, date: String) async throws -> Data {
-        print("Call api for \(date)")
-
         return try await withCheckedThrowingContinuation { continuation in
             provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
                 .frequency([.DAILY]),
@@ -191,7 +196,40 @@ class AppStoreConnectApi {
                 case .success(let value):
                     continuation.resume(returning: value)
                 case .failure(let error):
-                    continuation.resume(throwing: error)
+                    if let apiError = error as? AppStoreConnect_Swift_SDK.APIProvider.Error {
+                        switch apiError {
+                        case .requestFailure(let statusCode, let errData):
+                            switch statusCode {
+                            case 401:
+                                continuation.resume(throwing: APIError.invalidCredentials)
+                            case 429:
+                                continuation.resume(throwing: APIError.exceededLimit)
+                            case 403:
+                                continuation.resume(throwing: APIError.wrongPermissions)
+                            case 404:
+                                guard let errData = errData else {
+                                    continuation.resume(throwing: APIError.unknown)
+                                    break
+                                }
+
+                                let resp = String(decoding: errData, as: UTF8.self)
+                                if resp.contains("The request expected results but none were found") {
+                                    continuation.resume(throwing: APIError.noDataAvailable)
+                                } else {
+                                    continuation.resume(throwing: APIError.unknown)
+                                }
+                            default:
+                                print(statusCode)
+                                continuation.resume(throwing: APIError.unknown)
+                            }
+                        case .requestGeneration:
+                            continuation.resume(throwing: APIError.invalidCredentials)
+                        default:
+                            continuation.resume(throwing: APIError.unknown)
+                        }
+                    } else {
+                        continuation.resume(throwing: error)
+                    }
                 }
             })
         }
