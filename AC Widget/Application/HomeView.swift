@@ -123,7 +123,7 @@ struct HomeView: View {
             }
 
             if data != nil {
-                Button(action: { data = nil; onAppear(useCache: false) }) {
+                Button(action: { data = nil; onAppear(useMemoization: false) }) {
                     Text("REFRESH_DATA")
                 }
                 .padding(.vertical, 8)
@@ -166,7 +166,7 @@ struct HomeView: View {
         }
     }
 
-    private func onAppear(useCache: Bool = true) {
+    private func onAppear(useMemoization: Bool = true) {
         askToRate()
 
         let selectedTiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
@@ -176,7 +176,7 @@ struct HomeView: View {
         let api = AppStoreConnectApi(apiKey: apiKey)
         Task {
             do {
-                self.data = try await api.getData(currency: Currency(rawValue: currency), useCache: useCache)
+                self.data = try await api.getData(currency: Currency(rawValue: currency), useMemoization: useMemoization)
             } catch let err as APIError {
                 self.error = err
             } catch {}

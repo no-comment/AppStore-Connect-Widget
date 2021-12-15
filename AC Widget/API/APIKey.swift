@@ -82,7 +82,7 @@ class APIKeyProvider: ObservableObject {
     }
 }
 
-struct APIKey: Codable, Identifiable {
+struct APIKey: Codable, Identifiable, Hashable {
     var id: String { privateKeyID }
     let name: String
     let color: Color
@@ -112,36 +112,60 @@ extension APIKey {
 }
 
 extension APIKey {
-    // swiftlint:disable:next large_tuple
-//    static private var lastChecks: [(key: APIKey, date: Date, success: Promise<Void>)] = []
+    static private var lastChecks: [APIKey: LoaderStatus] = [:]
+    private enum LoaderStatus {
+        case inProgress(Task<Void, Error>)
+        case loaded((error: Error?, date: Date))
+    }
 
-    static func clearInMemoryCache() {
-//        lastChecks = []
+    static func clearMemoization() {
+        lastChecks.removeAll()
     }
 
     func checkKey() async throws {
-//        if let last = APIKey.lastChecks.first(where: { self.equalsKeyDetails(other: $0.key) }) {
-//            if last.date.timeIntervalSinceNow > -30 {
-//                return last.result
-//            } else {
-//                APIKey.lastChecks.removeAll(where: { $0.key.id == self.id })
-//            }
-//        }
-
-        let api = AppStoreConnectApi(apiKey: self)
-        do {
-            _ = try await api.getData(currency: .system, numOfDays: 1, useCache: false)
-        } catch APIError.noDataAvailable {
-            return
-        } catch let error as APIError {
-            throw error
-        } catch {
-            throw APIError.unknown
+        if let check = APIKey.lastChecks[self] {
+            switch check {
+            case .loaded(let res):
+                if res.date.timeIntervalSinceNow > -30 {
+                    if let error = res.error {
+                        throw error
+                    } else {
+                        return
+                    }
+                } else {
+                    APIKey.lastChecks.removeValue(forKey: self)
+                }
+            case .inProgress(let task):
+                try await task.value
+                return
+            }
         }
 
-//        APIKey.lastChecks.append((key: self, date: Date(), result: promise))
+        let task: Task<Void, Error> = Task {
+            let api = AppStoreConnectApi(apiKey: self)
+            do {
+                _ = try await api.getData(currency: .system, numOfDays: 1, useCache: false)
+            } catch APIError.noDataAvailable {
+                return
+            } catch let error as APIError {
+                throw error
+            } catch {
+                throw APIError.unknown
+            }
+            return
+        }
 
-//        return promise
+        APIKey.lastChecks[self] = .inProgress(task)
+
+        do {
+            try await task.value
+            APIKey.lastChecks[self] = .loaded((error: nil, date: .now))
+        } catch {
+            APIKey.lastChecks[self] = .loaded((error: error, date: .now))
+            throw error
+        }
+
+        return
     }
 
     static let example = APIKey(name: "Example Key",

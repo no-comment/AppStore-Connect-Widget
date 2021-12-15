@@ -74,7 +74,7 @@ struct SettingsView: View {
     var widgetSection: some View {
         Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
             Button("FORCE_REFRESH_WIDGET") {
-                AppStoreConnectApi.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
@@ -88,8 +88,8 @@ struct SettingsView: View {
                 }
 
             Button("CLEAR_ALL_CACHE") {
-                AppStoreConnectApi.clearInMemoryCache()
-                APIKey.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
+                APIKey.clearMemoization()
                 ACDataCache.clearCache()
                 self.cachedEntries = ACDataCache.numberOfEntriesCached()
             }

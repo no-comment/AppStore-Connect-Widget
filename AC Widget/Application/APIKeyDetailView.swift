@@ -134,8 +134,8 @@ struct APIKeyDetailView: View {
             Text("CACHED_ENTRIES:\(cachedEntries)")
 
             Button("CLEAR_CACHE") {
-                AppStoreConnectApi.clearInMemoryCache()
-                APIKey.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
+                APIKey.clearMemoization()
                 ACDataCache.clearCache(apiKey: key)
                 self.cachedEntries = ACDataCache.numberOfEntriesCached(apiKey: key)
             }

@@ -22,36 +22,52 @@ class AppStoreConnectApi {
     private var privateKey: String { apiKey.privateKey }
     private var vendorNumber: String { apiKey.vendorNumber }
 
-    // swiftlint:disable:next large_tuple
-    static private var lastData: [(key: APIKey, date: Date, result: Task<ACData, Error>)] = []
+    static private var lastData: [APIKey: LoaderStatus] = [:]
+    private enum LoaderStatus {
+        case inProgress(Task<ACData, Error>)
+        case loaded((data: ACData, date: Date))
+    }
 
-    static func clearInMemoryCache() {
-        lastData = []
+    static func clearMemoization() {
+        lastData.removeAll()
     }
 
     public func getData(currency: CurrencyParam?, numOfDays: Int = 35, useCache: Bool = true) async throws -> ACData {
         return try await getData(currency: currency?.toCurrency(), numOfDays: numOfDays, useCache: useCache)
     }
 
-    // swiftlint:disable:next function_body_length
-    public func getData(currency: Currency? = nil, numOfDays: Int = 35, useCache: Bool = true) async throws -> ACData {
-        let localCurrency: Currency = currency ?? .USD
+    public func getData(currency: Currency? = nil, numOfDays: Int = 35, useCache: Bool = true, useMemoization: Bool = true) async throws -> ACData {
+        if apiKey.name == APIKey.demoKeyName { return ACData.example }
 
-        if apiKey.name == APIKey.demoKeyName {
-            return ACData.example
-        }
-
-        // memoization
-        if useCache {
-            if let last = AppStoreConnectApi.lastData.first(where: { $0.key.id == self.apiKey.id }) {
-                if last.date.timeIntervalSinceNow > -60 * 5 {
-                    return try await last.result.value.changeCurrency(to: localCurrency)
-                } else {
-                    AppStoreConnectApi.lastData.removeAll(where: { $0.key.id == self.apiKey.id })
+        if useMemoization {
+            if let last = AppStoreConnectApi.lastData[apiKey] {
+                switch last {
+                case .loaded(let res):
+                    if res.date.timeIntervalSinceNow > -60 * 5 {
+                        return res.data
+                    } else {
+                        AppStoreConnectApi.lastData.removeValue(forKey: apiKey)
+                    }
+                case .inProgress(let task):
+                    return try await task.value
                 }
             }
         }
 
+        let task: Task<ACData, Error> = Task {
+            return try await getDataFromAPI(localCurrency: currency ?? .USD, numOfDays: numOfDays, useCache: useCache)
+        }
+
+        AppStoreConnectApi.lastData[apiKey] = .inProgress(task)
+
+        let data = try await task.value
+
+        AppStoreConnectApi.lastData[apiKey] = .loaded((data, .now))
+
+        return data
+    }
+
+    private func getDataFromAPI(localCurrency: Currency, numOfDays: Int = 35, useCache: Bool = true) async throws -> ACData {
         if self.privateKey.count < privateKeyMinLength {
             throw APIError.invalidCredentials
         }
@@ -62,13 +78,10 @@ class AppStoreConnectApi {
 
         var entries: [ACEntry] = []
 
-        let converter = CurrencyConverter.shared
+        await CurrencyConverter.shared.updateExchangeRates()
 
-        await converter.updateExchangeRates()
+        let dates = Date.now.dayBefore.getLastNDates(numOfDays).map({ $0.acApiFormat() })
 
-        let dates = Date().dayBefore.getLastNDates(numOfDays).map({ $0.acApiFormat() })
-
-        // TODO: differentiate between memoization and caching
         if useCache {
             let cachedData = ACDataCache.getData(apiKey: self.apiKey)?.changeCurrency(to: localCurrency)
             let cachedEntries: [ACEntry] = cachedData?.entries ?? []
@@ -102,56 +115,60 @@ class AppStoreConnectApi {
         }
 
         for result in try await results {
-            guard let decompressedData = try? result.gunzipped() else {
-                #if DEBUG
-                fatalError()
-                #endif
-                continue
-            }
-
-            let str = String(decoding: decompressedData, as: UTF8.self)
-
-            guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
-                #if DEBUG
-                fatalError()
-                #endif
-                continue
-            }
-
-            try? tsv.enumerateAsDict { dict in
-                let parentId: String = dict["Parent Identifier"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                let sku: String = dict["SKU"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-                var proceeds = Double(dict["Developer Proceeds"] ?? "0.00") ?? 0
-                if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
-                    proceeds = converter.convert(proceeds, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
-                } else {
-                    proceeds = 0
-                }
-
-                let newEntry = ACEntry(appTitle: dict["Title"] ?? "UNKNOWN",
-                                       appSKU: parentId.isEmpty ? sku : parentId,
-                                       units: Int(dict["Units"] ?? "0") ?? 0,
-                                       proceeds: Float(proceeds),
-                                       date: Date.fromACFormat(dict["Begin Date"] ?? "") ?? Date.distantPast,
-                                       countryCode: dict["Country Code"] ?? "UNKNOWN",
-                                       device: dict["Device"] ?? "UNKNOWN",
-                                       appIdentifier: dict["Apple Identifier"] ?? "",
-                                       type: ACEntryType(dict["Product Type Identifier"]))
-                entries.append(newEntry)
-            }
+            entries.append(contentsOf: parseApiResult(result, localCurrency: localCurrency))
         }
 
         let apps = try? await self.getApps(entries: entries)
         let acdata = ACData(entries: entries, currency: localCurrency, apps: apps ?? [])
         ACDataCache.saveData(data: acdata, apiKey: self.apiKey)
 
-        // TODO: mem
-        //        if useCache {
-        //            AppStoreConnectApi.lastData.append((key: self.apiKey, date: Date(), result: ))
-        //        }
-
         return acdata
+    }
+
+    private func parseApiResult(_ result: Data, localCurrency: Currency) -> [ACEntry] {
+        var entries: [ACEntry] = []
+
+        guard let decompressedData = try? result.gunzipped() else {
+            #if DEBUG
+            fatalError()
+            #else
+            return []
+            #endif
+        }
+
+        let str = String(decoding: decompressedData, as: UTF8.self)
+
+        guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
+            #if DEBUG
+            fatalError()
+            #else
+            return []
+            #endif
+        }
+
+        try? tsv.enumerateAsDict { dict in
+            let parentId: String = dict["Parent Identifier"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let sku: String = dict["SKU"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+            var proceeds = Double(dict["Developer Proceeds"] ?? "0.00") ?? 0
+            if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
+                proceeds = CurrencyConverter.shared.convert(proceeds, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
+            } else {
+                proceeds = 0
+            }
+
+            let newEntry = ACEntry(appTitle: dict["Title"] ?? "UNKNOWN",
+                                   appSKU: parentId.isEmpty ? sku : parentId,
+                                   units: Int(dict["Units"] ?? "0") ?? 0,
+                                   proceeds: Float(proceeds),
+                                   date: Date.fromACFormat(dict["Begin Date"] ?? "") ?? Date.distantPast,
+                                   countryCode: dict["Country Code"] ?? "UNKNOWN",
+                                   device: dict["Device"] ?? "UNKNOWN",
+                                   appIdentifier: dict["Apple Identifier"] ?? "",
+                                   type: ACEntryType(dict["Product Type Identifier"]))
+            entries.append(newEntry)
+        }
+        return entries
     }
 
     private func getApps(entries: [ACEntry]) async throws -> [ACApp] {
