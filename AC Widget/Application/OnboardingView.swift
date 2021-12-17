@@ -47,7 +47,7 @@ struct OnboardingView: View {
             Text("WELCOME_TO")
                 .padding(.top, 50)
                 .foregroundColor(.gray)
-            Text("ACWIDGET")
+            Text("ACWidget")
                 .font(.system(size: 45, weight: .semibold, design: .rounded))
                 .foregroundColor(.accentColor)
 
@@ -61,7 +61,7 @@ struct OnboardingView: View {
                 .padding(.horizontal)
             }
 
-            Button("GET_STARTED", action: { page = .naming })
+            Button("START", action: { page = .naming })
                 .buttonStyle(PrimaryButtonStyle())
         }
         .padding(.horizontal)
@@ -106,7 +106,7 @@ struct OnboardingView: View {
                 }
                 .padding(.top, 35)
 
-                Text("If you haven't created an API Key yet, now is the time to do it.")
+                Text("CREATE_KEY_NOTICE")
                     .multilineTextAlignment(.center)
 
                 // swiftlint:disable force_unwrapping
