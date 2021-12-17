@@ -74,6 +74,8 @@
 		CB77BBB22691F19A006D4EC4 /* BetterToStrings in Frameworks */ = {isa = PBXBuildFile; productRef = CB77BBB12691F19A006D4EC4 /* BetterToStrings */; };
 		CB77BBB42691F3EC006D4EC4 /* BetterToStrings in Frameworks */ = {isa = PBXBuildFile; productRef = CB77BBB32691F3EC006D4EC4 /* BetterToStrings */; };
 		CB77BBB62691F3F2006D4EC4 /* BetterToStrings in Frameworks */ = {isa = PBXBuildFile; productRef = CB77BBB52691F3F2006D4EC4 /* BetterToStrings */; };
+		CB7B9227276D29E00007766C /* PrimarySquareButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7B9226276D29E00007766C /* PrimarySquareButtonStyle.swift */; };
+		CB7B9229276D29FA0007766C /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7B9228276D29FA0007766C /* PrimaryButtonStyle.swift */; };
 		CB9C4CAB262A136A007E38F1 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9C4CAA262A136A007E38F1 /* Card.swift */; };
 		CB9C4CB3262A2391007E38F1 /* InfoTileFront.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9C4CB2262A2391007E38F1 /* InfoTileFront.swift */; };
 		CBAB7297261B338600ED0F94 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4583A842261A3E3700368001 /* APIKey.swift */; };
@@ -191,6 +193,8 @@
 		CB77BBAA268D121E006D4EC4 /* CountryTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryTile.swift; sourceTree = "<group>"; };
 		CB77BBAC268D18E8006D4EC4 /* PercentStackedBarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentStackedBarChart.swift; sourceTree = "<group>"; };
 		CB77BBAE268D1EF5006D4EC4 /* DeviceTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTile.swift; sourceTree = "<group>"; };
+		CB7B9226276D29E00007766C /* PrimarySquareButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimarySquareButtonStyle.swift; sourceTree = "<group>"; };
+		CB7B9228276D29FA0007766C /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		CB9C4CAA262A136A007E38F1 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		CB9C4CB2262A2391007E38F1 /* InfoTileFront.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTileFront.swift; sourceTree = "<group>"; };
 		CBB4A60426F3D8E40064EE9E /* InfoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTile.swift; sourceTree = "<group>"; };
@@ -328,6 +332,15 @@
 			path = WidgetIntentExtension;
 			sourceTree = "<group>";
 		};
+		CB7B9225276D299A0007766C /* ButtonStyles */ = {
+			isa = PBXGroup;
+			children = (
+				CB7B9228276D29FA0007766C /* PrimaryButtonStyle.swift */,
+				CB7B9226276D29E00007766C /* PrimarySquareButtonStyle.swift */,
+			);
+			path = ButtonStyles;
+			sourceTree = "<group>";
+		};
 		CBAB7280261B32A400ED0F94 /* Application */ = {
 			isa = PBXGroup;
 			children = (
@@ -361,6 +374,7 @@
 		CBAB728C261B330400ED0F94 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				CB7B9225276D299A0007766C /* ButtonStyles */,
 				CB9C4CAA262A136A007E38F1 /* Card.swift */,
 				CB28AEFB2615F5E700B48215 /* GraphView.swift */,
 				CB77BBAC268D18E8006D4EC4 /* PercentStackedBarChart.swift */,
@@ -583,6 +597,8 @@
 				CB2D236926433AB9003DA727 /* SummaryLarge.swift in Sources */,
 				45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */,
 				CB9C4CB3262A2391007E38F1 /* InfoTileFront.swift in Sources */,
+				CB7B9227276D29E00007766C /* PrimarySquareButtonStyle.swift in Sources */,
+				CB7B9229276D29FA0007766C /* PrimaryButtonStyle.swift in Sources */,
 				45B7C45C2700F2E400F3ECC4 /* UpdateDetailView.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AF0926161D5E00B48215 /* DescribedValueView.swift in Sources */,

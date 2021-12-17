@@ -7,11 +7,9 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var alert: AddAPIKeyAlert?
-
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
-
-    let showsWelcome: Bool
+    @State private var alert: AddAPIKeyAlert?
+    @State private var page: OnboardingSection
 
     @State private var name: String = ""
     @State private var color: Color = .accentColor
@@ -21,136 +19,243 @@ struct OnboardingView: View {
     @State private var vendor: String = ""
 
     init(showsWelcome: Bool) {
-        self.showsWelcome = showsWelcome
-        UITextView.appearance().backgroundColor = .clear
+        self._page = State(initialValue: showsWelcome ? .welcome : .naming)
     }
 
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 330))], alignment: .center, spacing: 20) {
-                if showsWelcome {
-                    welcomeSection.padding(.horizontal, 5)
+        NavigationView {
+            Group {
+                switch page {
+                case .welcome:
+                    welcomeSection
+                case .naming:
+                    nameSection
+                case .key:
+                    creatingKeySection
+                case .vendor:
+                    vendorNrSection
                 }
-
-                nameSection.padding(.horizontal, 5)
-
-                issuerIDSection.padding(.horizontal, 5)
-
-                privateKeyIDSection.padding(.horizontal, 5)
-
-                privateKeySection.padding(.horizontal, 5)
-
-                VendorNrSection.padding(.horizontal, 5)
             }
-            .padding()
-
-            finishButton
-                .padding(.bottom)
+            .tabViewStyle(.page)
+            .navigationTitle(page == .welcome ? "" : "ADD_KEY")
+            .navigationBarTitleDisplayMode(.inline)
+            .alert(item: $alert, content: { generateAlert($0) })
         }
-        .alert(item: $alert, content: { generateAlert($0) })
     }
 
     // MARK: Pages
     var welcomeSection: some View {
-        GroupBox(label: Text("WELCOME"), content: {
-            SummaryMedium(data: ACData.example, color: color, filteredApps: [])
-                .showAsWidget(.systemMedium)
-                .padding(.vertical)
+        VStack {
+            Text("WELCOME")
+                .font(.system(.largeTitle, design: .rounded))
+                .padding(.top, 50)
+                .foregroundColor(.accentColor)
 
-            Text("ONBOARD_WELCOME")
-                .fixedSize(horizontal: false, vertical: true)
-                .multilineTextAlignment(.center)
-            Spacer()
-        })
+            ScrollView {
+                Group {
+                    UpdateDetailView(imageName: "logo.github", title: "OPEN_SOURCE", subTitle: "OPEN_SOURCE_DESCRIPTION")
+                    UpdateDetailView(systemName: "key.fill", title: "MULTIPLE_KEYS", subTitle: "MULTIPLE_KEYS_DESCRIPTION")
+                    UpdateDetailView(systemName: "eurosign.circle", title: "ALL_CURRENCIES", subTitle: "ALL_CURRENCIES_DESCRIPTION")
+                    UpdateDetailView(systemName: "rectangle.3.group", title: "ALL_WIDGET_SIZES", subTitle: "ALL_WIDGET_SIZES_DESCRIPTION")
+                }
+                .padding(.horizontal)
+            }
+
+            Button("GET_STARTED", action: { page = .naming })
+                .buttonStyle(PrimaryButtonStyle())
+        }
+        .padding(.horizontal)
     }
 
     var nameSection: some View {
-        GroupBox(label: Text("KEY_NAME"), content: {
-            TextField("KEY_NAME", text: $name)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            VStack(spacing: 25) {
+                Image(systemName: "person.fill.badge.plus")
+                    .renderingMode(.original)
+                    .foregroundColor(.accentColor)
+                    .font(.system(size: 45, weight: .medium))
+                    .padding(.top, 35)
 
-            Text("ONBOARD_KEY_NAME")
-                .fixedSize(horizontal: false, vertical: true)
+                Text("ONBOARD_KEY_NAME")
 
-            Spacer()
-            Divider()
-            Spacer()
+                TextField("KEY_NAME", text: $name)
+                    .textFieldStyle(.roundedBorder)
 
-            Text("ONBOARD_KEY_COLOR")
-                .fixedSize(horizontal: false, vertical: true)
+                Text("ONBOARD_KEY_COLOR")
 
-            ColorPicker(selection: $color, supportsOpacity: false, label: {
-                Text("KEY_COLOR")
-                    .fixedSize()
-            })
-                .frame(maxWidth: 250, maxHeight: 30)
-            Spacer()
-        })
+                ColorPicker(selection: $color, supportsOpacity: false, label: {
+                    Text("KEY_COLOR")
+                        .fixedSize()
+                })
+                Spacer()
+                Button("NEXT", action: { page = .key })
+                    .buttonStyle(PrimaryButtonStyle())
+            }
+            .padding(.horizontal)
+    }
+
+    var creatingKeySection: some View {
+        ScrollView {
+            VStack(spacing: 25) {
+                HStack(alignment: .top, spacing: 2) {
+                    Image(systemName: "key.fill")
+                        .font(.system(size: 45, weight: .medium))
+                        .foregroundColor(.accentColor)
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 25, weight: .medium))
+                        .foregroundColor(.green)
+                }
+                .padding(.top, 35)
+
+                Text("If you haven't created an API Key yet, now is the time to do it.")
+                    .multilineTextAlignment(.center)
+
+                // swiftlint:disable force_unwrapping
+                Link(destination: URL(string: "https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api")!) {
+                    Card {
+                        HStack {
+                            Label("HOW_TO_CREATE_APIKEY", systemImage: "questionmark.circle")
+                            Spacer()
+                            Image(systemName: "arrow.up.forward.app")
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+
+                issuerIDSection
+                privateKeyIDSection
+                privateKeySection
+
+                HStack {
+                    Button(action: { page = .naming }, label: { Image(systemName: "chevron.left") })
+                        .buttonStyle(PrimarySquareButtonStyle(color: .cardColor, foregroundColor: .accentColor))
+                    Button("NEXT", action: { page = .vendor })
+                        .buttonStyle(PrimaryButtonStyle())
+                }
+            }
+            .padding(.horizontal)
+        }
     }
 
     var issuerIDSection: some View {
-        GroupBox(label: Text("ISSUER_ID"), content: {
-            TextField("ISSUER_ID", text: $issuerID)
+        VStack {
+            HStack {
+                Image(systemName: "person.text.rectangle.fill")
+                    .foregroundColor(.green)
+                Text("ISSUER_ID")
+                Spacer()
+            }
+            .font(.system(size: 25, weight: .medium, design: .rounded))
+
+            TextField("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", text: $issuerID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
-            Text("ONBOARD_ISSUER_ID")
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer()
-        })
+            Card(innerPadding: 12) {
+                DisclosureGroup(content: {
+                    Text("asdf")
+                }, label: { Label("WHERE_TO_FIND_ISSUER_ID", systemImage: "questionmark.circle") })
+                    .buttonStyle(.plain)
+            }
+        }
     }
 
     var privateKeyIDSection: some View {
-        GroupBox(label: Text("PRIVATE_KEY_ID"), content: {
-            TextField("PRIVATE_KEY_ID", text: $keyID)
+        VStack {
+            HStack {
+                Image(systemName: "grid.circle.fill")
+                    .foregroundColor(.green)
+                Text("PRIVATE_KEY_ID")
+                Spacer()
+            }
+            .font(.system(size: 25, weight: .medium, design: .rounded))
+
+            TextField("XXXXXXXXXX", text: $keyID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
 
-            Text("ONBOARD_PRIVATE_KEY_ID")
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer()
-        })
+            Card(innerPadding: 12) {
+                DisclosureGroup(content: {
+                    Text("asdf")
+                }, label: { Label("WHERE_TO_FIND_KEY_ID", systemImage: "questionmark.circle") })
+                    .buttonStyle(.plain)
+            }
+        }
     }
 
     var privateKeySection: some View {
-        GroupBox(label: Text("PRIVATE_KEY"), content: {
-            TextField("PRIVATE_KEY", text: $key)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
+        VStack {
+            HStack {
+                Image(systemName: "key.fill")
+                    .foregroundColor(.green)
+                Text("PRIVATE_KEY")
+                Spacer()
+            }
+            .font(.system(size: 25, weight: .medium, design: .rounded))
 
-            Text("ONBOARD_PRIVATE_KEY")
-                .fixedSize(horizontal: false, vertical: true)
-            Spacer()
-        })
+            VStack {
+                TextEditor(text: $key)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .disableAutocorrection(true)
+                    .frame(height: 150)
+            }
+            .overlay(
+                     RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color(UIColor.systemGray5), lineWidth: 1)
+                     )
+
+            Card(innerPadding: 12) {
+                DisclosureGroup(content: {
+                    Text("asdf")
+                }, label: { Label("WHERE_TO_FIND_KEY", systemImage: "questionmark.circle") })
+                    .buttonStyle(.plain)
+            }
+        }
     }
 
-    var VendorNrSection: some View {
-        GroupBox(label: Text("VENDOR_NR"), content: {
-            TextField("VENDOR_NR", text: $vendor)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
+    var vendorNrSection: some View {
+        VStack(spacing: 25) {
+            HStack(alignment: .top, spacing: 2) {
+                Image(systemName: "cart.fill")
+                    .font(.system(size: 45, weight: .medium))
+                    .foregroundColor(.accentColor)
+                Image(systemName: "grid.circle.fill")
+                    .font(.system(size: 25, weight: .medium))
+                    .foregroundColor(.green)
+            }
+            .padding(.top, 35)
 
-            Text("ONBOARD_VENDOR_NR")
-                .fixedSize(horizontal: false, vertical: true)
+            VStack {
+                HStack {
+                    Image(systemName: "cart.fill")
+                        .foregroundColor(.green)
+                    Text("VENDOR_NR")
+                    Spacer()
+                }
+                .font(.system(size: 25, weight: .medium, design: .rounded))
+
+                TextField("XXXXXXXX", text: $vendor)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .disableAutocorrection(true)
+
+                Card(innerPadding: 12) {
+                    DisclosureGroup(content: {
+                        Text("asdf")
+                    }, label: { Label("WHERE_TO_FIND_VENDOR_NR", systemImage: "questionmark.circle") })
+                        .buttonStyle(.plain)
+                }
+            }
             Spacer()
-        })
-    }
-
-    // MARK: Finish Button
-    var finishButton: some View {
-        Button(action: onFinishPressed, label: {
-            Text("FINISH")
-                .font(.system(size: 18, weight: .bold))
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .foregroundColor(.white)
-                .background(Color.accentColor)
-                .clipShape(Capsule())
-                .contentShape(Rectangle())
-        })
-            .disabled(
-                name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
-            )
+            HStack {
+                Button(action: { page = .key }, label: { Image(systemName: "chevron.left") })
+                    .buttonStyle(PrimarySquareButtonStyle(color: .cardColor, foregroundColor: .accentColor))
+                Button("FINISH", action: onFinishPressed)
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(
+                        name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
+                    )
+            }
+        }
+        .padding(.horizontal)
     }
 
     private func onFinishPressed() {
@@ -177,6 +282,15 @@ struct OnboardingView: View {
 
     private func finishOnboarding() {
         presentationMode.wrappedValue.dismiss()
+    }
+
+    private enum OnboardingSection: Int, Identifiable {
+        case welcome = 0
+        case naming = 1
+        case key = 2
+        case vendor = 3
+
+        var id: Int { self.rawValue }
     }
 
     // MARK: Alert
