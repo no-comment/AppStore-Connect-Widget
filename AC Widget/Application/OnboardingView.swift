@@ -32,8 +32,6 @@ struct OnboardingView: View {
                     nameSection
                 case .key:
                     creatingKeySection
-                case .vendor:
-                    vendorNrSection
                 }
             }
             .tabViewStyle(.page)
@@ -46,13 +44,15 @@ struct OnboardingView: View {
     // MARK: Pages
     var welcomeSection: some View {
         VStack {
-            Text("WELCOME")
-                .font(.system(.largeTitle, design: .rounded))
+            Text("WELCOME_TO")
                 .padding(.top, 50)
+                .foregroundColor(.gray)
+            Text("ACWIDGET")
+                .font(.system(size: 45, weight: .semibold, design: .rounded))
                 .foregroundColor(.accentColor)
 
             ScrollView {
-                Group {
+                VStack(alignment: .leading) {
                     UpdateDetailView(imageName: "logo.github", title: "OPEN_SOURCE", subTitle: "OPEN_SOURCE_DESCRIPTION")
                     UpdateDetailView(systemName: "key.fill", title: "MULTIPLE_KEYS", subTitle: "MULTIPLE_KEYS_DESCRIPTION")
                     UpdateDetailView(systemName: "eurosign.circle", title: "ALL_CURRENCIES", subTitle: "ALL_CURRENCIES_DESCRIPTION")
@@ -111,7 +111,7 @@ struct OnboardingView: View {
 
                 // swiftlint:disable force_unwrapping
                 Link(destination: URL(string: "https://developer.apple.com/documentation/appstoreconnectapi/creating_api_keys_for_app_store_connect_api")!) {
-                    Card {
+                    Card(innerPadding: 12) {
                         HStack {
                             Label("HOW_TO_CREATE_APIKEY", systemImage: "questionmark.circle")
                             Spacer()
@@ -124,12 +124,16 @@ struct OnboardingView: View {
                 issuerIDSection
                 privateKeyIDSection
                 privateKeySection
+                vendorNrSection
 
                 HStack {
                     Button(action: { page = .naming }, label: { Image(systemName: "chevron.left") })
                         .buttonStyle(PrimarySquareButtonStyle(color: .cardColor, foregroundColor: .accentColor))
-                    Button("NEXT", action: { page = .vendor })
+                    Button("FINISH", action: onFinishPressed)
                         .buttonStyle(PrimaryButtonStyle())
+                        .disabled(
+                            name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
+                        )
                 }
             }
             .padding(.horizontal)
@@ -144,15 +148,16 @@ struct OnboardingView: View {
                 Text("ISSUER_ID")
                 Spacer()
             }
-            .font(.system(size: 25, weight: .medium, design: .rounded))
+            .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", text: $issuerID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
+                .font(.system(.body, design: .monospaced))
 
             Card(innerPadding: 12) {
                 DisclosureGroup(content: {
-                    Text("asdf")
+                    Text("WHERE_TO_FIND_ISSUER_ID_DESC")
                 }, label: { Label("WHERE_TO_FIND_ISSUER_ID", systemImage: "questionmark.circle") })
                     .buttonStyle(.plain)
             }
@@ -167,15 +172,16 @@ struct OnboardingView: View {
                 Text("PRIVATE_KEY_ID")
                 Spacer()
             }
-            .font(.system(size: 25, weight: .medium, design: .rounded))
+            .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXXXX", text: $keyID)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
+                .font(.system(.body, design: .monospaced))
 
             Card(innerPadding: 12) {
                 DisclosureGroup(content: {
-                    Text("asdf")
+                    Text("WHERE_TO_FIND_KEY_ID_DESC")
                 }, label: { Label("WHERE_TO_FIND_KEY_ID", systemImage: "questionmark.circle") })
                     .buttonStyle(.plain)
             }
@@ -190,13 +196,14 @@ struct OnboardingView: View {
                 Text("PRIVATE_KEY")
                 Spacer()
             }
-            .font(.system(size: 25, weight: .medium, design: .rounded))
+            .font(.system(size: 20, weight: .medium, design: .rounded))
 
             VStack {
                 TextEditor(text: $key)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disableAutocorrection(true)
                     .frame(height: 150)
+                    .font(.system(.body, design: .monospaced))
             }
             .overlay(
                      RoundedRectangle(cornerRadius: 5)
@@ -205,7 +212,7 @@ struct OnboardingView: View {
 
             Card(innerPadding: 12) {
                 DisclosureGroup(content: {
-                    Text("asdf")
+                    Text("WHERE_TO_FIND_KEY_DESC")
                 }, label: { Label("WHERE_TO_FIND_KEY", systemImage: "questionmark.circle") })
                     .buttonStyle(.plain)
             }
@@ -213,49 +220,27 @@ struct OnboardingView: View {
     }
 
     var vendorNrSection: some View {
-        VStack(spacing: 25) {
-            HStack(alignment: .top, spacing: 2) {
-                Image(systemName: "cart.fill")
-                    .font(.system(size: 45, weight: .medium))
-                    .foregroundColor(.accentColor)
-                Image(systemName: "grid.circle.fill")
-                    .font(.system(size: 25, weight: .medium))
-                    .foregroundColor(.green)
-            }
-            .padding(.top, 35)
-
-            VStack {
-                HStack {
-                    Image(systemName: "cart.fill")
-                        .foregroundColor(.green)
-                    Text("VENDOR_NR")
-                    Spacer()
-                }
-                .font(.system(size: 25, weight: .medium, design: .rounded))
-
-                TextField("XXXXXXXX", text: $vendor)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .disableAutocorrection(true)
-
-                Card(innerPadding: 12) {
-                    DisclosureGroup(content: {
-                        Text("asdf")
-                    }, label: { Label("WHERE_TO_FIND_VENDOR_NR", systemImage: "questionmark.circle") })
-                        .buttonStyle(.plain)
-                }
-            }
-            Spacer()
+        VStack {
             HStack {
-                Button(action: { page = .key }, label: { Image(systemName: "chevron.left") })
-                    .buttonStyle(PrimarySquareButtonStyle(color: .cardColor, foregroundColor: .accentColor))
-                Button("FINISH", action: onFinishPressed)
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(
-                        name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
-                    )
+                Image(systemName: "cart.fill")
+                    .foregroundColor(.green)
+                Text("VENDOR_NR")
+                Spacer()
+            }
+            .font(.system(size: 20, weight: .medium, design: .rounded))
+
+            TextField("XXXXXXXX", text: $keyID)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .disableAutocorrection(true)
+                .font(.system(.body, design: .monospaced))
+
+            Card(innerPadding: 12) {
+                DisclosureGroup(content: {
+                    Text("WHERE_TO_FIND_VENDOR_NR_DESC")
+                }, label: { Label("WHERE_TO_FIND_VENDOR_NR", systemImage: "questionmark.circle") })
+                    .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal)
     }
 
     private func onFinishPressed() {
@@ -288,7 +273,6 @@ struct OnboardingView: View {
         case welcome = 0
         case naming = 1
         case key = 2
-        case vendor = 3
 
         var id: Int { self.rawValue }
     }
@@ -321,6 +305,10 @@ struct OnboardingView: View {
 
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingView(showsWelcome: true)
+        Group {
+            OnboardingView(showsWelcome: true)
+            OnboardingView(showsWelcome: true)
+                .preferredColorScheme(.dark)
+        }
     }
 }

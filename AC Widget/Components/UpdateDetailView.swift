@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct UpdateDetailView: View {
+    @Environment(\.colorScheme) private var scheme
     private var icon: Image
     private var title: LocalizedStringKey
     private var subTitle: LocalizedStringKey
@@ -24,10 +25,15 @@ struct UpdateDetailView: View {
 
     var body: some View {
         HStack(alignment: .center) {
-            icon
-                .font(.largeTitle)
-                .frame(width: 50.0, height: 50.0)
-                .padding(.trailing)
+            ZStack(alignment: .center) {
+                Rectangle()
+                    .foregroundColor(.accentColor.opacity(scheme == .dark ? 0.2 : 1))
+                    .frame(width: 40, height: 40)
+                icon
+                    .foregroundColor(scheme == .dark ? .accentColor : .white)
+                    .font(.system(size: 40 * 0.425, weight: .medium))
+            }
+            .cornerRadius(5)
 
             VStack(alignment: .leading) {
                 Text(title)
@@ -48,9 +54,17 @@ struct UpdateDetailView: View {
 
 struct UpdateDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            UpdateDetailView(systemName: "icloud", title: "iCloud Sync", subTitle: "This App now syncs via automatically iCloud.")
-            UpdateDetailView(imageName: "logo.github", title: "Open Source", subTitle: "This App is open source.")
+        Group {
+            VStack(alignment: .leading) {
+                UpdateDetailView(systemName: "icloud", title: "iCloud Sync", subTitle: "This App now syncs via automatically iCloud.")
+                UpdateDetailView(imageName: "logo.github", title: "Open Source", subTitle: "This App is open source.")
+            }
+
+            VStack(alignment: .leading) {
+                UpdateDetailView(systemName: "icloud", title: "iCloud Sync", subTitle: "This App now syncs via automatically iCloud.")
+                UpdateDetailView(imageName: "logo.github", title: "Open Source", subTitle: "This App is open source.")
+            }
+            .preferredColorScheme(.dark)
         }
     }
 }
