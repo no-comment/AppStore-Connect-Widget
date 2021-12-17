@@ -43,19 +43,43 @@ struct KeySelectionView: View {
 
     var currencySelection: some View {
         Section(header: Label("CURRENCY", systemImage: "dollarsign.circle.fill")) {
-            Picker("APP_CURRENCY", selection: $currency) {
-                ForEach(Currency.sortedAllCases, id: \.rawValue) { currency in
-                    Text(currency.rawValue)
+            NavigationLink(destination: CurrencyPicker(selection: $currency)) {
+                HStack {
+                Text("APP_CURRENCY")
+                    Spacer()
+                    CurrencySymbol(symbol: (Currency(rawValue: currency) ?? .USD).symbol)
                 }
             }
         }
     }
 }
 
+struct CurrencySymbol: View {
+    let symbol: String
+    let strokeWeight: CGFloat = 1.5
+
+    var body: some View {
+        Text(symbol)
+            .font(.system(.body, design: .rounded).weight(.semibold))
+            .padding(.horizontal, 6)
+            .overlay(
+                Group {
+                    if symbol.count == 1 {
+                        Circle().stroke(.foreground, lineWidth: strokeWeight)
+                    } else {
+                        Capsule().stroke(.foreground, lineWidth: strokeWeight)
+                    }
+                }
+            )
+    }
+}
+
 struct KeySelectionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeySelectionView()
+            Form {
+                KeySelectionView().currencySelection
+            }
         }
     }
 }

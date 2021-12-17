@@ -29,6 +29,10 @@ enum Currency: String, CaseIterable, Codable {
         return getSymbolForCurrencyCode(code: self.rawValue)
     }
 
+    var name: String {
+        return Locale.current.localizedString(forCurrencyCode: self.rawValue) ?? self.rawValue
+    }
+
     static var sortedAllCases: [Currency] {
         var identifiers: [Currency] = Currency.allCases
         let first: [Currency] = [.USD, .EUR, .GBP]

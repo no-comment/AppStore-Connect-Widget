@@ -21,6 +21,7 @@
 		4570D39B261EE1FC006F50AA /* ACDataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4570D399261EE1FC006F50AA /* ACDataCache.swift */; };
 		457E715C268D12E5000AEBF6 /* RearrangeTilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457E715B268D12E5000AEBF6 /* RearrangeTilesView.swift */; };
 		4583A87F261A43FE00368001 /* Widgets.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45C1A3F72619AC28006C1650 /* Widgets.intentdefinition */; settings = {ATTRIBUTES = (codegen, ); }; };
+		45AB9881276D34B40024597F /* CurrencyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AB9880276D34B40024597F /* CurrencyPicker.swift */; };
 		45B7C45A2700F18300F3ECC4 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7C4592700F18300F3ECC4 /* UpdateView.swift */; };
 		45B7C45C2700F2E400F3ECC4 /* UpdateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7C45B2700F2E400F3ECC4 /* UpdateDetailView.swift */; };
 		45C1A3F32619AC28006C1650 /* Widgets.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45C1A3F72619AC28006C1650 /* Widgets.intentdefinition */; };
@@ -151,6 +152,7 @@
 		4570D399261EE1FC006F50AA /* ACDataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACDataCache.swift; sourceTree = "<group>"; };
 		457E715B268D12E5000AEBF6 /* RearrangeTilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RearrangeTilesView.swift; sourceTree = "<group>"; };
 		4583A842261A3E3700368001 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
+		45AB9880276D34B40024597F /* CurrencyPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPicker.swift; sourceTree = "<group>"; };
 		45B7C4592700F18300F3ECC4 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
 		45B7C45B2700F2E400F3ECC4 /* UpdateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDetailView.swift; sourceTree = "<group>"; };
 		45C1A3F62619AC28006C1650 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Widgets.intentdefinition; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				CBB4A60626F3E6130064EE9E /* AppIconStack.swift */,
 				CBBBE74B2700F17D00DF7942 /* AppStoreNotice.swift */,
 				45B7C45B2700F2E400F3ECC4 /* UpdateDetailView.swift */,
+				45AB9880276D34B40024597F /* CurrencyPicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -602,6 +605,7 @@
 				45B7C45C2700F2E400F3ECC4 /* UpdateDetailView.swift in Sources */,
 				CB28AEE02615D24400B48215 /* UnitText.swift in Sources */,
 				CB28AF0926161D5E00B48215 /* DescribedValueView.swift in Sources */,
+				45AB9881276D34B40024597F /* CurrencyPicker.swift in Sources */,
 				45B7C45A2700F18300F3ECC4 /* UpdateView.swift in Sources */,
 				CB28AEFC2615F5E700B48215 /* GraphView.swift in Sources */,
 				CB436DDB26186B0C00A432B1 /* OnboardingView.swift in Sources */,
