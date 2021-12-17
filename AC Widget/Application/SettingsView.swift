@@ -206,15 +206,13 @@ struct ApiKeyCheckIndicator: View {
                     .foregroundColor(.orange)
             }
         }
-        .onAppear(perform: {
-            Task(priority: .background) {
-                do {
-                    try await key.checkKey()
-                } catch let err {
-                    status = (err as? APIError) ?? .unknown
-                }
-                loading = false
+        .task(priority: .background, {
+            do {
+                try await key.checkKey()
+            } catch let err {
+                status = (err as? APIError) ?? .unknown
             }
+            loading = false
         })
     }
 }
