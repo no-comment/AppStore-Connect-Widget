@@ -229,7 +229,7 @@ struct OnboardingView: View {
             }
             .font(.system(size: 20, weight: .medium, design: .rounded))
 
-            TextField("XXXXXXXX", text: $keyID)
+            TextField("XXXXXXXX", text: $vendor)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .disableAutocorrection(true)
                 .font(.system(.body, design: .monospaced))
