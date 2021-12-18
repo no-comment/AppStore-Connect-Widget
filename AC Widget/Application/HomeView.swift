@@ -30,7 +30,9 @@ struct HomeView: View {
     @State private var showsUpdateScreen = false
 
     var body: some View {
-        ScrollView {
+        RefreshableScrollView(onRefresh: {
+            await onAppear(useMemoization: false)
+        }) {
             if let data = data {
                 lastChangeSubtitle
                 if appStoreNotice && AppStoreNotice.isTestFlight() {
@@ -72,13 +74,13 @@ struct HomeView: View {
         .sheet(isPresented: $showsUpdateScreen, content: {
             UpdateView()
         })
-        .onChange(of: keyID, perform: { _ in onAppear() })
-        .onChange(of: currency, perform: { _ in onAppear() })
-        .onAppear(perform: {
-            onAppear()
-        })
+        .onChange(of: keyID, perform: { _ in Task { await onAppear() } })
+        .onChange(of: currency, perform: { _ in Task { await onAppear() } })
+        .task {
+            await onAppear()
+        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            onAppear()
+            Task { await onAppear() }
         }
     }
 
@@ -123,7 +125,13 @@ struct HomeView: View {
             }
 
             if data != nil {
-                Button(action: { data = nil; onAppear(useMemoization: false) }) {
+                Button(action: {
+                    // TODO: Don't delete data?
+                    data = nil
+                    Task {
+                        await onAppear(useMemoization: false)
+                    }
+                }) {
                     Text("REFRESH_DATA")
                 }
                 .padding(.vertical, 8)
@@ -166,7 +174,7 @@ struct HomeView: View {
         }
     }
 
-    private func onAppear(useMemoization: Bool = true) {
+    private func onAppear(useMemoization: Bool = true) async {
         askToRate()
 
         let selectedTiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
@@ -174,13 +182,11 @@ struct HomeView: View {
 
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
-        Task {
-            do {
-                self.data = try await api.getData(currency: Currency(rawValue: currency), useMemoization: useMemoization)
-            } catch let err as APIError {
-                self.error = err
-            } catch {}
-        }
+        do {
+            self.data = try await api.getData(currency: Currency(rawValue: currency), useMemoization: useMemoization)
+        } catch let err as APIError {
+            self.error = err
+        } catch {}
 
         let appVersion: String = UIApplication.appVersion ?? ""
         let buildVersion: String = UIApplication.buildVersion ?? ""

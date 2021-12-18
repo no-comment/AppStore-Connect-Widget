@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		450FE060276E1B9600BA1D7B /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 450FE05F276E1B9600BA1D7B /* RefreshableScrollView.swift */; };
 		452A37F126161C97005CD1DA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452A37F026161C97005CD1DA /* Extensions.swift */; };
 		452A37F226161C97005CD1DA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452A37F026161C97005CD1DA /* Extensions.swift */; };
 		4542C451261B912E00799E4B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4542C450261B912E00799E4B /* Preview Assets.xcassets */; };
@@ -144,6 +145,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		450FE05F276E1B9600BA1D7B /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
 		451A530127010A100094B5D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Widgets.strings; sourceTree = "<group>"; };
 		451A530327010A110094B5D6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Widgets.strings; sourceTree = "<group>"; };
 		452A37F026161C97005CD1DA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -390,6 +392,7 @@
 				CBBBE74B2700F17D00DF7942 /* AppStoreNotice.swift */,
 				45B7C45B2700F2E400F3ECC4 /* UpdateDetailView.swift */,
 				45AB9880276D34B40024597F /* CurrencyPicker.swift */,
+				450FE05F276E1B9600BA1D7B /* RefreshableScrollView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -600,6 +603,7 @@
 				CB2D236926433AB9003DA727 /* SummaryLarge.swift in Sources */,
 				45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */,
 				CB9C4CB3262A2391007E38F1 /* InfoTileFront.swift in Sources */,
+				450FE060276E1B9600BA1D7B /* RefreshableScrollView.swift in Sources */,
 				CB7B9227276D29E00007766C /* PrimarySquareButtonStyle.swift in Sources */,
 				CB7B9229276D29FA0007766C /* PrimaryButtonStyle.swift in Sources */,
 				45B7C45C2700F2E400F3ECC4 /* UpdateDetailView.swift in Sources */,
