@@ -1,8 +1,8 @@
 // MARK: Onboarding
-"WELCOME_TO" = "Wilkommen zu";
+"WELCOME_TO" = "Willkommen zu";
 "OPEN_SOURCE" = "Open Source";
 "OPEN_SOURCE_DESCRIPTION" = "ACWidget ist komplett open source auf GitHub.";
-"MULTIPLE_KEYS" = "Meherer Keys";
+"MULTIPLE_KEYS" = "Mehrere Keys";
 "MULTIPLE_KEYS_DESCRIPTION" = "Füge so viele verschiedene keys hinzu wie du magst.";
 "ALL_CURRENCIES" = "Alle Währungen";
 "ALL_CURRENCIES_DESCRIPTION" = "Schau dir deine Einnahmen in jeder Währung an.";
@@ -137,11 +137,11 @@
 "IDEA_BUG_LINK" = "Hast du eine Idee für ein neues Feature oder einen Fehler gefunden?";
 "START" = "Start";
 
-"UPDATE_TITLE_1" = "iCloud Syncronisation";
+"UPDATE_TITLE_1" = "iCloud Synchronisation";
 "UPDATE_SUBTITLE_1" = "Deine API Keys werden jetzt automatisch über iCloud synchronisiert.";
 "UPDATE_TITLE_2" = "Extra großes Widget";
 "UPDATE_SUBTITLE_2" = "Die neue Größe zeigt nun noch mehr Details direkt auf dem Homescreen an.";
 "UPDATE_TITLE_3" = "Nach Apps filtern";
 "UPDATE_SUBTITLE_3" = "Du kannst jetzt filtern, auf welchen Apps die Statistiken basieren.";
 "UPDATE_TITLE_4" = "Statistische Aufschlüsselung";
-"UPDATE_SUBTITLE_4" = "Tippe auf die Boxen auf der Startseite, um eine detailierte Aufschlüsselung pro App anzuzeigen.";
+"UPDATE_SUBTITLE_4" = "Tippe auf die Boxen auf der Startseite, um eine detaillierte Aufschlüsselung pro App anzuzeigen.";
