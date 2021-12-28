@@ -39,7 +39,6 @@ struct HomeView: View {
                     AppStoreNotice()
                 }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
-
                     ForEach(tiles) { tile in
                         switch tile {
                         case .downloads:
@@ -58,10 +57,10 @@ struct HomeView: View {
                     }
                 }
                 .padding(.horizontal)
+                additionalInformation
             } else {
                 loadingIndicator
             }
-            additionalInformation
         }
         .background(
             NavigationLink(destination: SettingsView(), isActive: $showSettings) {
@@ -74,10 +73,10 @@ struct HomeView: View {
         .sheet(isPresented: $showsUpdateScreen, content: {
             UpdateView()
         })
-        .onChange(of: keyID, perform: { _ in Task { await onAppear() } })
-        .onChange(of: currency, perform: { _ in Task { await onAppear() } })
+        .onChange(of: keyID, perform: { _ in Task { await onAppear(useMemoization: false) } })
+        .onChange(of: currency, perform: { _ in Task { await onAppear(useMemoization: false) } })
         .task {
-            await onAppear()
+            await onAppear(useMemoization: false)
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             Task { await onAppear() }
@@ -94,6 +93,7 @@ struct HomeView: View {
                 .italic()
         }
         .padding(.top, 25)
+        .frame(maxWidth: .infinity)
     }
 
     var lastChangeSubtitle: some View {
@@ -125,12 +125,8 @@ struct HomeView: View {
             }
 
             if data != nil {
-                Button(action: {
-                    // TODO: Don't delete data?
-                    data = nil
-                    Task {
-                        await onAppear(useMemoization: false)
-                    }
+                AsyncButton(action: {
+                    await onAppear(useMemoization: false)
                 }) {
                     Text("REFRESH_DATA")
                 }
