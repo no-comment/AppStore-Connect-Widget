@@ -11,8 +11,8 @@ public struct PrimarySquareButtonStyle: ButtonStyle {
     private var scheme: ColorScheme = .light
 
     public init(color: Color = .accentColor,
-         foregroundColor: Color = .white,
-         scheme: ColorScheme = .light
+                foregroundColor: Color = .white,
+                scheme: ColorScheme = .light
     ) {
         self.color = color
         self.foregroundColor = foregroundColor

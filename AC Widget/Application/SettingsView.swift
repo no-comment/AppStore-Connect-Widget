@@ -160,12 +160,7 @@ struct SettingsView: View {
     }
 
     private func sheet() -> some View {
-        return NavigationView {
-            OnboardingView(showsWelcome: false)
-                .navigationTitle("ADD_KEY")
-                .navigationBarTitleDisplayMode(.inline)
-                .closeSheetButton()
-        }
+        OnboardingView(showsWelcome: false)
     }
 
     private func deleteKey(at offsets: IndexSet) {

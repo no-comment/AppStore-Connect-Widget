@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+// swiftlint:disable type_body_length
 struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
@@ -39,6 +40,7 @@ struct OnboardingView: View {
             .navigationBarTitleDisplayMode(.inline)
             .alert(item: $alert, content: { generateAlert($0) })
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 
     // MARK: Pages
