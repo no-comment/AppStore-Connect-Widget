@@ -7,9 +7,7 @@ import Foundation
 import AppStoreConnect_Swift_SDK
 import Gzip
 import SwiftCSV
-import Promises
 
-// swiftlint:disable:next type_body_length
 class AppStoreConnectApi {
     private let privateKeyMinLength = 100
 
@@ -24,186 +22,156 @@ class AppStoreConnectApi {
     private var privateKey: String { apiKey.privateKey }
     private var vendorNumber: String { apiKey.vendorNumber }
 
-    // swiftlint:disable:next large_tuple
-    static private var lastData: [(key: APIKey, date: Date, result: Promise<ACData>)] = []
-
-    static func clearInMemoryCache() {
-        lastData = []
+    static private var lastData: [APIKey: LoaderStatus] = [:]
+    private enum LoaderStatus {
+        case inProgress(Task<ACData, Error>)
+        case loaded((data: ACData, date: Date))
     }
 
-    public func getData(currency: CurrencyParam?, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
-        return getData(currency: currency?.toCurrency(), numOfDays: numOfDays, useCache: useCache)
+    static func clearMemoization() {
+        lastData.removeAll()
     }
 
-    // swiftlint:disable:next function_body_length
-    public func getData(currency: Currency? = nil, numOfDays: Int = 35, useCache: Bool = true) -> Promise<ACData> {
-        let localCurrency: Currency = currency ?? .USD
-        let promise = Promise<ACData>.pending()
+    public func getData(currency: CurrencyParam?, numOfDays: Int = 35, useCache: Bool = true) async throws -> ACData {
+        return try await getData(currency: currency?.toCurrency(), numOfDays: numOfDays, useCache: useCache)
+    }
 
-        if apiKey.name == APIKey.demoKeyName {
-            promise.fulfill(ACData.example)
-            return promise
-        }
+    public func getData(currency: Currency? = nil, numOfDays: Int = 35, useCache: Bool = true, useMemoization: Bool = true) async throws -> ACData {
+        if apiKey.name == APIKey.demoKeyName { return ACData.example }
 
-        if useCache {
-            if let last = AppStoreConnectApi.lastData.first(where: { $0.key.id == self.apiKey.id }) {
-                if last.date.timeIntervalSinceNow > -60 * 5 {
-                    last.result
-                        .then { promise.fulfill($0.changeCurrency(to: localCurrency)) }
-                        .catch { promise.reject($0) }
-                    return promise
-                } else {
-                    AppStoreConnectApi.lastData.removeAll(where: { $0.key.id == self.apiKey.id })
+        if useMemoization {
+            if let last = AppStoreConnectApi.lastData[apiKey] {
+                switch last {
+                case .loaded(let res):
+                    if res.date.timeIntervalSinceNow > -60 * 5 {
+                        return res.data
+                    } else {
+                        AppStoreConnectApi.lastData.removeValue(forKey: apiKey)
+                    }
+                case .inProgress(let task):
+                    return try await task.value
                 }
             }
         }
 
-        if self.privateKey.count < privateKeyMinLength {
-            promise.reject(APIError.invalidCredentials)
-            return promise
+        let task: Task<ACData, Error> = Task {
+            return try await getDataFromAPI(localCurrency: currency ?? .USD, numOfDays: numOfDays, useCache: useCache)
         }
+
+        AppStoreConnectApi.lastData[apiKey] = .inProgress(task)
+
+        let data = try await task.value
+
+        AppStoreConnectApi.lastData[apiKey] = .loaded((data, .now))
+
+        return data
+    }
+
+    private func getDataFromAPI(localCurrency: Currency, numOfDays: Int = 35, useCache: Bool = true) async throws -> ACData {
+        if self.privateKey.count < privateKeyMinLength {
+            throw APIError.invalidCredentials
+        }
+
         let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
 
         let provider: APIProvider = APIProvider(configuration: configuration)
 
         var entries: [ACEntry] = []
 
-        let converter = CurrencyConverter.shared
+        await CurrencyConverter.shared.updateExchangeRates()
 
-        converter.updateExchangeRates()
-            .then({ _ ->  Promise<[Maybe<Data>]> in
-                let dates = Date().dayBefore.getLastNDates(numOfDays-1).map({ $0.acApiFormat() })
-
-                if useCache {
-                    let cachedData = ACDataCache.getData(apiKey: self.apiKey)?.changeCurrency(to: localCurrency)
-                    let cachedEntries: [ACEntry] = cachedData?.entries ?? []
-
-                    entries.append(contentsOf: cachedEntries)
-                }
-                let entriesDates = entries.map({ $0.date.acApiFormat() })
-                let missingDates = dates.filter({ !entriesDates.contains($0) })
-
-                return any(missingDates.map({ self.apiSalesAndTrendsWrapped(provider: provider, vendorNumber: self.vendorNumber, date: $0) }))
-            })
-            .then { results in
-                for result in results {
-                    guard let resultValue = result.value else {
-                        print("ERROR: \(result.error?.localizedDescription ?? "")")
-                        continue
-                    }
-                    guard let decompressedData = try? resultValue.gunzipped() else {
-                        #if DEBUG
-                        fatalError()
-                        #endif
-                        continue
-                    }
-
-                    let str = String(decoding: decompressedData, as: UTF8.self)
-
-                    guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
-                        #if DEBUG
-                        fatalError()
-                        #endif
-                        continue
-                    }
-
-                    try? tsv.enumerateAsDict { dict in
-                        let parentId: String = dict["Parent Identifier"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                        let sku: String = dict["SKU"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-                        var proceeds = Double(dict["Developer Proceeds"] ?? "0.00") ?? 0
-                        if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
-                            proceeds = converter.convert(proceeds, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
-                        } else {
-                            proceeds = 0
-                        }
-
-                        let newEntry = ACEntry(appTitle: dict["Title"] ?? "UNKNOWN",
-                                               appSKU: parentId.isEmpty ? sku : parentId,
-                                               units: Int(dict["Units"] ?? "0") ?? 0,
-                                               proceeds: Float(proceeds),
-                                               date: Date.fromACFormat(dict["Begin Date"] ?? "") ?? Date.distantPast,
-                                               countryCode: dict["Country Code"] ?? "UNKNOWN",
-                                               device: dict["Device"] ?? "UNKNOWN",
-                                               appIdentifier: dict["Apple Identifier"] ?? "",
-                                               type: ACEntryType(dict["Product Type Identifier"]))
-                        entries.append(newEntry)
-                    }
-                }
-
-                self.getApps(entries: entries)
-                    .then { apps in
-                        let newData = ACData(entries: entries, currency: localCurrency, apps: apps)
-                        ACDataCache.saveData(data: newData, apiKey: self.apiKey)
-                        promise.fulfill(newData)
-                    }
-                    .catch { _ in
-                        let newData = ACData(entries: entries, currency: localCurrency, apps: [])
-                        ACDataCache.saveData(data: newData, apiKey: self.apiKey)
-                        promise.fulfill(newData)
-                    }
-            }
-            .catch { err in
-                if let apiError = err as? AppStoreConnect_Swift_SDK.APIProvider.Error {
-                    switch apiError {
-                    case .requestFailure(let statusCode, let errData):
-                        switch statusCode {
-                        case 401:
-                            promise.reject(APIError.invalidCredentials)
-                        case 429:
-                            promise.reject(APIError.exceededLimit)
-                        case 403:
-                            promise.reject(APIError.wrongPermissions)
-                        case 404:
-                            guard let errData = errData else {
-                                promise.reject(APIError.unknown)
-                                break
-                            }
-
-                            let resp = String(decoding: errData, as: UTF8.self)
-                            if resp.contains("The request expected results but none were found") {
-                                if entries.isEmpty {
-                                    promise.reject(APIError.noDataAvailable)
-                                } else {
-                                    self.getApps(entries: entries)
-                                        .then { apps in
-                                            let newData = ACData(entries: entries, currency: localCurrency, apps: apps)
-                                            ACDataCache.saveData(data: newData, apiKey: self.apiKey)
-                                            promise.fulfill(newData)
-                                        }
-                                        .catch { _ in
-                                            let newData = ACData(entries: entries, currency: localCurrency, apps: [])
-                                            ACDataCache.saveData(data: newData, apiKey: self.apiKey)
-                                            promise.fulfill(newData)
-                                        }
-                                }
-                            } else {
-                                promise.reject(APIError.unknown)
-                            }
-                        default:
-                            print(statusCode)
-                            promise.reject(APIError.unknown)
-                        }
-                    case .requestGeneration:
-                        promise.reject(APIError.invalidCredentials)
-                    default:
-                        promise.reject(APIError.unknown)
-                    }
-                } else {
-                    promise.reject(APIError.unknown)
-                }
-            }
+        let dates = Date.now.dayBefore.getLastNDates(numOfDays).map({ $0.acApiFormat() })
 
         if useCache {
-            AppStoreConnectApi.lastData.append((key: self.apiKey, date: Date(), result: promise))
+            let cachedData = ACDataCache.getData(apiKey: self.apiKey)?.changeCurrency(to: localCurrency)
+            let cachedEntries: [ACEntry] = cachedData?.entries ?? []
+
+            entries.append(contentsOf: cachedEntries)
         }
 
-        return promise
+        let entriesDates = entries.map({ $0.date.acApiFormat() })
+        let missingDates = dates.filter({ !entriesDates.contains($0) })
+
+        async let results: [Data] = withThrowingTaskGroup(of: Data?.self) { group in
+            var data: [Data] = []
+
+            for date in missingDates {
+                group.addTask {
+                    do {
+                        return try await self.apiSalesAndTrendsWrapped(provider: provider, vendorNumber: self.vendorNumber, date: date)
+                    } catch APIError.noDataAvailable {
+                        return nil
+                    }
+                }
+            }
+
+            for try await d in group {
+                if let d = d {
+                    data.append(d)
+                }
+            }
+
+            return data
+        }
+
+        for result in try await results {
+            entries.append(contentsOf: parseApiResult(result, localCurrency: localCurrency))
+        }
+
+        let apps = try? await self.getApps(entries: entries)
+        let acdata = ACData(entries: entries, currency: localCurrency, apps: apps ?? [])
+        ACDataCache.saveData(data: acdata, apiKey: self.apiKey)
+
+        return acdata
     }
 
-    private func getApps(entries: [ACEntry]) -> Promise<[ACApp]> {
-        let promise = Promise<[ACApp]>.pending()
+    private func parseApiResult(_ result: Data, localCurrency: Currency) -> [ACEntry] {
+        var entries: [ACEntry] = []
 
+        guard let decompressedData = try? result.gunzipped() else {
+            #if DEBUG
+            fatalError()
+            #else
+            return []
+            #endif
+        }
+
+        let str = String(decoding: decompressedData, as: UTF8.self)
+
+        guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
+            #if DEBUG
+            fatalError()
+            #else
+            return []
+            #endif
+        }
+
+        try? tsv.enumerateAsDict { dict in
+            let parentId: String = dict["Parent Identifier"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let sku: String = dict["SKU"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+            var proceeds = Double(dict["Developer Proceeds"] ?? "0.00") ?? 0
+            if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
+                proceeds = CurrencyConverter.shared.convert(proceeds, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
+            } else {
+                proceeds = 0
+            }
+
+            let newEntry = ACEntry(appTitle: dict["Title"] ?? "UNKNOWN",
+                                   appSKU: parentId.isEmpty ? sku : parentId,
+                                   units: Int(dict["Units"] ?? "0") ?? 0,
+                                   proceeds: Float(proceeds),
+                                   date: Date.fromACFormat(dict["Begin Date"] ?? "") ?? Date.distantPast,
+                                   countryCode: dict["Country Code"] ?? "UNKNOWN",
+                                   device: dict["Device"] ?? "UNKNOWN",
+                                   appIdentifier: dict["Apple Identifier"] ?? "",
+                                   type: ACEntryType(dict["Product Type Identifier"]))
+            entries.append(newEntry)
+        }
+        return entries
+    }
+
+    private func getApps(entries: [ACEntry]) async throws -> [ACApp] {
         let tupples: [ITunesLookupApp] = entries.map({ .init(appstoreId: $0.appIdentifier, name: $0.appTitle, sku: $0.appSKU) })
         var uniqueTupple: [ITunesLookupApp] = []
         for tupple in tupples {
@@ -212,20 +180,29 @@ class AppStoreConnectApi {
             }
         }
 
-        any(uniqueTupple.map(self.iTunesLookup(app:)))
-            .then { data in
-                promise.fulfill(data.compactMap({ $0.value }))
-            }
-            .catch { err in
-                promise.reject(err)
+        return await withTaskGroup(of: ACApp?.self) { group in
+            var lookUps: [ACApp] = []
+            lookUps.reserveCapacity(uniqueTupple.count)
+
+            for app in uniqueTupple {
+                group.addTask {
+                    return try? await self.iTunesLookup(app: app)
+                }
             }
 
-        return promise
+            for await app in group {
+                if let app = app {
+                    lookUps.append(app)
+                }
+            }
+
+            return lookUps
+        }
     }
 
-    private func apiSalesAndTrendsWrapped(provider: APIProvider, vendorNumber: String, date: String) -> Promise<Data> {
-        print("Call api for \(date)")
-        return Promise<Data> { fulfill, reject in
+    private func apiSalesAndTrendsWrapped(provider: APIProvider, vendorNumber: String, date: String) async throws -> Data {
+        print("Loading data for: \(date)")
+        return try await withCheckedThrowingContinuation { continuation in
             provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
                 .frequency([.DAILY]),
                 .reportSubType([.SUMMARY]),
@@ -234,10 +211,43 @@ class AppStoreConnectApi {
                 .reportDate([date]),
             ]), completion: { result in
                 switch result {
-                case .success(let data):
-                    fulfill(data)
-                case .failure(let reason):
-                    reject(reason)
+                case .success(let value):
+                    continuation.resume(returning: value)
+                case .failure(let error):
+                    if let apiError = error as? AppStoreConnect_Swift_SDK.APIProvider.Error {
+                        switch apiError {
+                        case .requestFailure(let statusCode, let errData):
+                            switch statusCode {
+                            case 401:
+                                continuation.resume(throwing: APIError.invalidCredentials)
+                            case 429:
+                                continuation.resume(throwing: APIError.exceededLimit)
+                            case 403:
+                                continuation.resume(throwing: APIError.wrongPermissions)
+                            case 404:
+                                guard let errData = errData else {
+                                    continuation.resume(throwing: APIError.unknown)
+                                    break
+                                }
+
+                                let resp = String(decoding: errData, as: UTF8.self)
+                                if resp.contains("The request expected results but none were found") {
+                                    continuation.resume(throwing: APIError.noDataAvailable)
+                                } else {
+                                    continuation.resume(throwing: APIError.unknown)
+                                }
+                            default:
+                                print(statusCode)
+                                continuation.resume(throwing: APIError.unknown)
+                            }
+                        case .requestGeneration:
+                            continuation.resume(throwing: APIError.invalidCredentials)
+                        default:
+                            continuation.resume(throwing: APIError.unknown)
+                        }
+                    } else {
+                        continuation.resume(throwing: error)
+                    }
                 }
             })
         }
@@ -261,19 +271,16 @@ class AppStoreConnectApi {
         let sku: String
     }
 
-    private func iTunesLookup(app: ITunesLookupApp) -> Promise<ACApp> {
-        let promise = Promise<ACApp>.pending()
+    private func iTunesLookup(app: ITunesLookupApp) async throws -> ACApp {
         guard let url = URL(string: "http://itunes.apple.com/lookup?id=" + app.appstoreId) else {
-            promise.reject(APIError.unknown)
-            return promise
+            throw APIError.unknown
         }
 
         if let data = try? Data(contentsOf: url) {
             let decoder = JSONDecoder()
             let result = try? decoder.decode(ITunesResponse.self, from: data)
             guard let appData = result?.results.first else {
-                promise.reject(APIError.unknown)
-                return promise
+                throw APIError.unknown
             }
 
             var imageData: Data?
@@ -281,34 +288,23 @@ class AppStoreConnectApi {
                 imageData = try? Data(contentsOf: imgUrl)
             }
 
-            promise.fulfill(
-                ACApp(appstoreId: app.appstoreId,
-                      name: app.name,
-                      sku: app.sku,
-                      version: appData.version,
-                      currentVersionReleaseDate: appData.currentVersionReleaseDate,
-                      artworkUrl60: appData.artworkUrl60,
-                      artworkUrl100: appData.artworkUrl100,
-                      artwork60ImgData: imageData)
-            )
+            return ACApp(appstoreId: app.appstoreId,
+                         name: app.name,
+                         sku: app.sku,
+                         version: appData.version,
+                         currentVersionReleaseDate: appData.currentVersionReleaseDate,
+                         artworkUrl60: appData.artworkUrl60,
+                         artworkUrl100: appData.artworkUrl100,
+                         artwork60ImgData: imageData)
         } else {
-            promise.reject(APIError.unknown)
+            throw APIError.unknown
         }
-
-        return promise
     }
 
-    private func apiAppsWrapped(provider: APIProvider) -> Promise<AppsResponse> {
-        return Promise<AppsResponse> { fulfill, reject in
-            provider.request(APIEndpoint.apps(select: [.apps([.name, .sku])]),
-                             completion: { result in
-                switch result {
-                case .success(let data):
-                    fulfill(data)
-                case .failure(let reason):
-                    print("Something went wrong fetching the apps: \(reason)")
-                    reject(reason)
-                }
+    private func apiAppsWrapped(provider: APIProvider) async throws -> AppsResponse {
+        return try await withCheckedThrowingContinuation { continuation in
+            provider.request(APIEndpoint.apps(select: [.apps([.name, .sku])]), completion: { result in
+                continuation.resume(with: result)
             })
         }
     }

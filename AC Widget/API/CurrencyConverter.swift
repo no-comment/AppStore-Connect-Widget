@@ -4,12 +4,8 @@
 //
 
 import Foundation
-import Promises
 
-//
-//  CurrencyConverter.swift
 //  Created by Thiago Martins on 26/03/19.
-//
 
 // Global Enumerations:
 enum Currency: String, CaseIterable, Codable {
@@ -31,6 +27,10 @@ enum Currency: String, CaseIterable, Codable {
 
     var symbol: String {
         return getSymbolForCurrencyCode(code: self.rawValue)
+    }
+
+    var name: String {
+        return Locale.current.localizedString(forCurrencyCode: self.rawValue) ?? self.rawValue
     }
 
     static var sortedAllCases: [Currency] {
@@ -128,20 +128,13 @@ class CurrencyConverter {
 
     // Public Methods:
     /** Updates the exchange rate and runs the completion afterwards. */
-    public func updateExchangeRates() -> Promise<Any?> {
-        return wrap { completion in
+    public func updateExchangeRates() async {
+        return await withCheckedContinuation { continuation in
             self.xmlParser.parse(completion: {
-                // Gets the exchange rate from the internet:
                 self.exchangeRates = self.xmlParser.getExchangeRates()
-                // Saves the updated exchange rate to the device's local storage:
-                //            CurrencyConverterLocalData.saveMostRecentExchangeRates(self.exchangeRates)
-                // Runs the completion:
-                completion()
-            }, errorCompletion: { // No internet access/network error:
-                // Loads the most recent exchange rate from the device's local storage:
-                //            self.exchangeRates = CurrencyConverterLocalData.loadMostRecentExchangeRates()
-                // Runs the completion:
-                completion()
+                continuation.resume()
+            }, errorCompletion: {
+                continuation.resume()
             })
         }
     }

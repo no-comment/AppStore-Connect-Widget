@@ -55,6 +55,25 @@ extension Date {
     func dateToMonthNumber() -> Int {
         return Int(Calendar.current.component(.day, from: self))
     }
+
+    static var appInstallDate: Date {
+        if let documentsFolder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last {
+            if let installDate = try? FileManager.default.attributesOfItem(atPath: documentsFolder.path)[.creationDate] as? Date {
+                return installDate
+            }
+        }
+        return .now // Should never execute
+    }
+}
+
+extension Calendar {
+    func numberOfDaysBetween(_ from: Date, and to: Date) -> Int {
+        let fromDate = startOfDay(for: from)
+        let toDate = startOfDay(for: to)
+        let numberOfDays = dateComponents([.day], from: fromDate, to: toDate)
+
+        return numberOfDays.day ?? 0
+    }
 }
 
 // MARK: UIApplication
@@ -75,8 +94,9 @@ extension UserDefaults {
 }
 
 enum UserDefaultsKey {
-    @available(*, deprecated)
+    @available(*, unavailable)
     static let apiKeys = "apiKeys"
+    @available(*, unavailable)
     static let dataCache = "dataCache"
     static let includeRedownloads = "includeRedownloads"
     static let homeSelectedKey = "homeSelectedKey"
@@ -84,6 +104,7 @@ enum UserDefaultsKey {
     static let tilesInHome = "tilesInHome"
     static let appStoreNotice = "appStoreNotice"
     static let lastSeenVersion = "lastSeenVersion"
+    static let rateCount = "rateCount"
 }
 
 // MARK: Editing Strings
@@ -103,23 +124,23 @@ extension String {
 }
 
 // MARK: View Modifier
-// Hide Redacted
-struct HideViewRedacted: ViewModifier {
+// hide view if redacted as placeholder (for loading widget)
+private struct HideViewPlaceholderRedacted: ViewModifier {
     @Environment(\.redactionReasons) private var reasons
 
     @ViewBuilder
     func body(content: Content) -> some View {
-        if reasons.isEmpty {
-            content
-        } else {
+        if reasons == .placeholder {
             EmptyView()
+        } else {
+            content
         }
     }
 }
 
 extension View {
-    func hideWhenRedacted() -> some View {
-        self.modifier(HideViewRedacted())
+    func hidePlaceholderRedacted() -> some View {
+        self.modifier(HideViewPlaceholderRedacted())
     }
 }
 

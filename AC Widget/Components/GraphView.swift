@@ -64,11 +64,11 @@ struct GraphView: View {
 struct GraphView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            GraphView(ACData.example.getRawData(.downloads, lastNDays: 30), color: .pink)
+            GraphView(ACData.example.getRawData(for: .downloads, lastNDays: 30), color: .pink)
                 .padding()
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
 
-            GraphView(ACData.example.getRawData(.proceeds, lastNDays: 30))
+            GraphView(ACData.example.getRawData(for: .proceeds, lastNDays: 30))
                 .padding()
                 .previewContext(WidgetPreviewContext(family: .systemSmall))
 

@@ -8,7 +8,6 @@ import WidgetKit
 
 struct SettingsView: View {
     @AppStorage(UserDefaultsKey.includeRedownloads, store: UserDefaults.shared) var includeRedownloads: Bool = false
-    @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) var appStoreNotice: Bool = true
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
 
     @State private var addKeySheet: Bool = false
@@ -69,16 +68,13 @@ struct SettingsView: View {
         Section(header: Label("GENERAL", systemImage: "gearshape.fill")) {
             Toggle("INCLUDE_REDOWNLOADS", isOn: $includeRedownloads)
             NavigationLink("REARRANGE", destination: RearrangeTilesView())
-            if AppStoreNotice.isTestFlight() {
-                Toggle("APPSTORE_NOTICE_TOGGLE", isOn: $appStoreNotice)
-            }
         }
     }
 
     var widgetSection: some View {
         Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
             Button("FORCE_REFRESH_WIDGET") {
-                AppStoreConnectApi.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
@@ -92,8 +88,8 @@ struct SettingsView: View {
                 }
 
             Button("CLEAR_ALL_CACHE") {
-                AppStoreConnectApi.clearInMemoryCache()
-                APIKey.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
+                APIKey.clearMemoization()
                 ACDataCache.clearCache()
                 self.cachedEntries = ACDataCache.numberOfEntriesCached()
             }
@@ -164,12 +160,7 @@ struct SettingsView: View {
     }
 
     private func sheet() -> some View {
-        return NavigationView {
-            OnboardingView(showsWelcome: false)
-                .navigationTitle("ADD_KEY")
-                .navigationBarTitleDisplayMode(.inline)
-                .closeSheetButton()
-        }
+        OnboardingView(showsWelcome: false)
     }
 
     private func deleteKey(at offsets: IndexSet) {
@@ -210,14 +201,13 @@ struct ApiKeyCheckIndicator: View {
                     .foregroundColor(.orange)
             }
         }
-        .onAppear(perform: {
-            key.checkKey()
-                .catch { err in
-                    status = (err as? APIError) ?? .unknown
-                }
-                .always {
-                    loading = false
-                }
+        .task(priority: .background, {
+            do {
+                try await key.checkKey()
+            } catch let err {
+                status = (err as? APIError) ?? .unknown
+            }
+            loading = false
         })
     }
 }

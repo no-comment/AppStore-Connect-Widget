@@ -18,20 +18,17 @@ class IntentHandler: INExtension, WidgetConfigurationIntentHandling {
         return .init(items: keys.map({ ApiKeyParam(key: $0) }))
     }
 
-    func provideFilteredAppsOptionsCollection(for intent: WidgetConfigurationIntent, with completion: @escaping (INObjectCollection<FilteredAppParam>?, Error?) -> Void) {
+    func provideFilteredAppsOptionsCollection(for intent: WidgetConfigurationIntent) async throws -> INObjectCollection<FilteredAppParam> {
         guard let apiKey = intent.apiKey?.toApiKey() else {
-            completion(.init(items: []), INIntentError(.missingInformation))
-            return
+            throw INIntentError(.missingInformation)
         }
 
-        AppStoreConnectApi(apiKey: apiKey).getData()
-            .then { data in
-                let apps = data.apps
-                completion(.init(items: apps.map({ FilteredAppParam(identifier: $0.id, display: $0.name) })), nil)
-            }
-            .catch { _ in
-                completion(nil, INIntentError(.requestTimedOut))
-            }
+        do {
+            let data = try await AppStoreConnectApi(apiKey: apiKey).getData()
+            return .init(items: data.apps.map({ FilteredAppParam(identifier: $0.id, display: $0.name) }))
+        } catch {
+            throw INIntentError(.requestTimedOut)
+        }
     }
 
     func defaultApiKey(for intent: WidgetConfigurationIntent) -> ApiKeyParam? {

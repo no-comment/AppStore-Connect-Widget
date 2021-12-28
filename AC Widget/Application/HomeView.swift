@@ -5,6 +5,7 @@
 
 import SwiftUI
 import AppStoreConnect_Swift_SDK
+import StoreKit
 
 struct HomeView: View {
     @State var data: ACData?
@@ -18,6 +19,7 @@ struct HomeView: View {
     @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) var appStoreNotice: Bool = true
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) private var keyID: String = ""
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) private var currency: String = "USD"
+    @AppStorage(UserDefaultsKey.rateCount, store: UserDefaults.shared) var rateCount: Int = 0
     private var selectedKey: APIKey? {
         return apiKeysProvider.getApiKey(apiKeyId: keyID) ?? apiKeysProvider.apiKeys.first
     }
@@ -28,14 +30,15 @@ struct HomeView: View {
     @State private var showsUpdateScreen = false
 
     var body: some View {
-        ScrollView {
+        RefreshableScrollView(onRefresh: {
+            await onAppear(useMemoization: false)
+        }) {
             if let data = data {
                 lastChangeSubtitle
                 if appStoreNotice && AppStoreNotice.isTestFlight() {
                     AppStoreNotice()
                 }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320))], spacing: 8) {
-
                     ForEach(tiles) { tile in
                         switch tile {
                         case .downloads:
@@ -54,10 +57,10 @@ struct HomeView: View {
                     }
                 }
                 .padding(.horizontal)
+                additionalInformation
             } else {
                 loadingIndicator
             }
-            additionalInformation
         }
         .background(
             NavigationLink(destination: SettingsView(), isActive: $showSettings) {
@@ -70,9 +73,14 @@ struct HomeView: View {
         .sheet(isPresented: $showsUpdateScreen, content: {
             UpdateView()
         })
-        .onChange(of: keyID, perform: { _ in onAppear() })
-        .onChange(of: currency, perform: { _ in onAppear() })
-        .onAppear(perform: { onAppear() })
+        .onChange(of: keyID, perform: { _ in Task { await onAppear(useMemoization: false) } })
+        .onChange(of: currency, perform: { _ in Task { await onAppear(useMemoization: false) } })
+        .task {
+            await onAppear(useMemoization: false)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            Task { await onAppear() }
+        }
     }
 
     var loadingIndicator: some View {
@@ -85,6 +93,7 @@ struct HomeView: View {
                 .italic()
         }
         .padding(.top, 25)
+        .frame(maxWidth: .infinity)
     }
 
     var lastChangeSubtitle: some View {
@@ -116,7 +125,9 @@ struct HomeView: View {
             }
 
             if data != nil {
-                Button(action: { data = nil; onAppear(useCache: false) }) {
+                AsyncButton(action: {
+                    await onAppear(useMemoization: false)
+                }) {
                     Text("REFRESH_DATA")
                 }
                 .padding(.vertical, 8)
@@ -159,20 +170,19 @@ struct HomeView: View {
         }
     }
 
-    private func onAppear(useCache: Bool = true) {
+    private func onAppear(useMemoization: Bool = true) async {
+        askToRate()
+
         let selectedTiles = UserDefaults.shared?.stringArray(forKey: UserDefaultsKey.tilesInHome)?.compactMap({ TileType(rawValue: $0) }) ?? []
         tiles = selectedTiles.isEmpty ? TileType.allCases : selectedTiles
 
         guard let apiKey = selectedKey else { return }
         let api = AppStoreConnectApi(apiKey: apiKey)
-        api.getData(currency: Currency(rawValue: currency), useCache: useCache).then { (data) in
-            self.data = data
-        }.catch { (err) in
-            guard let apiErr = err as? APIError else {
-                return
-            }
-            self.error = apiErr
-        }
+        do {
+            self.data = try await api.getData(currency: Currency(rawValue: currency), useMemoization: useMemoization)
+        } catch let err as APIError {
+            self.error = err
+        } catch {}
 
         let appVersion: String = UIApplication.appVersion ?? ""
         let buildVersion: String = UIApplication.buildVersion ?? ""
@@ -180,6 +190,21 @@ struct HomeView: View {
         if vString != lastSeenVersion {
             lastSeenVersion = vString
             showsUpdateScreen = true
+            appStoreNotice = true
+        }
+    }
+
+    func askToRate() {
+        let daysSinceInstall = Calendar.current.numberOfDaysBetween(Date.appInstallDate, and: .now)
+        if daysSinceInstall > (rateCount + 1) * 20 {
+            // equivalent to rateCount += 1 in most cases, except if app is installed a long time ago but no review done
+            rateCount = Int(ceil(Double(daysSinceInstall - 20) / 20))
+            let later = DispatchTime.now() + 5
+            DispatchQueue.main.asyncAfter(deadline: later) {
+                if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                    SKStoreReviewController.requestReview(in: scene)
+                }
+            }
         }
     }
 }

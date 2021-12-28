@@ -46,12 +46,14 @@ struct APIKeyDetailView: View {
             storageSection
             deleteSection
         }
-        .onAppear(perform: {
-            key.checkKey().catch { err in
+        .task {
+            do {
+                try await key.checkKey()
+                try await loadApps()
+            } catch let err {
                 status = (err as? APIError) ?? .unknown
             }
-            loadApps()
-        })
+        }
         .navigationTitle(keyName)
     }
 
@@ -112,11 +114,10 @@ struct APIKeyDetailView: View {
         }
     }
 
-    private func loadApps() {
+    private func loadApps() async throws {
         let api = AppStoreConnectApi(apiKey: key)
-        api.getData(currency: Currency.USD, useCache: true).then { (data) in
-            self.apps = data.apps
-        }
+        let data = try await api.getData(currency: Currency.USD, useCache: true)
+        self.apps = data.apps
     }
 
     private func save() {
@@ -133,8 +134,8 @@ struct APIKeyDetailView: View {
             Text("CACHED_ENTRIES:\(cachedEntries)")
 
             Button("CLEAR_CACHE") {
-                AppStoreConnectApi.clearInMemoryCache()
-                APIKey.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
+                APIKey.clearMemoization()
                 ACDataCache.clearCache(apiKey: key)
                 self.cachedEntries = ACDataCache.numberOfEntriesCached(apiKey: key)
             }
