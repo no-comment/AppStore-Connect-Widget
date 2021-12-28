@@ -160,6 +160,7 @@ struct OnboardingView: View {
             Card(innerPadding: 12) {
                 DisclosureGroup(content: {
                     Text("WHERE_TO_FIND_ISSUER_ID_DESC")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }, label: { Label("WHERE_TO_FIND_ISSUER_ID", systemImage: "questionmark.circle") })
                     .buttonStyle(.plain)
             }
@@ -184,6 +185,7 @@ struct OnboardingView: View {
             Card(innerPadding: 12) {
                 DisclosureGroup(content: {
                     Text("WHERE_TO_FIND_KEY_ID_DESC")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }, label: { Label("WHERE_TO_FIND_KEY_ID", systemImage: "questionmark.circle") })
                     .buttonStyle(.plain)
             }
@@ -215,6 +217,7 @@ struct OnboardingView: View {
             Card(innerPadding: 12) {
                 DisclosureGroup(content: {
                     Text("WHERE_TO_FIND_KEY_DESC")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }, label: { Label("WHERE_TO_FIND_KEY", systemImage: "questionmark.circle") })
                     .buttonStyle(.plain)
             }
@@ -239,6 +242,7 @@ struct OnboardingView: View {
             Card(innerPadding: 12) {
                 DisclosureGroup(content: {
                     Text("WHERE_TO_FIND_VENDOR_NR_DESC")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }, label: { Label("WHERE_TO_FIND_VENDOR_NR", systemImage: "questionmark.circle") })
                     .buttonStyle(.plain)
             }

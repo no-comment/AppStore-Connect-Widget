@@ -1,7 +1,7 @@
 // MARK: Onboarding
 "WELCOME_TO" = "Willkommen zu";
 "OPEN_SOURCE" = "Open Source";
-"OPEN_SOURCE_DESCRIPTION" = "ACWidget ist komplett open source auf GitHub.";
+"OPEN_SOURCE_DESCRIPTION" = "ACWidget ist komplett open source auf [GitHub](https://github.com/no-comment/AppStore-Connect-Widget).";
 "MULTIPLE_KEYS" = "Mehrere Keys";
 "MULTIPLE_KEYS_DESCRIPTION" = "Füge so viele verschiedene keys hinzu wie du magst.";
 "ALL_CURRENCIES" = "Alle Währungen";
@@ -17,11 +17,11 @@
 "WHERE_TO_FIND_ISSUER_ID" = "Wo finde ich die Issuer ID";
 "WHERE_TO_FIND_ISSUER_ID_DESC" = "Ganz oben auf der Keys Seite, steht deine 'Issuer ID'.";
 "WHERE_TO_FIND_KEY_ID" = "Wo finde ich die Key ID";
-"WHERE_TO_FIND_KEY_ID_DESC" = "In der dritten Spalte der Key-Tabelle in AppStoreConnect.";
+"WHERE_TO_FIND_KEY_ID_DESC" = "In der dritten Spalte der Key-Tabelle in App Store Connect.";
 "WHERE_TO_FIND_KEY" = "Wo finde ich den Key";
-"WHERE_TO_FIND_KEY_DESC" = "Den Key solltest du direkt nach dem erstellen bekommen haben. Leider ist dieser nicht mehr aufrufbar, solltest du ihn verlegt haben.";
+"WHERE_TO_FIND_KEY_DESC" = "Den Key solltest du direkt nach dem Erstellen bekommen haben. Leider ist dieser nicht mehr aufrufbar, solltest du ihn verlegt haben. Du musst dann einen neuen Key erstellen.";
 "WHERE_TO_FIND_VENDOR_NR" = "Wo finde ich die Vendor Number";
-"WHERE_TO_FIND_VENDOR_NR_DESC" = "Diese befindet sich auf AppStoreConnect in dem 'Reports' Tab. Oben links sollte deine 'Vendor #' stehen.";
+"WHERE_TO_FIND_VENDOR_NR_DESC" = "Diese befindet sich auf App Store Connect in dem 'Reports' Tab. Oben links sollte deine 'Vendor #' stehen.";
 
 "RECHECK_INPUTS" = "Key überprüfen";
 "OK" = "Ok";
@@ -73,7 +73,7 @@
 "NO_APPS" = "Keine Apps verfügbar";
 "ALL_CACHED_ENTRIES:%lld" = "Du hast %lld Einträge im Cache";
 "CLEAR_ALL_CACHE" = "Gesamten Cache löschen";
-"UPDATE_FREQUENCY_NOTICE" = "Anmerkung: AppStoreConnect stellt die Daten vom Vortag erst gegen 14 Uhr deutscher Zeit bereit.";
+"UPDATE_FREQUENCY_NOTICE" = "Anmerkung: App Store Connect stellt die Daten vom Vortag erst gegen 14 Uhr deutscher Zeit bereit.";
 "RATE_ACWIDGET" = "AC Widget bewerten";
 
 "KEY_NAME" = "Key Name";

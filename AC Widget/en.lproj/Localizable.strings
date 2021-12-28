@@ -1,7 +1,7 @@
 // MARK: Onboarding
 "WELCOME_TO" = "Welcome to";
 "OPEN_SOURCE" = "Open Source";
-"OPEN_SOURCE_DESCRIPTION" = "ACWidget is completely open source on GitHub.";
+"OPEN_SOURCE_DESCRIPTION" = "ACWidget is completely open source on [GitHub](https://github.com/no-comment/AppStore-Connect-Widget).";
 "MULTIPLE_KEYS" = "Multiple Keys";
 "MULTIPLE_KEYS_DESCRIPTION" = "Add as many different keys as you want.";
 "ALL_CURRENCIES" = "All Currencies";
@@ -15,13 +15,13 @@
 "CREATE_KEY_NOTICE" = "If you haven't created an API Key yet, now is the time to do it.";
 "HOW_TO_CREATE_APIKEY" = "How to create an API key";
 "WHERE_TO_FIND_ISSUER_ID" = "Where to find the Issuer ID";
-"WHERE_TO_FIND_ISSUER_ID_DESC" = "On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'.";
+"WHERE_TO_FIND_ISSUER_ID_DESC" = "On the top of the keys page in App Store Connect, it will state your 'Issuer ID'.";
 "WHERE_TO_FIND_KEY_ID" = "Where to find the Key ID";
-"WHERE_TO_FIND_KEY_ID_DESC" = "In the third column of the table on the keys page in AppStoreConnect.";
+"WHERE_TO_FIND_KEY_ID_DESC" = "In the third column of the table on the keys page in App Store Connect.";
 "WHERE_TO_FIND_KEY" = "Where to find the Key";
-"WHERE_TO_FIND_KEY_DESC" = "You should have gotten the key right after creating it. Once you close the window, there unfortunately is no way to show it again.";
+"WHERE_TO_FIND_KEY_DESC" = "You should have gotten the key right after creating it. Once you close the window, there unfortunately is no way to show it again. You'll have to create a new one.";
 "WHERE_TO_FIND_VENDOR_NR" = "Where to find the Vendor Number";
-"WHERE_TO_FIND_VENDOR_NR_DESC" = "You can find it on AppStoreConnect in your 'Reports' tab. In the top left it should state your 'Vendor #'.";
+"WHERE_TO_FIND_VENDOR_NR_DESC" = "You can find it on App Store Connect in your 'Reports' tab. In the top left it should state your 'Vendor #'.";
 "RECHECK_INPUTS" = "Recheck Key";
 "OK" = "Ok";
 "INVALID_KEY" = "Invalid Key";
@@ -73,7 +73,7 @@
 "NO_APPS" = "No Apps available";
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
-"UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at around 5am Pacific Time.";
+"UPDATE_FREQUENCY_NOTICE" = "Note: App Store Connect updates its API data for the previous day at around 5am Pacific Time.";
 "RATE_ACWIDGET" = "Rate AC Widget";
 
 "KEY_NAME" = "Key Name";
