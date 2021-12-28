@@ -137,11 +137,13 @@
 "IDEA_BUG_LINK" = "Hast du eine Idee für ein neues Feature oder einen Fehler gefunden?";
 "START" = "Start";
 
-"UPDATE_TITLE_1" = "iCloud Synchronisation";
-"UPDATE_SUBTITLE_1" = "Deine API Keys werden jetzt automatisch über iCloud synchronisiert.";
-"UPDATE_TITLE_2" = "Extra großes Widget";
-"UPDATE_SUBTITLE_2" = "Die neue Größe zeigt nun noch mehr Details direkt auf dem Homescreen an.";
-"UPDATE_TITLE_3" = "Nach Apps filtern";
-"UPDATE_SUBTITLE_3" = "Du kannst jetzt filtern, auf welchen Apps die Statistiken basieren.";
-"UPDATE_TITLE_4" = "Statistische Aufschlüsselung";
-"UPDATE_SUBTITLE_4" = "Tippe auf die Boxen auf der Startseite, um eine detaillierte Aufschlüsselung pro App anzuzeigen.";
+"UPDATE_TITLE_1" = "Async";
+"UPDATE_SUBTITLE_1" = "ACWidget benutzt Swifts neue Async Features.";
+"UPDATE_TITLE_2" = "Neues Onboarding";
+"UPDATE_SUBTITLE_2" = "Das Onboarding ist einfacher und klarer.";
+"UPDATE_TITLE_3" = "Besserer Speicher";
+"UPDATE_SUBTITLE_3" = "Alle Daten werden effizienter gespeichert.";
+"UPDATE_TITLE_4" = "Pull to Refresh";
+"UPDATE_SUBTITLE_4" = "Du kannst jetzt nach unten ziehen um neu zu laden.";
+"UPDATE_TITLE_5" = "Performance";
+"UPDATE_SUBTITLE_5" = "Weitere Änderungen um die Performance zu verbessern.";

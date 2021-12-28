@@ -194,6 +194,7 @@ struct HomeView: View {
         if vString != lastSeenVersion {
             lastSeenVersion = vString
             showsUpdateScreen = true
+            appStoreNotice = true
         }
     }
 

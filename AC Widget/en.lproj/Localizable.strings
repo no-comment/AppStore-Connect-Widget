@@ -137,11 +137,13 @@
 "IDEA_BUG_LINK" = "Have an idea for a new feature or found a bug?";
 "START" = "Start";
 
-"UPDATE_TITLE_1" = "iCloud Sync";
-"UPDATE_SUBTITLE_1" = "From now on your API keys will automatically be synced across all your devices.";
-"UPDATE_TITLE_2" = "Extra Large Widget";
-"UPDATE_SUBTITLE_2" = "This new size shows even more details on your home screen.";
-"UPDATE_TITLE_3" = "Filter by Apps";
-"UPDATE_SUBTITLE_3" = "You can now filter what apps the metrics are based on.";
-"UPDATE_TITLE_4" = "Statistic Breakdown";
-"UPDATE_SUBTITLE_4" = "Tap the tiles in the home view to reveal a per-app breakdown.";
+"UPDATE_TITLE_1" = "Async";
+"UPDATE_SUBTITLE_1" = "ACWidget now uses Swifts new async features.";
+"UPDATE_TITLE_2" = "Reworked Onboarding";
+"UPDATE_SUBTITLE_2" = "The Onboarding is easier and cleaner.";
+"UPDATE_TITLE_3" = "Better Storage";
+"UPDATE_SUBTITLE_3" = "All Data is stored more efficient.";
+"UPDATE_TITLE_4" = "Pull to refresh";
+"UPDATE_SUBTITLE_4" = "You can now pull to refresh.";
+"UPDATE_TITLE_5" = "Performance";
+"UPDATE_SUBTITLE_5" = "A lot more changes were made under the hood to improve performance.";
