@@ -75,9 +75,7 @@ struct HomeView: View {
         })
         .onChange(of: keyID, perform: { _ in Task { await onAppear(useMemoization: false) } })
         .onChange(of: currency, perform: { _ in Task { await onAppear(useMemoization: false) } })
-        .task {
-            await onAppear(useMemoization: false)
-        }
+        .task { await onAppear(useMemoization: true) }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             Task { await onAppear() }
         }

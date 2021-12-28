@@ -8,6 +8,7 @@ import AppStoreConnect_Swift_SDK
 import Gzip
 import SwiftCSV
 
+@MainActor
 class AppStoreConnectApi {
     private let privateKeyMinLength = 100
 

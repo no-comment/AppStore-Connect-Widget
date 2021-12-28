@@ -98,7 +98,7 @@ struct Provider: IntentTimelineProvider {
               APIKeyProvider().getApiKey(apiKeyId: apiKey.id) != nil else {
                   throw APIError.invalidCredentials
               }
-        let api = AppStoreConnectApi(apiKey: apiKey)
+        let api = await AppStoreConnectApi(apiKey: apiKey)
         return try await api.getData(currency: currencyParam)
     }
 }

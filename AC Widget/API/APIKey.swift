@@ -142,7 +142,7 @@ extension APIKey {
         }
 
         let task: Task<Void, Error> = Task {
-            let api = AppStoreConnectApi(apiKey: self)
+            let api = await AppStoreConnectApi(apiKey: self)
             do {
                 _ = try await api.getData(currency: .system, numOfDays: 1, useCache: false)
             } catch APIError.noDataAvailable {

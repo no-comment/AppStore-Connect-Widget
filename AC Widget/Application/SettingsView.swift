@@ -182,8 +182,8 @@ struct SettingsView_Previews: PreviewProvider {
 
 struct ApiKeyCheckIndicator: View {
     let key: APIKey
-    @State var status: APIError?
-    @State var loading = true
+    @State private var status: APIError?
+    @State private var loading = true
 
     var body: some View {
         Group {
