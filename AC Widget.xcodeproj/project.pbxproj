@@ -37,6 +37,7 @@
 		45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
 		45D2041E262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
 		45D2041F262CBEB000D0E889 /* ACApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D2041C262CBEB000D0E889 /* ACApp.swift */; };
+		45E6FA35277B9EC400C5E426 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E6FA34277B9EC400C5E426 /* AsyncButton.swift */; };
 		45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8C4802612512E007F9B0E /* AC_WidgetApp.swift */; };
 		45E8C4832612512E007F9B0E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8C4822612512E007F9B0E /* ContentView.swift */; };
 		45E8C4852612512F007F9B0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45E8C4842612512F007F9B0E /* Assets.xcassets */; };
@@ -160,6 +161,7 @@
 		45C1A3F62619AC28006C1650 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Widgets.intentdefinition; sourceTree = "<group>"; };
 		45CAC1142615CDBE00FF63E7 /* AppStoreConnectApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreConnectApi.swift; sourceTree = "<group>"; };
 		45D2041C262CBEB000D0E889 /* ACApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACApp.swift; sourceTree = "<group>"; };
+		45E6FA34277B9EC400C5E426 /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
 		45E8C47D2612512E007F9B0E /* AC Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AC Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45E8C4802612512E007F9B0E /* AC_WidgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AC_WidgetApp.swift; sourceTree = "<group>"; };
 		45E8C4822612512E007F9B0E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -393,6 +395,7 @@
 				45B7C45B2700F2E400F3ECC4 /* UpdateDetailView.swift */,
 				45AB9880276D34B40024597F /* CurrencyPicker.swift */,
 				450FE05F276E1B9600BA1D7B /* RefreshableScrollView.swift */,
+				45E6FA34277B9EC400C5E426 /* AsyncButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -599,6 +602,7 @@
 				CBB4A60526F3D8E40064EE9E /* InfoTile.swift in Sources */,
 				CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */,
 				CB436E13261A3F6E00A432B1 /* APIKeyDetailView.swift in Sources */,
+				45E6FA35277B9EC400C5E426 /* AsyncButton.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
 				CB2D236926433AB9003DA727 /* SummaryLarge.swift in Sources */,
 				45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */,
@@ -842,7 +846,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"AC Widget/Preview Content\"";
 				DEVELOPMENT_TEAM = E348R9JYR6;
 				ENABLE_PREVIEWS = YES;
@@ -852,7 +856,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.kruschel.AC-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -873,7 +877,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"AC Widget/Preview Content\"";
 				DEVELOPMENT_TEAM = E348R9JYR6;
 				ENABLE_PREVIEWS = YES;
@@ -883,7 +887,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "dev.kruschel.AC-Widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
