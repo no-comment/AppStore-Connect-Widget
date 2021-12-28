@@ -54,7 +54,7 @@ struct OnboardingView: View {
                 .foregroundColor(.accentColor)
 
             ScrollView {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 14) {
                     UpdateDetailView(imageName: "logo.github", title: "OPEN_SOURCE", subTitle: "OPEN_SOURCE_DESCRIPTION")
                     UpdateDetailView(systemName: "key.fill", title: "MULTIPLE_KEYS", subTitle: "MULTIPLE_KEYS_DESCRIPTION")
                     UpdateDetailView(systemName: "eurosign.circle", title: "ALL_CURRENCIES", subTitle: "ALL_CURRENCIES_DESCRIPTION")

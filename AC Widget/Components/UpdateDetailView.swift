@@ -44,11 +44,10 @@ struct UpdateDetailView: View {
                     .lineLimit(1)
 
                 Text(subTitle)
-                    .font(.body)
+                    .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.secondary)
             }
         }
-        .padding(.top)
     }
 }
 
