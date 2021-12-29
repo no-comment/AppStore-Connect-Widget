@@ -160,7 +160,10 @@ struct SettingsView: View {
     }
 
     private func sheet() -> some View {
+        NavigationView {
         OnboardingView(showsWelcome: false)
+                .closeSheetButton()
+        }
     }
 
     private func deleteKey(at offsets: IndexSet) {

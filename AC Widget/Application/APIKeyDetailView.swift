@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct APIKeyDetailView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
 
     let key: APIKey
@@ -25,11 +26,11 @@ struct APIKeyDetailView: View {
         self.key = key
         self._keyName = State(initialValue: key.name)
         self._keyColor = State(initialValue: key.color)
+        self._cachedEntries = State(initialValue: ACDataCache.numberOfEntriesCached(apiKey: key))
         self.issuerID = key.issuerID
         self.privateKeyID = key.privateKeyID
         self.privateKey = key.privateKey
         self.vendorNumber = key.vendorNumber
-        self.cachedEntries = ACDataCache.numberOfEntriesCached(apiKey: key)
     }
 
     var body: some View {
@@ -158,6 +159,7 @@ struct APIKeyDetailView: View {
                 primaryButton: .destructive(Text("DELETE_KEY")) {
                     ACDataCache.clearCache(apiKey: key)
                     apiKeysProvider.deleteApiKeys(keys: [key])
+                    dismiss()
                 },
                 secondaryButton: .cancel()
             )

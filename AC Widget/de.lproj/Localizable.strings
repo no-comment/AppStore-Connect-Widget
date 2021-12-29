@@ -13,12 +13,12 @@
 "ONBOARD_KEY_NAME" = "Um deine Keys besser auseinanderzuhalten, kannst du deinem Key einen Namen geben.";
 "ONBOARD_KEY_COLOR" = "Du kannst jedem Key auch eine eigene Farbe geben, welche auf dem Widget verwendet wird.";
 "CREATE_KEY_NOTICE" = "Solltest du noch keinen API Key haben, erstelle jetzt einen.";
-"HOW_TO_CREATE_APIKEY" = "Wie erstellt man einen Key";
+"HOW_TO_CREATE_APIKEY" = "Wie erstellt man einen API Key";
 "WHERE_TO_FIND_ISSUER_ID" = "Wo finde ich die Issuer ID";
 "WHERE_TO_FIND_ISSUER_ID_DESC" = "Ganz oben auf der Keys Seite, steht deine 'Issuer ID'.";
-"WHERE_TO_FIND_KEY_ID" = "Wo finde ich die Key ID";
+"WHERE_TO_FIND_KEY_ID" = "Wo finde ich die Private Key ID";
 "WHERE_TO_FIND_KEY_ID_DESC" = "In der dritten Spalte der Key-Tabelle in App Store Connect.";
-"WHERE_TO_FIND_KEY" = "Wo finde ich den Key";
+"WHERE_TO_FIND_KEY" = "Wo finde ich den Private Key";
 "WHERE_TO_FIND_KEY_DESC" = "Den Key solltest du direkt nach dem Erstellen bekommen haben. Leider ist dieser nicht mehr aufrufbar, solltest du ihn verlegt haben. Du musst dann einen neuen Key erstellen.";
 "WHERE_TO_FIND_VENDOR_NR" = "Wo finde ich die Vendor Number";
 "WHERE_TO_FIND_VENDOR_NR_DESC" = "Diese befindet sich auf App Store Connect in dem 'Reports' Tab. Oben links sollte deine 'Vendor #' stehen.";
@@ -46,7 +46,6 @@
 "REFRESH_DATA" = "Daten aktualisieren";
 
 // Key Selection Sheet
-"DONE" = "Fertig";
 "DISMISS" = "Schliessen";
 "SELECT_KEY" = "API Key auswählen";
 "API_KEY" = "API Key";

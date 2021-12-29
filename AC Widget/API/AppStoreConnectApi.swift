@@ -45,12 +45,12 @@ class AppStoreConnectApi {
                 switch last {
                 case .loaded(let res):
                     if res.date.timeIntervalSinceNow > -60 * 5 {
-                        return res.data
+                        return res.data.changeCurrency(to: currency ?? .USD)
                     } else {
                         AppStoreConnectApi.lastData.removeValue(forKey: apiKey)
                     }
                 case .inProgress(let task):
-                    return try await task.value
+                    return try await task.value.changeCurrency(to: currency ?? .USD)
                 }
             }
         }

@@ -160,11 +160,7 @@ struct HomeView: View {
     func sheet() -> some View {
         NavigationView {
             KeySelectionView()
-                .toolbar {
-                    ToolbarItem {
-                        Button("DONE", action: { showingSheet = false })
-                    }
-                }
+                .closeSheetButton()
         }
     }
 

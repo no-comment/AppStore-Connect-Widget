@@ -1,8 +1,6 @@
 //
 //  AsyncButton.swift
-//  AC Widget
-//
-//  Created by Miká Kruschel on 28.12.21.
+//  AC Widget by NO-COMMENT
 //
 
 import SwiftUI

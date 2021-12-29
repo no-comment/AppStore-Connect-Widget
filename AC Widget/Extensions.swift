@@ -195,7 +195,10 @@ struct CloseSheet: ViewModifier {
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
                     }) {
-                        Image(systemName: "xmark.circle").imageScale(.large)
+                        Image(systemName: "xmark.circle.fill")
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundColor(.secondary)
+                            .font(.title2)
                     }.keyboardShortcut(.cancelAction)
                 }
             })

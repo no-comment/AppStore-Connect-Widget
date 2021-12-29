@@ -5,9 +5,8 @@
 
 import SwiftUI
 
-// swiftlint:disable type_body_length
 struct OnboardingView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
     @State private var alert: AddAPIKeyAlert?
     @State private var page: OnboardingSection
@@ -24,23 +23,21 @@ struct OnboardingView: View {
     }
 
     var body: some View {
-        NavigationView {
-            Group {
-                switch page {
-                case .welcome:
-                    welcomeSection
-                case .naming:
-                    nameSection
-                case .key:
-                    creatingKeySection
-                }
+        Group {
+            switch page {
+            case .welcome:
+                welcomeSection
+            case .naming:
+                nameSection
+            case .key:
+                creatingKeySection
             }
-            .tabViewStyle(.page)
-            .navigationTitle(page == .welcome ? "" : "ADD_KEY")
-            .navigationBarTitleDisplayMode(.inline)
-            .alert(item: $alert, content: { generateAlert($0) })
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .tabViewStyle(.page)
+        .navigationTitle(page == .welcome ? "" : "ADD_KEY")
+        .navigationBarTitleDisplayMode(.inline)
+        .alert(item: $alert, content: { generateAlert($0) })
+        .navigationViewStyle(.stack)
     }
 
     // MARK: Pages
@@ -66,7 +63,7 @@ struct OnboardingView: View {
             Button("START", action: { page = .naming })
                 .buttonStyle(PrimaryButtonStyle())
         }
-        .padding(.horizontal)
+        .padding()
     }
 
     var nameSection: some View {
@@ -88,11 +85,12 @@ struct OnboardingView: View {
                     Text("KEY_COLOR")
                         .fixedSize()
                 })
+                    .frame(maxWidth: 250, maxHeight: 30)
                 Spacer()
                 Button("NEXT", action: { page = .key })
                     .buttonStyle(PrimaryButtonStyle())
             }
-            .padding(.horizontal)
+            .padding()
     }
 
     var creatingKeySection: some View {
@@ -138,7 +136,7 @@ struct OnboardingView: View {
                         )
                 }
             }
-            .padding(.horizontal)
+            .padding()
         }
     }
 
@@ -153,17 +151,9 @@ struct OnboardingView: View {
             .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", text: $issuerID)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
-                .font(.system(.body, design: .monospaced))
+                .modifier(TextFieldStyle())
 
-            Card(innerPadding: 12) {
-                DisclosureGroup(content: {
-                    Text("WHERE_TO_FIND_ISSUER_ID_DESC")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }, label: { Label("WHERE_TO_FIND_ISSUER_ID", systemImage: "questionmark.circle") })
-                    .buttonStyle(.plain)
-            }
+            infoCard(title: "WHERE_TO_FIND_ISSUER_ID_DESC", label: "WHERE_TO_FIND_ISSUER_ID")
         }
     }
 
@@ -178,17 +168,9 @@ struct OnboardingView: View {
             .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXXXX", text: $keyID)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
-                .font(.system(.body, design: .monospaced))
+                .modifier(TextFieldStyle())
 
-            Card(innerPadding: 12) {
-                DisclosureGroup(content: {
-                    Text("WHERE_TO_FIND_KEY_ID_DESC")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }, label: { Label("WHERE_TO_FIND_KEY_ID", systemImage: "questionmark.circle") })
-                    .buttonStyle(.plain)
-            }
+            infoCard(title: "WHERE_TO_FIND_KEY_ID_DESC", label: "WHERE_TO_FIND_KEY_ID")
         }
     }
 
@@ -204,23 +186,15 @@ struct OnboardingView: View {
 
             VStack {
                 TextEditor(text: $key)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .disableAutocorrection(true)
+                    .modifier(TextFieldStyle())
                     .frame(height: 150)
-                    .font(.system(.body, design: .monospaced))
             }
             .overlay(
                      RoundedRectangle(cornerRadius: 5)
                         .stroke(Color(UIColor.systemGray5), lineWidth: 1)
                      )
 
-            Card(innerPadding: 12) {
-                DisclosureGroup(content: {
-                    Text("WHERE_TO_FIND_KEY_DESC")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }, label: { Label("WHERE_TO_FIND_KEY", systemImage: "questionmark.circle") })
-                    .buttonStyle(.plain)
-            }
+            infoCard(title: "WHERE_TO_FIND_KEY_DESC", label: "WHERE_TO_FIND_KEY")
         }
     }
 
@@ -235,17 +209,9 @@ struct OnboardingView: View {
             .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXX", text: $vendor)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
-                .font(.system(.body, design: .monospaced))
+                .modifier(TextFieldStyle())
 
-            Card(innerPadding: 12) {
-                DisclosureGroup(content: {
-                    Text("WHERE_TO_FIND_VENDOR_NR_DESC")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }, label: { Label("WHERE_TO_FIND_VENDOR_NR", systemImage: "questionmark.circle") })
-                    .buttonStyle(.plain)
-            }
+            infoCard(title: "WHERE_TO_FIND_VENDOR_NR_DESC", label: "WHERE_TO_FIND_VENDOR_NR")
         }
     }
 
@@ -262,6 +228,8 @@ struct OnboardingView: View {
                 try await apiKey.checkKey()
                 try apiKeysProvider.addApiKey(apiKey: apiKey)
                 finishOnboarding()
+                let api = AppStoreConnectApi(apiKey: apiKey)
+                _ = try? await api.getData(useCache: true, useMemoization: false)
             } catch let err {
                 let apiErr: APIError = (err as? APIError) ?? .unknown
                 if apiErr == .invalidCredentials {
@@ -272,7 +240,7 @@ struct OnboardingView: View {
     }
 
     private func finishOnboarding() {
-        presentationMode.wrappedValue.dismiss()
+        dismiss()
     }
 
     private enum OnboardingSection: Int, Identifiable {
@@ -306,6 +274,25 @@ struct OnboardingView: View {
             button = Alert.Button.default(Text("RECHECK_INPUTS"))
         }
         return Alert(title: title, message: message, dismissButton: button)
+    }
+
+    func infoCard(title: LocalizedStringKey, label: LocalizedStringKey) -> some View {
+        Card(innerPadding: 12) {
+            DisclosureGroup(content: {
+                Text(title).frame(maxWidth: .infinity, alignment: .leading)
+            }, label: {
+                Label(label, systemImage: "questionmark.circle")
+            }).buttonStyle(.plain)
+        }
+    }
+
+    private struct TextFieldStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .disableAutocorrection(true)
+                .font(.system(.body, design: .monospaced))
+        }
     }
 }
 
