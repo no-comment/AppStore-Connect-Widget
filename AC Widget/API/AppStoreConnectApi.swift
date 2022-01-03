@@ -34,6 +34,7 @@ class AppStoreConnectApi {
     }
 
     public func getData(currency: CurrencyParam?, numOfDays: Int = 35, useCache: Bool = true) async throws -> ACData {
+        if apiKey.name.caseInsensitiveCompare(APIKey.demoKeyName) == .orderedSame { return ACData.example }
         return try await getData(currency: currency?.toCurrency(), numOfDays: numOfDays, useCache: useCache)
     }
 

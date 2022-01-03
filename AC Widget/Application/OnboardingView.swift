@@ -216,7 +216,14 @@ struct OnboardingView: View {
     }
 
     private func onFinishPressed() {
-        let apiKey = APIKey(name: name, color: color, issuerID: issuerID, privateKeyID: keyID, privateKey: key, vendorNumber: vendor)
+        let apiKey = APIKey(
+            name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+            color: color,
+            issuerID: issuerID.trimmingCharacters(in: .whitespacesAndNewlines),
+            privateKeyID: keyID.trimmingCharacters(in: .whitespacesAndNewlines),
+            privateKey: key.trimmingCharacters(in: .whitespacesAndNewlines),
+            vendorNumber: vendor.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
 
         if apiKeysProvider.getApiKey(apiKeyId: apiKey.id) != nil {
             alert = .duplicateKey

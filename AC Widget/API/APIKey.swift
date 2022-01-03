@@ -111,6 +111,7 @@ extension APIKey {
     }
 }
 
+@MainActor
 extension APIKey {
     static private var lastChecks: [APIKey: LoaderStatus] = [:]
     private enum LoaderStatus {
@@ -142,7 +143,7 @@ extension APIKey {
         }
 
         let task: Task<Void, Error> = Task {
-            let api = await AppStoreConnectApi(apiKey: self)
+            let api = AppStoreConnectApi(apiKey: self)
             do {
                 _ = try await api.getData(currency: .system, numOfDays: 1, useCache: false)
             } catch APIError.noDataAvailable {
