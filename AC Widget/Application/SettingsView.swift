@@ -121,16 +121,7 @@ struct SettingsView: View {
                 })
             }
 
-            if let destination = URL(string: "https://www.buymeacoffee.com/nocomment") {
-                Link(destination: destination, label: {
-                    HStack {
-                        Label("Buy me a Coffee", image: "logo.buymeacoffee")
-                            .symbolRenderingMode(.multicolor)
-                        Spacer()
-                        Image(systemName: "arrow.up.forward.app")
-                    }.contentShape(Rectangle())
-                })
-            }
+            // TODO: Add tip jar
         }
         .buttonStyle(.plain)
     }

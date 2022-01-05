@@ -39,7 +39,7 @@ class AppStoreConnectApi {
     }
 
     public func getData(currency: Currency? = nil, numOfDays: Int = 35, useCache: Bool = true, useMemoization: Bool = true) async throws -> ACData {
-        if apiKey.name == APIKey.demoKeyName { return ACData.example }
+        if apiKey.name.caseInsensitiveCompare(APIKey.demoKeyName) == .orderedSame { return ACData.example }
 
         if useMemoization {
             if let last = AppStoreConnectApi.lastData[apiKey] {
