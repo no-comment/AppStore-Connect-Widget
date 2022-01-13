@@ -407,11 +407,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 45E8C48C2612512F007F9B0E /* Build configuration list for PBXNativeTarget "AC Widget" */;
 			buildPhases = (
-				45440454261A4D4D0032D256 /* Linting */,
 				45E8C4792612512E007F9B0E /* Sources */,
 				45E8C47A2612512E007F9B0E /* Frameworks */,
 				45E8C47B2612512E007F9B0E /* Resources */,
 				45E8C4AA2612531E007F9B0E /* Embed App Extensions */,
+				45440454261A4D4D0032D256 /* Linting */,
 			);
 			buildRules = (
 			);

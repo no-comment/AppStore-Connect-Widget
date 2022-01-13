@@ -18,6 +18,8 @@ struct OnboardingView: View {
     @State private var key: String = ""
     @State private var vendor: String = ""
 
+    @State private var errorFields: Set<Fields> = .init()
+
     init(showsWelcome: Bool) {
         self._page = State(initialValue: showsWelcome ? .welcome : .naming)
     }
@@ -89,6 +91,7 @@ struct OnboardingView: View {
                 Spacer()
                 Button("NEXT", action: { page = .key })
                     .buttonStyle(PrimaryButtonStyle())
+                    .disabled(name.isEmpty)
             }
             .padding()
     }
@@ -129,11 +132,16 @@ struct OnboardingView: View {
                 HStack {
                     Button(action: { page = .naming }, label: { Image(systemName: "chevron.left") })
                         .buttonStyle(PrimarySquareButtonStyle(color: .cardColor, foregroundColor: .accentColor))
-                    Button("FINISH", action: onFinishPressed)
-                        .buttonStyle(PrimaryButtonStyle())
-                        .disabled(
-                            name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty
-                        )
+                    FinishButton("FINISH", disabled: name.isEmpty || issuerID.isEmpty || keyID.isEmpty || key.isEmpty || vendor.isEmpty, successAction: onFinishPressed, failureAction: {
+                        errorFields.removeAll()
+                        if name.isEmpty { errorFields.insert(.name) }
+                        if issuerID.isEmpty { errorFields.insert(.issuerID) }
+                        if key.isEmpty { errorFields.insert(.key) }
+                        if keyID.isEmpty { errorFields.insert(.keyID) }
+                        if vendor.isEmpty { errorFields.insert(.vendor) }
+                        if key.isEmpty { errorFields.insert(.key) }
+                    })
+                        .onChange(of: name + issuerID + keyID + key + vendor) { _ in errorFields.removeAll() }
                 }
             }
             .padding()
@@ -151,7 +159,7 @@ struct OnboardingView: View {
             .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", text: $issuerID)
-                .modifier(TextFieldStyle())
+                .modifier(TextFieldStyle(borderColor: errorFields.contains(.issuerID) ? .red : nil))
 
             infoCard(title: "WHERE_TO_FIND_ISSUER_ID_DESC", label: "WHERE_TO_FIND_ISSUER_ID")
         }
@@ -168,7 +176,7 @@ struct OnboardingView: View {
             .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXXXX", text: $keyID)
-                .modifier(TextFieldStyle())
+                .modifier(TextFieldStyle(borderColor: errorFields.contains(.keyID) ? .red : nil))
 
             infoCard(title: "WHERE_TO_FIND_KEY_ID_DESC", label: "WHERE_TO_FIND_KEY_ID")
         }
@@ -186,13 +194,9 @@ struct OnboardingView: View {
 
             VStack {
                 TextEditor(text: $key)
-                    .modifier(TextFieldStyle())
+                    .modifier(TextFieldStyle(borderColor: errorFields.contains(.key) ? .red : nil))
                     .frame(height: 150)
             }
-            .overlay(
-                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color(UIColor.systemGray5), lineWidth: 1)
-                     )
 
             infoCard(title: "WHERE_TO_FIND_KEY_DESC", label: "WHERE_TO_FIND_KEY")
         }
@@ -209,7 +213,7 @@ struct OnboardingView: View {
             .font(.system(size: 20, weight: .medium, design: .rounded))
 
             TextField("XXXXXXXX", text: $vendor)
-                .modifier(TextFieldStyle())
+                .modifier(TextFieldStyle(borderColor: errorFields.contains(.vendor) ? .red : nil))
 
             infoCard(title: "WHERE_TO_FIND_VENDOR_NR_DESC", label: "WHERE_TO_FIND_VENDOR_NR")
         }
@@ -294,12 +298,53 @@ struct OnboardingView: View {
     }
 
     private struct TextFieldStyle: ViewModifier {
+        init(borderColor: Color? = nil, borderWidth: CGFloat = 1, cornerRadius: CGFloat = 5) {
+            self.borderColor = borderColor ?? Color(UIColor.systemGray5)
+            self.borderWidth = borderWidth
+            self.cornerRadius = cornerRadius
+        }
+
+        let borderColor: Color
+        let borderWidth: CGFloat
+        let cornerRadius: CGFloat
+
         func body(content: Content) -> some View {
             content
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .buttonStyle(.plain)
+                .padding(5)
+                .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(borderColor, lineWidth: borderWidth))
                 .disableAutocorrection(true)
                 .font(.system(.body, design: .monospaced))
         }
+    }
+
+    enum Fields {
+        case name, issuerID, keyID, key, vendor
+    }
+}
+
+struct FinishButton: View {
+    let title: LocalizedStringKey
+    let disabled: Bool
+    let successAction: () -> Void
+    let failureAction: () -> Void
+
+    init(_ title: LocalizedStringKey, disabled: Bool, successAction: @escaping () -> Void, failureAction: @escaping () -> Void) {
+        self.title = title
+        self.disabled = disabled
+        self.successAction = successAction
+        self.failureAction = failureAction
+    }
+
+    var body: some View {
+        Button(title) {
+            if disabled {
+                failureAction()
+            } else {
+                successAction()
+            }
+        }
+        .buttonStyle(PrimaryButtonStyle(color: disabled ? .secondary : .accentColor))
     }
 }
 

@@ -27,6 +27,7 @@ public struct PrimarySquareButtonStyle: ButtonStyle {
             .padding(18)
             .background(color.opacity(scheme == .dark ? 0.15 : 1))
             .cornerRadius(10)
+            .opacity(configuration.isPressed ? 0.8 : 1)
     }
 }
 
