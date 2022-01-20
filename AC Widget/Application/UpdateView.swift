@@ -41,13 +41,11 @@ struct UpdateView: View {
 
     var infoSection: some View {
         VStack(alignment: .leading) {
-            UpdateDetailView(systemName: "icloud", title: "UPDATE_TITLE_1", subTitle: "UPDATE_SUBTITLE_1")
-
-            UpdateDetailView(systemName: "apps.ipad.landscape", title: "UPDATE_TITLE_2", subTitle: "UPDATE_SUBTITLE_2")
-
-            UpdateDetailView(systemName: "line.3.horizontal.decrease.circle", title: "UPDATE_TITLE_3", subTitle: "UPDATE_SUBTITLE_3")
-
-            UpdateDetailView(systemName: "chart.pie", title: "UPDATE_TITLE_4", subTitle: "UPDATE_SUBTITLE_4")
+            UpdateDetailView(systemName: "arrow.triangle.branch", title: "UPDATE_TITLE_1", subTitle: "UPDATE_SUBTITLE_1")
+            UpdateDetailView(systemName: "plus.bubble.fill", title: "UPDATE_TITLE_2", subTitle: "UPDATE_SUBTITLE_2")
+            UpdateDetailView(systemName: "internaldrive", title: "UPDATE_TITLE_3", subTitle: "UPDATE_SUBTITLE_3")
+            UpdateDetailView(systemName: "arrow.down", title: "UPDATE_TITLE_4", subTitle: "UPDATE_SUBTITLE_4")
+            UpdateDetailView(systemName: "wrench.and.screwdriver", title: "UPDATE_TITLE_5", subTitle: "UPDATE_SUBTITLE_5")
         }
         .frame(maxWidth: 430)
         .padding(.horizontal)

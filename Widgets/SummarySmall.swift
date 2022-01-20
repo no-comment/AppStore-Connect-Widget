@@ -18,16 +18,20 @@ struct SummarySmall: View {
                     .font(.subheadline)
                     .foregroundColor(.gray)
 
-                UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: filteredApps), metricSymbol: "square.and.arrow.down")
-                UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: filteredApps), metric: data.displayCurrency.symbol)
+                UnitText(data.getRawData(for: .downloads, lastNDays: 1, filteredApps: filteredApps).toString(), metricSymbol: "square.and.arrow.down")
+                UnitText(data.getRawData(for: .proceeds, lastNDays: 1, filteredApps: filteredApps).toString(), metric: data.displayCurrency.symbol)
 
                 Spacer()
                     .frame(minHeight: 0)
 
                 DescribedValueView(description: "LAST_SEVEN_DAYS",
-                                   value: data.getAsString(.proceeds, lastNDays: 7, size: .compact, filteredApps: filteredApps).appending(data.displayCurrency.symbol))
+                                   value: data.getRawData(for: .proceeds, lastNDays: 7, filteredApps: filteredApps)
+                                    .toString(size: .compact)
+                                    .appending(data.displayCurrency.symbol))
                 DescribedValueView(description: "LAST_THIRTY_DAYS",
-                                   value: data.getAsString(.proceeds, lastNDays: 30, size: .compact, filteredApps: filteredApps).appending(data.displayCurrency.symbol))
+                                   value: data.getRawData(for: .proceeds, lastNDays: 30, filteredApps: filteredApps)
+                                    .toString(size: .compact)
+                                    .appending(data.displayCurrency.symbol))
             }
             .padding()
             AppIconStack(apps: filteredApps)

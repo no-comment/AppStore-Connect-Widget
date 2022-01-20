@@ -8,6 +8,10 @@ import Foundation
 class ACDataCache {
     private init() {}
 
+    private static var storageUrl: URL? {
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.kruschel.ACWidget")
+    }
+
     private struct CacheObjectCollection: Codable {
         let objects: [CacheObject]
     }
@@ -68,14 +72,20 @@ class ACDataCache {
     }
 
     private static func saveCollection(_ collection: CacheObjectCollection) {
+        guard let storageUrl = storageUrl?.appendingPathComponent("cache.json") else { return }
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(collection) {
-            UserDefaults.shared?.setValue(encoded, forKey: UserDefaultsKey.dataCache)
+            do {
+                try encoded.write(to: storageUrl)
+            } catch {
+                print("Caching failed", error)
+            }
         }
     }
 
     private static func getCollection() -> CacheObjectCollection? {
-        if let savedData: Data = UserDefaults.shared?.data(forKey: UserDefaultsKey.dataCache) {
+        guard let storageUrl = storageUrl?.appendingPathComponent("cache.json") else { return nil }
+        if let savedData: Data = try? Data(contentsOf: storageUrl) {
             let decoder = JSONDecoder()
             let loadedData = try? decoder.decode(CacheObjectCollection.self, from: savedData)
             return loadedData
@@ -101,6 +111,7 @@ class ACDataCache {
     }
 
     public static func clearCache() {
-        UserDefaults.shared?.removeObject(forKey: UserDefaultsKey.dataCache)
+        guard let storageUrl = storageUrl?.appendingPathComponent("cache.json") else { return }
+        try? FileManager.default.removeItem(at: storageUrl)
     }
 }

@@ -6,19 +6,31 @@
 import SwiftUI
 
 struct AppStoreNotice: View {
+    @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) private var appStoreNotice: Bool = true
+
     var body: some View {
         Card(spacing: 15) {
+            Image("logo.appstore")
+                .font(.system(size: 50))
+                .foregroundColor(.accentColor)
+
             Text("APPSTORE_NOTICE")
                 .font(.system(size: 22, weight: .medium, design: .rounded))
                 .foregroundColor(.accentColor)
 
             Text("APPSTORE_NOTICE_TEXT")
 
-            if let destination = URL(string: "https://apps.apple.com/app/ac-widget/id1562025981") {
-                Link(destination: destination, label: {
-                    Text("APPSTORE_NOTICE_PROMPT")
-                })
-                    .buttonStyle(.borderedProminent)
+            HStack {
+                Button("DISMISS", action: { appStoreNotice = false })
+                    .buttonStyle(.bordered)
+
+                if let destination = URL(string: "https://apps.apple.com/app/ac-widget/id1562025981") {
+                    Link(destination: destination, label: {
+                        Label("APPSTORE_NOTICE_PROMPT", image: "logo.appstore")
+                        // Text("APPSTORE_NOTICE_PROMPT")
+                    })
+                        .buttonStyle(.borderedProminent)
+                }
             }
         }
         .multilineTextAlignment(.center)

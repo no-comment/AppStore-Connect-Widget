@@ -1,19 +1,27 @@
 // MARK: Onboarding
-"WELCOME" = "Welcome";
+"WELCOME_TO" = "Welcome to";
+"OPEN_SOURCE" = "Open Source";
+"OPEN_SOURCE_DESCRIPTION" = "ACWidget is completely open source on [GitHub](https://github.com/no-comment/AppStore-Connect-Widget).";
+"MULTIPLE_KEYS" = "Multiple Keys";
+"MULTIPLE_KEYS_DESCRIPTION" = "Add as many different keys as you want.";
+"ALL_CURRENCIES" = "All Currencies";
+"ALL_CURRENCIES_DESCRIPTION" = "Display you revenue in any currency.";
+"ALL_WIDGET_SIZES" = "All Widget Sizes";
+"ALL_WIDGET_SIZES_DESCRIPTION" = "ACWidget has widgets in all sizes.";
 "NEXT" = "Next";
 "FINISH" = "Finish";
-"ONBOARD_WELCOME" = "Welcome to AC Widget!
-To start, you first need to enter an API Key for AppStoreConnect.
-In the following steps, we will guide you through the process and help you to getting started.";
 "ONBOARD_KEY_NAME" = "In order to differentiate your keys, give it a name, so that you can later match it to its Apple Developer account.";
 "ONBOARD_KEY_COLOR" = "You can also give it a color that will be used on the widget.";
-"ONBOARD_ISSUER_ID" = "Now comes creating the key.
-Log in to AppStoreConnect and go to 'Users and Access'. There you will have the submenu option 'Keys'. To create a new one, click on the + icon and make sure to save your key, since you cannot redownload it later on.
-On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. Copy it into the textfield up top.";
-"ONBOARD_PRIVATE_KEY_ID" = "On the same page copy the ID of your newly created key (Key ID), and paste it into the textfield.";
-"ONBOARD_PRIVATE_KEY" = "Now insert the content of your actual key you just downloaded here.";
-"ONBOARD_VENDOR_NR" = "Lastly, the Vendor number is needed. You can find it on AppStoreConnect in your 'Reports' tab. In the top left it should state your 'Vendor #'.";
-
+"CREATE_KEY_NOTICE" = "If you haven't created an API Key yet, now is the time to do it.";
+"HOW_TO_CREATE_APIKEY" = "How to create an API Key";
+"WHERE_TO_FIND_ISSUER_ID" = "Where to find the Issuer ID";
+"WHERE_TO_FIND_ISSUER_ID_DESC" = "On the top of the keys page in App Store Connect, it will state your 'Issuer ID'.";
+"WHERE_TO_FIND_KEY_ID" = "Where to find the Private Key ID";
+"WHERE_TO_FIND_KEY_ID_DESC" = "In the third column of the table on the keys page in App Store Connect.";
+"WHERE_TO_FIND_KEY" = "Where to find the Private Key";
+"WHERE_TO_FIND_KEY_DESC" = "You should have gotten the key right after creating it. Once you close the window, there unfortunately is no way to show it again. You'll have to create a new one.";
+"WHERE_TO_FIND_VENDOR_NR" = "Where to find the Vendor Number";
+"WHERE_TO_FIND_VENDOR_NR_DESC" = "You can find it on App Store Connect in your 'Reports' tab. In the top left it should state your 'Vendor #'.";
 "RECHECK_INPUTS" = "Recheck Key";
 "OK" = "Ok";
 "INVALID_KEY" = "Invalid Key";
@@ -37,7 +45,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "REFRESH_DATA" = "Refresh Data";
 
 // Key Selection Sheet
-"DONE" = "Done";
+"DISMISS" = "Dismiss";
 "SELECT_KEY" = "Select API Key";
 "API_KEY" = "API Key";
 "APPLICATIONS" = "Applications";
@@ -64,7 +72,7 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "NO_APPS" = "No Apps available";
 "ALL_CACHED_ENTRIES:%lld" = "You have cached %lld entries";
 "CLEAR_ALL_CACHE" = "Clear the cache of all keys";
-"UPDATE_FREQUENCY_NOTICE" = "Note: AppStoreConnect updates its API data for the previous day at around 5am Pacific Time.";
+"UPDATE_FREQUENCY_NOTICE" = "Note: App Store Connect updates its API data for the previous day at around 5am Pacific Time.";
 "RATE_ACWIDGET" = "Rate AC Widget";
 
 "KEY_NAME" = "Key Name";
@@ -128,11 +136,13 @@ On the top of the Keys page in AppStoreConnect, it will state your 'Issuer ID'. 
 "IDEA_BUG_LINK" = "Have an idea for a new feature or found a bug?";
 "START" = "Start";
 
-"UPDATE_TITLE_1" = "iCloud Sync";
-"UPDATE_SUBTITLE_1" = "From now on your API keys will automatically be synced across all your devices.";
-"UPDATE_TITLE_2" = "Extra Large Widget";
-"UPDATE_SUBTITLE_2" = "This new size shows even more details on your home screen.";
-"UPDATE_TITLE_3" = "Filter by Apps";
-"UPDATE_SUBTITLE_3" = "You can now filter what apps the metrics are based on.";
-"UPDATE_TITLE_4" = "Statistic Breakdown";
-"UPDATE_SUBTITLE_4" = "Tap the tiles in the home view to reveal a per-app breakdown.";
+"UPDATE_TITLE_1" = "Async";
+"UPDATE_SUBTITLE_1" = "ACWidget now uses Swifts new async features.";
+"UPDATE_TITLE_2" = "Reworked Onboarding";
+"UPDATE_SUBTITLE_2" = "The Onboarding is easier and cleaner.";
+"UPDATE_TITLE_3" = "Better Storage";
+"UPDATE_SUBTITLE_3" = "All Data is stored more efficient.";
+"UPDATE_TITLE_4" = "Pull to refresh";
+"UPDATE_SUBTITLE_4" = "You can now pull to refresh.";
+"UPDATE_TITLE_5" = "Performance";
+"UPDATE_SUBTITLE_5" = "A lot more changes were made under the hood to improve performance.";

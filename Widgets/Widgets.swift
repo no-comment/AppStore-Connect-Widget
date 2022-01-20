@@ -6,7 +6,6 @@
 import WidgetKit
 import SwiftUI
 import Intents
-import Promises
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
@@ -17,9 +16,10 @@ struct Provider: IntentTimelineProvider {
         if context.isPreview {
             completion(.placeholder)
         } else {
-            getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
-                .then { data in
-                    let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
+            Task.init {
+                do {
+                    let data = try await getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
+                    let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
                         Calendar.current.isDateInYesterday(proceed.1)
                     }
@@ -33,20 +33,19 @@ struct Provider: IntentTimelineProvider {
                         relevance: isNewData ? .high : .medium
                     )
                     completion(entry)
-                }
-                .catch { err in
+                } catch let err {
                     let entry = ACStatEntry(date: Date(), data: nil, filteredApps: [], error: err as? APIError, color: configuration.apiKey?.getColor() ?? .accentColor, configuration: configuration, relevance: .low)
                     completion(entry)
                 }
+            }
         }
     }
 
     func getTimeline(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-        var entries: [ACStatEntry] = []
-
-        getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
-            .then { data in
-                let isNewData = data.getRawData(.proceeds, lastNDays: 3).contains { (proceed) -> Bool in
+        Task.init {
+            do {
+                let data = try await getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
+                let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
                     Calendar.current.isDateInYesterday(proceed.1)
                 }
@@ -57,7 +56,6 @@ struct Provider: IntentTimelineProvider {
                                         color: configuration.apiKey?.getColor() ?? .accentColor,
                                         configuration: configuration,
                                         relevance: isNewData ? .high : .medium)
-                entries.append(entry)
 
                 // Report is not available yet. Daily reports for the Americas are available by 5 am Pacific Time; Japan, Australia, and New Zealand by 5 am Japan Standard Time; and 5 am Central European Time for all other territories.
 
@@ -70,35 +68,38 @@ struct Provider: IntentTimelineProvider {
                     nextUpdate = nextUpdate.nextFullHour()
                 }
 
-                let timeline = Timeline(entries: entries, policy: .after(nextUpdate))
+                let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
                 completion(timeline)
-            }
-            .catch { err in
-                let entry = ACStatEntry(date: Date(), data: nil, filteredApps: [], error: err as? APIError, color: .accentColor, configuration: configuration)
-                entries.append(entry)
+            } catch let err as APIError {
+                let entry = ACStatEntry(date: Date(), data: nil, filteredApps: [], error: err, color: .accentColor, configuration: configuration)
 
                 var nextUpdateDate = Date()
-                if err as? APIError == .invalidCredentials {
+                if err == .invalidCredentials {
                     nextUpdateDate = nextUpdateDate.advanced(by: 24 * 60)
                 } else {
                     // wenn api down, update in 5 min erneut
                     nextUpdateDate = nextUpdateDate.advanced(by: 5 * 60)
                 }
 
-                let timeline = Timeline(entries: entries, policy: .after(nextUpdateDate))
+                let timeline = Timeline(entries: [entry], policy: .after(nextUpdateDate))
+                completion(timeline)
+            } catch {
+                let entry = ACStatEntry(date: Date(), data: nil, filteredApps: [], error: nil, color: .accentColor, configuration: configuration)
+
+                // wenn api down, update in 5 min erneut
+                let timeline = Timeline(entries: [entry], policy: .after(Date().advanced(by: 5 * 60)))
                 completion(timeline)
             }
+        }
     }
 
-    func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) -> Promise<ACData> {
+    func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) async throws -> ACData {
         guard let apiKey = apiKeyParam?.toApiKey(),
               APIKeyProvider().getApiKey(apiKeyId: apiKey.id) != nil else {
-                  let promise = Promise<ACData>.pending()
-                  promise.reject(APIError.invalidCredentials)
-                  return promise
+                  throw APIError.invalidCredentials
               }
-        let api = AppStoreConnectApi(apiKey: apiKey)
-        return api.getData(currency: currencyParam)
+        let api = await AppStoreConnectApi(apiKey: apiKey)
+        return try await api.getData(currency: currencyParam)
     }
 }
 

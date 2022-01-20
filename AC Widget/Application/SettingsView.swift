@@ -8,7 +8,6 @@ import WidgetKit
 
 struct SettingsView: View {
     @AppStorage(UserDefaultsKey.includeRedownloads, store: UserDefaults.shared) var includeRedownloads: Bool = false
-    @AppStorage(UserDefaultsKey.appStoreNotice, store: UserDefaults.shared) var appStoreNotice: Bool = true
     @EnvironmentObject var apiKeysProvider: APIKeyProvider
 
     @State private var addKeySheet: Bool = false
@@ -69,16 +68,13 @@ struct SettingsView: View {
         Section(header: Label("GENERAL", systemImage: "gearshape.fill")) {
             Toggle("INCLUDE_REDOWNLOADS", isOn: $includeRedownloads)
             NavigationLink("REARRANGE", destination: RearrangeTilesView())
-            if AppStoreNotice.isTestFlight() {
-                Toggle("APPSTORE_NOTICE_TOGGLE", isOn: $appStoreNotice)
-            }
         }
     }
 
     var widgetSection: some View {
         Section(header: Label("WIDGET", systemImage: "rectangle.3.offgrid.fill")) {
             Button("FORCE_REFRESH_WIDGET") {
-                AppStoreConnectApi.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
@@ -92,8 +88,8 @@ struct SettingsView: View {
                 }
 
             Button("CLEAR_ALL_CACHE") {
-                AppStoreConnectApi.clearInMemoryCache()
-                APIKey.clearInMemoryCache()
+                AppStoreConnectApi.clearMemoization()
+                APIKey.clearMemoization()
                 ACDataCache.clearCache()
                 self.cachedEntries = ACDataCache.numberOfEntriesCached()
             }
@@ -125,16 +121,7 @@ struct SettingsView: View {
                 })
             }
 
-            if let destination = URL(string: "https://www.buymeacoffee.com/nocomment") {
-                Link(destination: destination, label: {
-                    HStack {
-                        Label("Buy me a Coffee", image: "logo.buymeacoffee")
-                            .symbolRenderingMode(.multicolor)
-                        Spacer()
-                        Image(systemName: "arrow.up.forward.app")
-                    }.contentShape(Rectangle())
-                })
-            }
+            // TODO: Add tip jar
         }
         .buttonStyle(.plain)
     }
@@ -164,10 +151,8 @@ struct SettingsView: View {
     }
 
     private func sheet() -> some View {
-        return NavigationView {
-            OnboardingView(showsWelcome: false)
-                .navigationTitle("ADD_KEY")
-                .navigationBarTitleDisplayMode(.inline)
+        NavigationView {
+        OnboardingView(showsWelcome: false)
                 .closeSheetButton()
         }
     }
@@ -191,8 +176,8 @@ struct SettingsView_Previews: PreviewProvider {
 
 struct ApiKeyCheckIndicator: View {
     let key: APIKey
-    @State var status: APIError?
-    @State var loading = true
+    @State private var status: APIError?
+    @State private var loading = true
 
     var body: some View {
         Group {
@@ -210,14 +195,13 @@ struct ApiKeyCheckIndicator: View {
                     .foregroundColor(.orange)
             }
         }
-        .onAppear(perform: {
-            key.checkKey()
-                .catch { err in
-                    status = (err as? APIError) ?? .unknown
-                }
-                .always {
-                    loading = false
-                }
+        .task(priority: .background, {
+            do {
+                try await key.checkKey()
+            } catch let err {
+                status = (err as? APIError) ?? .unknown
+            }
+            loading = false
         })
     }
 }

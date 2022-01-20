@@ -53,35 +53,38 @@ struct SummaryLarge: View {
 
     var downloadsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: filteredApps), metricSymbol: "square.and.arrow.down")
-            GraphView(data.getRawData(.downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+            UnitText(data.getRawData(for: .downloads, lastNDays: 1, filteredApps: filteredApps).toString(), metricSymbol: "square.and.arrow.down")
+            GraphView(data.getRawData(for: .downloads, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data
-                                    .getAsString(.downloads, lastNDays: 7, size: .compact, filteredApps: filteredApps))
+                                    .getRawData(for: .downloads, lastNDays: 7, filteredApps: filteredApps).toString(size: .compact))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
-                                    .getAsString(.downloads, lastNDays: 30, size: .compact, filteredApps: filteredApps))
+                                    .getRawData(for: .downloads, lastNDays: 30, filteredApps: filteredApps).toString(size: .compact))
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
-                                   value: data.getAsString(.downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps))
+                                   value: data.getRawData(for: .downloads, lastNDays: data.latestReportingDate().dateToMonthNumber(), filteredApps: filteredApps).toString(size: .compact))
             }
         }
     }
 
     var proceedsSection: some View {
         VStack(alignment: .leading, spacing: 5.0) {
-            UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: filteredApps), metric: data.displayCurrency.symbol)
-            GraphView(data.getRawData(.proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
+            UnitText(data.getRawData(for: .proceeds, lastNDays: 1, filteredApps: filteredApps).toString(), metric: data.displayCurrency.symbol)
+            GraphView(data.getRawData(for: .proceeds, lastNDays: 30, filteredApps: filteredApps), color: color.readable(colorScheme: colorScheme))
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data
-                                    .getAsString(.proceeds, lastNDays: 7, size: .compact, filteredApps: filteredApps)
+                                    .getRawData(for: .proceeds, lastNDays: 7, filteredApps: filteredApps)
+                                    .toString(size: .compact)
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
-                                    .getAsString(.proceeds, lastNDays: 30, size: .compact, filteredApps: filteredApps)
+                                    .getRawData(for: .proceeds, lastNDays: 30, filteredApps: filteredApps)
+                                    .toString(size: .compact)
                                     .appending(data.displayCurrency.symbol))
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
                                    value: data
-                                    .getAsString(.proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), size: .compact, filteredApps: filteredApps)
+                                    .getRawData(for: .proceeds, lastNDays: data.latestReportingDate().dateToMonthNumber(), filteredApps: filteredApps)
+                                    .toString(size: .compact)
                                     .appending(data.displayCurrency.symbol))
             }
         }
@@ -125,14 +128,14 @@ struct SummaryLarge: View {
                     }
 
                     HStack(alignment: .bottom) {
-                        UnitText(data.getAsString(.downloads, lastNDays: 1, filteredApps: [app]), metricSymbol: InfoType.downloads.systemImage)
+                        UnitText(data.getRawData(for: .downloads, lastNDays: 1, filteredApps: [app]).toString(), metricSymbol: InfoType.downloads.systemImage)
                             .fontSize(fewApps ? 25 : 19)
                         Spacer()
-                        UnitText(data.getAsString(.proceeds, lastNDays: 1, filteredApps: [app]), metric: data.displayCurrency.symbol)
+                        UnitText(data.getRawData(for: .proceeds, lastNDays: 1, filteredApps: [app]).toString(), metric: data.displayCurrency.symbol)
                             .fontSize(fewApps ? 25 : 19)
                         if fewApps {
                             Spacer()
-                            UnitText(data.getAsString(.iap, lastNDays: 1, filteredApps: [app]), metricSymbol: InfoType.iap.systemImage)
+                            UnitText(data.getRawData(for: .iap, lastNDays: 1, filteredApps: [app]).toString(), metricSymbol: InfoType.iap.systemImage)
                                 .fontSize(25)
                         }
                     }

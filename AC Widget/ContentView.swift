@@ -14,14 +14,14 @@ struct ContentView: View {
     }
 
     var body: some View {
-        if completedOnboarding {
-            NavigationView {
+        NavigationView {
+            if completedOnboarding {
                 HomeView()
+            } else {
+                OnboardingView(showsWelcome: true)
             }
-            .navigationViewStyle(StackNavigationViewStyle())
-        } else {
-            OnboardingView(showsWelcome: true)
         }
+        .navigationViewStyle(.stack)
     }
 }
 

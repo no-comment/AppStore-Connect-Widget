@@ -32,7 +32,7 @@ struct InfoTileFront: View {
     init(description: LocalizedStringKey, data: ACData, type: InfoType, color: Color = .accentColor) {
         self.description = description
         self.data = data
-        self.rawData = data.getRawData(type, lastNDays: 30).reversed()
+        self.rawData = data.getRawData(for: type, lastNDays: 30).reversed()
         self.type = type
         self.color = color
     }
@@ -76,9 +76,9 @@ struct InfoTileFront: View {
                     .font(.system(size: 20))
                 Spacer()
                 if currencySymbol.isEmpty {
-                    UnitText(data.getAsString(type, lastNDays: 1), metricSymbol: type.systemImage)
+                    UnitText(data.getRawData(for: type, lastNDays: 1).toString(), metricSymbol: type.systemImage)
                 } else {
-                    UnitText(data.getAsString(type, lastNDays: 1), metric: currencySymbol)
+                    UnitText(data.getRawData(for: type, lastNDays: 1).toString(), metric: currencySymbol)
                 }
             }
         }
@@ -161,10 +161,10 @@ struct InfoTileFront: View {
     var bottomSection: some View {
         VStack {
             HStack(alignment: .bottom) {
-                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getAsString(type, lastNDays: 7, size: .compact).appending(currencySymbol))
+                DescribedValueView(description: "LAST_SEVEN_DAYS", value: data.getRawData(for: type, lastNDays: 7).toString(size: .compact).appending(currencySymbol))
                 Spacer()
                     .frame(width: 40)
-                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getAsString(type, lastNDays: 30, size: .compact).appending(currencySymbol))
+                DescribedValueView(description: "LAST_THIRTY_DAYS", value: data.getRawData(for: type, lastNDays: 30).toString(size: .compact).appending(currencySymbol))
             }
 
             HStack(alignment: .bottom) {
@@ -172,8 +172,7 @@ struct InfoTileFront: View {
                 Spacer()
                     .frame(width: 40)
                 DescribedValueView(descriptionString: data.latestReportingDate().toString(format: "MMMM").appending(":"),
-                                   value: data.getAsString(type, lastNDays: data.latestReportingDate().dateToMonthNumber(),
-                                                           size: .compact).appending(currencySymbol))
+                                   value: data.getRawData(for: type, lastNDays: data.latestReportingDate().dateToMonthNumber()).toString(size: .compact).appending(currencySymbol))
             }
         }
     }
