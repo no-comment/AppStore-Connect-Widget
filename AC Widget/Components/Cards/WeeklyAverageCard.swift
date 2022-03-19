@@ -93,7 +93,7 @@ struct WeeklyAverageCard: View {
                 ForEach(data.reversed(), id: \.1) { (value, date) in
                     VStack {
                         RoundedRectangle(cornerRadius: 4)
-                            .frame(width: val.size.width/20, height: abs(val.size.height * CGFloat(value/max) - 25))
+                            .frame(width: val.size.width/20, height: max == 0 ? 0 : CGFloat.maximum(0, val.size.height * CGFloat(value/max) - 25))
                         Text(date.toString(format: "EEEEE")).unredacted()
                     }
                     .foregroundColor(.graphColor)
@@ -108,10 +108,10 @@ struct WeeklyAverageCard: View {
             Capsule()
                 .foregroundColor(type.color)
                 .frame(height: 6)
-                .padding(.top, val.size.height - (val.size.height * CGFloat(average/max)) - 3)
+                .padding(.top, max == 0 ? 0 : val.size.height - (val.size.height * CGFloat(average/max)) - 3)
                 .overlay {
                     text
-                        .padding(.top, val.size.height - (val.size.height * CGFloat(average/max)) + 8)
+                        .padding(.top, max == 0 ? 0 : val.size.height - (val.size.height * CGFloat(average/max)) + 8)
                 }
         }
     }
