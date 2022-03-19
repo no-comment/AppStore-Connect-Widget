@@ -7,13 +7,6 @@ import SwiftUI
 import BetterToStrings
 
 struct PercentageComparisonCard: View {
-    init(type: InfoType, header: Bool) {
-        self.type = type
-        self.header = header
-        
-        refresh()
-    }
-    
     @EnvironmentObject private var dataProvider: ACDataProvider
     let type: InfoType
     let header: Bool
@@ -82,6 +75,7 @@ struct PercentageComparisonCard: View {
             }
             .noDataOverlay(noData)
         }
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 

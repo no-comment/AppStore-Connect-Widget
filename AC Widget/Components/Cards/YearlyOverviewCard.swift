@@ -17,8 +17,6 @@ struct YearlyOverviewCard: View {
     init(type: InfoType, header: Bool) {
         self.type = type
         self.header = header
-        
-        refresh()
     }
 
     var body: some View {
@@ -38,6 +36,7 @@ struct YearlyOverviewCard: View {
             }
             .noDataOverlay(noData)
         }
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 

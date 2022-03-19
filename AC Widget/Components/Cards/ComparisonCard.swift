@@ -7,13 +7,6 @@ import SwiftUI
 import BetterToStrings
 
 struct ComparisonCard: View {
-    init(type: InfoType, header: Bool, interval: TimeIntervall) {
-        self.type = type
-        self.header = header
-        self.interval = interval
-        refresh()
-    }
-
     @EnvironmentObject private var dataProvider: ACDataProvider
     let type: InfoType
     let header: Bool
@@ -78,6 +71,7 @@ struct ComparisonCard: View {
             }
             .noDataOverlay(noData)
         }
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 

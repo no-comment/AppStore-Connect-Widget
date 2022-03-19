@@ -57,12 +57,6 @@ struct AppRow: View {
 
     @State private var noData = true
 
-    init(app: ACApp) {
-        self.app = app
-
-        refresh()
-    }
-
     var body: some View {
         Card(spacing: 7, innerPadding: 10) {
             HStack {
@@ -107,6 +101,7 @@ struct AppRow: View {
             }
         }
         .noDataOverlay(noData, short: true)
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
         .frame(maxHeight: 120)
     }
