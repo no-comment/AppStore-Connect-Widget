@@ -82,8 +82,6 @@ class AppStoreConnectApi {
 
         var entries: [ACEntry] = []
 
-        await CurrencyConverter.shared.updateExchangeRates()
-
         let dates = Date.now.dayBefore.getLastNDates(numOfDays).map({ $0.acApiFormat() })
 
         if useCache {

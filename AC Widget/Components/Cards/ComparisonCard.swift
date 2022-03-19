@@ -19,9 +19,15 @@ struct ComparisonCard: View {
 
     @State private var noData = true
 
+    let rowHeight: CGFloat = 30
+
+    private var maxValue: Float {
+        max(primaryValue, secondaryValue)
+    }
+
     var body: some View {
         Card {
-            GeometryReader { val in
+            GeometryReader { geo in
                 VStack(alignment: .leading, spacing: 10) {
                     if header {
                         Label(type.title, systemImage: type.systemImage)
@@ -35,33 +41,31 @@ struct ComparisonCard: View {
 
                     VStack(alignment: .leading, spacing: 1) {
                         UnitText(primaryValue.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: dataProvider.displayCurrencySymbol)
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 6)
-                                .foregroundColor(type.color)
-                                .frame(width: val.size.width * CGFloat(primaryValue/max(primaryValue, secondaryValue)), height: 30)
-
+                        DynamicWidthChartRow(color: type.color, contrastColor: type.contrastColor, width: maxValue == 0 ? 0 : geo.size.width * CGFloat(primaryValue/maxValue)) {
                             Text(primaryLabel)
                                 .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(type.contrastColor)
-                                .padding(.leading, 8)
+                                .unredacted()
+                        } longContent: {
+                            Text(primaryLabel)
+                                .font(.system(size: 15, weight: .medium))
                                 .unredacted()
                         }
+                        .frame(height: rowHeight)
                     }
                     Spacer(minLength: 0)
                     VStack(alignment: .leading, spacing: 1) {
                         UnitText(secondaryValue.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: dataProvider.displayCurrencySymbol)
 
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 6)
-                                .foregroundColor(.graphColor)
-                                .frame(width: val.size.width * CGFloat(secondaryValue/max(primaryValue, secondaryValue)), height: 30)
-
+                        DynamicWidthChartRow(color: .graphColor, contrastColor: .primary, width: maxValue == 0 ? 0 : geo.size.width * CGFloat(secondaryValue / maxValue)) {
                             Text(secondaryLabel)
                                 .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(.primary)
-                                .padding(.leading, 8)
+                                .unredacted()
+                        } longContent: {
+                            Text(secondaryLabel)
+                                .font(.system(size: 15, weight: .medium))
                                 .unredacted()
                         }
+                        .frame(height: rowHeight)
                     }
                 }
             }

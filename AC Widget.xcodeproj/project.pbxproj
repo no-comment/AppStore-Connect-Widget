@@ -19,6 +19,7 @@
 		4542C451261B912E00799E4B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4542C450261B912E00799E4B /* Preview Assets.xcassets */; };
 		4542D60226276F8100B79E10 /* ACDataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4570D399261EE1FC006F50AA /* ACDataCache.swift */; };
 		4544325F27BC42740070DCE5 /* NoDataOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4544325E27BC42740070DCE5 /* NoDataOverlay.swift */; };
+		454E22B427E67DB5006378FA /* DynamicWidthChartRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E22B327E67DB5006378FA /* DynamicWidthChartRow.swift */; };
 		4552EE9E261CF3FF006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
 		4552EE9F261CF400006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
 		4552EEA0261CFB99006C30B9 /* ACEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4552EE9D261CF3FF006C30B9 /* ACEntry.swift */; };
@@ -178,6 +179,7 @@
 		452A37F026161C97005CD1DA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4542C450261B912E00799E4B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4544325E27BC42740070DCE5 /* NoDataOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataOverlay.swift; sourceTree = "<group>"; };
+		454E22B327E67DB5006378FA /* DynamicWidthChartRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicWidthChartRow.swift; sourceTree = "<group>"; };
 		4552EE9D261CF3FF006C30B9 /* ACEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACEntry.swift; sourceTree = "<group>"; };
 		456BE764279A10FC0018D75A /* WeeklyAverageComparisonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAverageComparisonCard.swift; sourceTree = "<group>"; };
 		4570D399261EE1FC006F50AA /* ACDataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACDataCache.swift; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				450B69FB27BD8A66000626C4 /* RankingChart.swift */,
 				CBABEE7E27BD8B9B00C1F1DD /* HeatMap.swift */,
 				CB77BBAC268D18E8006D4EC4 /* PercentStackedBarChart.swift */,
+				454E22B327E67DB5006378FA /* DynamicWidthChartRow.swift */,
 			);
 			path = Graphs;
 			sourceTree = "<group>";
@@ -699,6 +702,7 @@
 				CBAB72A0261B338600ED0F94 /* CurrencyConverter.swift in Sources */,
 				45C718BA27BAEAF4009CC361 /* YearlyOverviewCard.swift in Sources */,
 				CB77BBAD268D18E8006D4EC4 /* PercentStackedBarChart.swift in Sources */,
+				454E22B427E67DB5006378FA /* DynamicWidthChartRow.swift in Sources */,
 				CBB4A60526F3D8E40064EE9E /* InfoTile.swift in Sources */,
 				CBABEE7F27BD8B9B00C1F1DD /* HeatMap.swift in Sources */,
 				CB28AEEF2615D2E900B48215 /* ErrorWidget.swift in Sources */,

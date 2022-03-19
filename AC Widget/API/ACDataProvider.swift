@@ -54,6 +54,7 @@ class ACDataProvider: ObservableObject {
 
         // load data from api
         Task {
+            await CurrencyConverter.shared.updateExchangeRates()
             await refreshData()
         }
     }
