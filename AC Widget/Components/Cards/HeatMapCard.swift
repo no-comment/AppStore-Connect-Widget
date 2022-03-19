@@ -12,12 +12,6 @@ struct HeatMapCard: View {
     @State private var rawData: [RawDataPoint] = []
     @State private var noData = true
 
-    init(type: InfoType, header: Bool) {
-        self.type = type
-        self.header = header
-        refresh()
-    }
-
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: 10) {
@@ -32,6 +26,7 @@ struct HeatMapCard: View {
             }
             .noDataOverlay(noData)
         }
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 

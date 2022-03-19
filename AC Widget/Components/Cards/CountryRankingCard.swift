@@ -12,13 +12,8 @@ struct CountryRankingCard: View {
 
     @State private var title: String = ""
     @State private var rankingData: [(String, Float)] = []
-    @State private var noData = true
 
-    init(type: InfoType, header: Bool) {
-        self.type = type
-        self.header = header
-        refresh()
-    }
+    @State private var noData = true
 
     var body: some View {
         Card {
@@ -36,6 +31,7 @@ struct CountryRankingCard: View {
             }
             .noDataOverlay(noData)
         }
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 

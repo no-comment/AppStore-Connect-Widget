@@ -56,9 +56,6 @@ struct WeeklyAverageCard: View {
         self.data = rawData
         self.average = rawData.isEmpty ? .infinity : rawData.map(\.0).reduce(0, +) / Float(rawData.count)
         self.max = rawData.map(\.0).max() ?? 1
-        if max == 0 {
-            max = 1
-        }
 
         switch type {
         case .downloads:

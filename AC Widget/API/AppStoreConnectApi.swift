@@ -122,8 +122,7 @@ class AppStoreConnectApi {
 
         let apps = try? await self.getApps(entries: entries)
 
-//        let acdata = ACData(entries: optimizeEntries(entries), currency: localCurrency, apps: apps ?? [])
-        let acdata = ACData(entries: entries, currency: localCurrency, apps: apps ?? [])
+        let acdata = ACData(entries: optimizeEntries(entries), currency: localCurrency, apps: apps ?? [])
         ACDataCache.saveData(data: acdata, apiKey: self.apiKey)
         return acdata
     }

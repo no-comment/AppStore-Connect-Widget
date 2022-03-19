@@ -11,12 +11,11 @@ struct DetailsRow: View {
 
     @State private var currentMonthData: [RawDataPoint] = []
     @State private var currentDay: RawDataPoint = (0, .now)
-    @State private var noData = true
+    //    {
+    //        return
+    //    }
 
-    init(infoType: InfoType) {
-        self.infoType = infoType
-        refresh()
-    }
+    @State private var noData = true
 
     var body: some View {
         Card(spacing: 15, innerPadding: 10) {
@@ -45,6 +44,7 @@ struct DetailsRow: View {
             .frame(minHeight: 50)
         }
         .noDataOverlay(noData, short: true)
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
         .frame(height: 90)
     }

@@ -14,12 +14,6 @@ struct MonthlyGoalCard: View {
     @State private var goal: Float = 0
     @State private var isEditing: Bool = false
 
-    internal init(type: InfoType, header: Bool) {
-        self.type = type
-        self.header = header
-        refresh()
-    }
-
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: 10) {
@@ -40,6 +34,7 @@ struct MonthlyGoalCard: View {
                 }
             }
         }
+        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
         .overlay(alignment: .topTrailing) {
             if goal == 0 && !isEditing {
