@@ -15,7 +15,7 @@ struct ACData: Codable {
     let displayCurrency: Currency
 
     init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
-        self.entries = entries
+        self.entries = entries.sorted(by: \.date)
         self.displayCurrency = currency
         self.apps = apps.sorted { entries.filterApps([$0]).count > entries.filterApps([$1]).count }
     }

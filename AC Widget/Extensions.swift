@@ -303,9 +303,16 @@ extension Color {
 // MARK: ACEntry Array
 extension Array where Element == ACEntry {
     func getLastDays(_ n: Int) -> [ACEntry] {
-        let latestDate: Date? = self.reduce(Date.distantPast, { $0 > $1.date ? $0 : $1.date })
-        let lastNDays: [Date] = (latestDate ?? Date()).getLastNDates(n)
-        return self.filter({ lastNDays.contains($0.date) })
+        let latestDate: Date = self.last?.date ?? Date.now
+        let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1*n, to: latestDate) ?? Date.now
+        var result: [ACEntry] = []
+        for entry in self.reversed() {
+            if entry.date < earliestDate  && !Calendar.current.isDate(entry.date, inSameDayAs: earliestDate) {
+                break
+            }
+            result.append(entry)
+        }
+        return result
     }
 
     func filterApps(_ isIncluded: [ACApp]) -> [ACEntry] {
