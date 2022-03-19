@@ -7,6 +7,13 @@ import SwiftUI
 import BetterToStrings
 
 struct WeeklyAverageCard: View {
+    init(type: InfoType, header: Bool) {
+        self.type = type
+        self.header = header
+        
+        refresh()
+    }
+    
     @EnvironmentObject private var dataProvider: ACDataProvider
     let type: InfoType
     let header: Bool
@@ -36,7 +43,6 @@ struct WeeklyAverageCard: View {
             }
             .noDataOverlay(noData)
         }
-        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 

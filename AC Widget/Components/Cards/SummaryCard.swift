@@ -27,6 +27,8 @@ struct SummaryCard: View {
         self.type = type
         self.header = header
 
+        refresh()
+
         //        rawData = data.getRawData(for: type, lastNDays: 30)
         //        let copy = rawData.map { $0.0 }
         //        let max: Float = copy.max() ?? 1
@@ -64,7 +66,6 @@ struct SummaryCard: View {
             }
             .noDataOverlay(noData)
         }
-        .onAppear(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 
