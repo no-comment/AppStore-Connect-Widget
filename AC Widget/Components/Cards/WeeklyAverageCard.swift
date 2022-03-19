@@ -36,7 +36,7 @@ struct WeeklyAverageCard: View {
             }
             .noDataOverlay(noData)
         }
-        .onAppear(perform: refresh)
+        .onLoad(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
     }
 

@@ -101,7 +101,7 @@ struct AppRow: View {
             }
         }
         .noDataOverlay(noData, short: true)
-        .onAppear(perform: refresh)
+        .onLoad(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
         .frame(maxHeight: 120)
     }

@@ -34,7 +34,7 @@ struct MonthlyGoalCard: View {
                 }
             }
         }
-        .onAppear(perform: refresh)
+        .onLoad(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
         .overlay(alignment: .topTrailing) {
             if goal == 0 && !isEditing {

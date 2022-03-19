@@ -44,7 +44,7 @@ struct DetailsRow: View {
             .frame(minHeight: 50)
         }
         .noDataOverlay(noData, short: true)
-        .onAppear(perform: refresh)
+        .onLoad(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }
         .frame(height: 90)
     }
