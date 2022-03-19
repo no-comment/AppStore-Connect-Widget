@@ -28,7 +28,7 @@ struct YearlyOverviewCard: View {
                         .foregroundColor(type.color)
                         .unredacted()
                 }
-                Text(Calendar.current.monthSymbols.indices.contains(maxData.month-1) ? "It looks like \(Calendar.current.monthSymbols[maxData.month-1]) ist your strongest month." : "")
+                Text(Calendar.current.monthSymbols.indices.contains(maxData.month-1) ? "It looks like \(Calendar.current.monthSymbols[maxData.month-1]) is your strongest month." : "")
                     .font(.title2.weight(.semibold))
 
                 Divider()
@@ -47,7 +47,7 @@ struct YearlyOverviewCard: View {
                     VStack {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(month == maxData.month ? type.color : .graphColor)
-                            .frame(width: geo.size.width/20, height: geo.size.height * CGFloat(val/maxData.val) - 25)
+                            .frame(width: geo.size.width/20, height: maxData.val == 0 ? 0 : max(0, geo.size.height * CGFloat(val/maxData.val) - 25))
 
                         Text(Calendar.current.veryShortMonthSymbols[month-1]).unredacted()
                     }

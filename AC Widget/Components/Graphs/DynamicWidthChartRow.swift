@@ -40,6 +40,7 @@ struct DynamicWidthChartRow<ShortContent: View, LongContent: View>: View {
                 longContent
                     .fixedSize(horizontal: true, vertical: false)
                     .readSize { size in
+                        guard size.width != 0 && width != 0 else { return }
                         if size.width + 10 > width {
                             small = true
                         }
