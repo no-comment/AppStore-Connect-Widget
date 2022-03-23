@@ -12,7 +12,7 @@ struct SettingsView: View {
 
     @State private var addKeySheet: Bool = false
 
-    @State private var cachedEntries: Int = 0
+    @State private var cachedEntries: Int?
 
     @State private var updateSheetVisible = false
 
@@ -82,10 +82,19 @@ struct SettingsView: View {
 
     var storageSection: some View {
         Section(header: Label("STORAGE", systemImage: "externaldrive.fill")) {
-            Text("ALL_CACHED_ENTRIES:\(cachedEntries)")
-                .onAppear {
-                    self.cachedEntries = ACDataCache.numberOfEntriesCached()
-                }
+            if let cachedEntries = cachedEntries {
+                Text("ALL_CACHED_ENTRIES:\(cachedEntries)")
+            } else {
+                ProgressView()
+                    .onAppear {
+                        DispatchQueue.global(qos: .background).async {
+                            let count = ACDataCache.numberOfEntriesCached()
+                            DispatchQueue.main.async {
+                                self.cachedEntries = count
+                            }
+                        }
+                    }
+            }
 
             Button("CLEAR_ALL_CACHE") {
                 AppStoreConnectApi.clearMemoization()

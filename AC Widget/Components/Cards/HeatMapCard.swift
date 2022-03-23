@@ -36,6 +36,9 @@ struct HeatMapCard: View {
             return
         }
         self.rawData = acData.getRawData(for: type, lastNDays: 100)
+        guard !rawData.isEmpty else {
+            return
+        }
         noData = false
     }
 

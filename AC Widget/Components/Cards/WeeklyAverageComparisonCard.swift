@@ -93,7 +93,7 @@ struct WeeklyAverageComparisonCard: View {
                 ForEach(data, id: \.1) { (value, _) in
                     VStack {
                         Capsule()
-                            .frame(width: 0.5 * geo.size.width / 31, height: geo.size.height * CGFloat(value/max))
+                            .frame(width: 0.5 * geo.size.width / 31, height: max == 0 ? 0 : geo.size.height * CGFloat(value/max))
                         //                        Text(date.toString(format: "EEEEE"))
                     }
                     .foregroundColor(.graphColor)
@@ -108,11 +108,11 @@ struct WeeklyAverageComparisonCard: View {
             HStack(spacing: 3) {
                 Capsule()
                     .frame(width: abs(-1.5 + (31 - 7) * geo.size.width / 31), height: 6)
-                    .offset(x: 0, y: geo.size.height - (geo.size.height * CGFloat(average1/max)) - 3)
+                    .offset(x: 0, y: max == 0 ? 0 : geo.size.height - (geo.size.height * CGFloat(average1/max)) - 3)
 
                 Capsule()
                     .frame(width: abs(-1.5 + 7 * geo.size.width / 31), height: 6)
-                    .offset(x: 0, y: geo.size.height - (geo.size.height * CGFloat(average2/max)) - 3)
+                    .offset(x: 0, y: max == 0 ? 0 : geo.size.height - (geo.size.height * CGFloat(average2/max)) - 3)
             }
             .foregroundColor(type.color)
         }

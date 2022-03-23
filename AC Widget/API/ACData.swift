@@ -6,7 +6,6 @@
 import Foundation
 import SwiftUI
 import BetterToStrings
-import Algorithms
 
 typealias RawDataPoint = (Float, Date)
 
@@ -45,19 +44,17 @@ struct ACData: Codable {
         var dic: [InfoType: [RawDataPoint]] = [:]
 
         let lastNDays: [Date] = (entries.last?.date ?? Date.now).getLastNDates(370)
-//        entries.chunked(on: \.date)
 
         let grouped = Dictionary(grouping: entries, by: { $0.date })
 
         for day in lastNDays {
             let entriesForDay = grouped[day] ?? []
-//            let entriesForDay = entries.filter({ Calendar.current.isDate($0.date, inSameDayAs: day) })
 
             for type in InfoType.allCases {
                 switch type {
                 case .proceeds:
                     var arr: [RawDataPoint] = dic[type] ?? []
-                    arr.append((entriesForDay.reduce(0, { $0 + $1.proceeds }), day))
+                    arr.append((entriesForDay.reduce(0, { $0 + $1.proceeds * Float($1.units) }), day))
                     dic[type] = arr
                 case .downloads:
                     var arr: [RawDataPoint] = dic[type] ?? []
@@ -82,6 +79,13 @@ struct ACData: Codable {
                 }
             }
         }
+
+        for (key, value) in dic {
+            if value.allSatisfy({ $0.0 == 0 }) {
+                dic[key] = []
+            }
+        }
+
         return dic
     }
 }
@@ -132,7 +136,7 @@ extension ACData {
 
     func getRawData(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [RawDataPoint] {
         if filteredApps.isEmpty {
-            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? Date.now.getLastNDates(370).map({ (.zero, $0) })
+            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? []
         }
         let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.date })
         var result: [RawDataPoint]
