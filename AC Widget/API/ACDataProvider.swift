@@ -68,6 +68,7 @@ class ACDataProvider: ObservableObject {
         let api = await AppStoreConnectApi(apiKey: apiKey)
         do {
             data = try await api.getData(currency: Currency(rawValue: currency), useMemoization: useMemoization)
+            error = nil
         } catch let err as APIError {
             self.error = err
         } catch {

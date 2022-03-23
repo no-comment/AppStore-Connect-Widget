@@ -6,6 +6,7 @@
 import Foundation
 import SwiftUI
 import BetterToStrings
+import Algorithms
 
 typealias RawDataPoint = (Float, Date)
 
@@ -14,10 +15,74 @@ struct ACData: Codable {
     let entries: [ACEntry]
     let displayCurrency: Currency
 
+    let summarisedEntries: [InfoType: [RawDataPoint]]
+
     init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
-        self.entries = entries.sorted(by: \.date)
+        let sortedEntries = entries.sorted(by: \.date)
+        self.entries = sortedEntries
         self.displayCurrency = currency
         self.apps = apps.sorted { entries.filterApps([$0]).count > entries.filterApps([$1]).count }
+
+        self.summarisedEntries = ACData.summariseEntries(sortedEntries)
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case apps
+        case entries
+        case displayCurrency
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        apps = try container.decode([ACApp].self, forKey: .apps)
+        entries = try container.decode([ACEntry].self, forKey: .entries)
+        displayCurrency = try container.decode(Currency.self, forKey: .displayCurrency)
+
+        self.summarisedEntries = ACData.summariseEntries(entries)
+    }
+
+    static func summariseEntries(_ entries: [ACEntry]) -> [InfoType: [RawDataPoint]] {
+        var dic: [InfoType: [RawDataPoint]] = [:]
+
+        let lastNDays: [Date] = (entries.last?.date ?? Date.now).getLastNDates(370)
+//        entries.chunked(on: \.date)
+
+        let grouped = Dictionary(grouping: entries, by: { $0.date })
+
+        for day in lastNDays {
+            let entriesForDay = grouped[day] ?? []
+//            let entriesForDay = entries.filter({ Calendar.current.isDate($0.date, inSameDayAs: day) })
+
+            for type in InfoType.allCases {
+                switch type {
+                case .proceeds:
+                    var arr: [RawDataPoint] = dic[type] ?? []
+                    arr.append((entriesForDay.reduce(0, { $0 + $1.proceeds }), day))
+                    dic[type] = arr
+                case .downloads:
+                    var arr: [RawDataPoint] = dic[type] ?? []
+                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .download ? $1.units : 0) })), day))
+                    dic[type] = arr
+                case .updates:
+                    var arr: [RawDataPoint] = dic[type] ?? []
+                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .update ? $1.units : 0) })), day))
+                    dic[type] = arr
+                case .iap:
+                    var arr: [RawDataPoint] = dic[type] ?? []
+                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .iap ? $1.units : 0) })), day))
+                    dic[type] = arr
+                case .reDownloads:
+                    var arr: [RawDataPoint] = dic[type] ?? []
+                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .redownload ? $1.units : 0) })), day))
+                    dic[type] = arr
+                case .restoredIap:
+                    var arr: [RawDataPoint] = dic[type] ?? []
+                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .restoredIap ? $1.units : 0) })), day))
+                    dic[type] = arr
+                }
+            }
+        }
+        return dic
     }
 }
 
@@ -51,11 +116,7 @@ extension ACData {
         case .proceeds:
             entries = entries.filter({ $0.proceeds > 0 })
         case .downloads:
-            if UserDefaults.shared?.bool(forKey: UserDefaultsKey.includeRedownloads) ?? false {
-                entries = entries.filter({ $0.type == .download || $0.type == .redownload })
-            } else {
-                entries = entries.filter({ $0.type == .download })
-            }
+            entries = entries.filter({ $0.type == .download })
         case .updates:
             entries = entries.filter({ $0.type == .update })
         case .iap:
@@ -70,6 +131,9 @@ extension ACData {
     }
 
     func getRawData(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [RawDataPoint] {
+        if filteredApps.isEmpty {
+            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? Date.now.getLastNDates(370).map({ (.zero, $0) })
+        }
         let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.date })
         var result: [RawDataPoint]
 
@@ -195,7 +259,7 @@ extension Array where Element == RawDataPoint {
     }
 }
 
-enum InfoType {
+enum InfoType: String, CaseIterable {
     case downloads, proceeds, updates, iap, reDownloads, restoredIap
 
     var title: String {

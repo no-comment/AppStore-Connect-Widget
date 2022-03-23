@@ -27,48 +27,50 @@ class ACDataCache {
     }
 
     public static func saveData(data: ACData, apiKey: APIKey) {
-        var cacheObjects: [CacheObject] = getCollection()?.objects ?? []
+        DispatchQueue.global(qos: .background).async {
+            var cacheObjects: [CacheObject] = getCollection()?.objects ?? []
 
-        // find existing data for apiKey and remove matching data temporarily from array
-        var oldData: ACData?
-        cacheObjects.removeAll(where: {
-            let matching = $0.apiKeyId == apiKey.id
-            if matching { oldData = $0.data }
-            return matching
-        })
+            // find existing data for apiKey and remove matching data temporarily from array
+            var oldData: ACData?
+            cacheObjects.removeAll(where: {
+                let matching = $0.apiKeyId == apiKey.id
+                if matching { oldData = $0.data }
+                return matching
+            })
 
-        // Convert currency from oldData to data.displayCurrency
-        var oldEntries: [ACEntry] = []
-        if let oldData = oldData {
-            oldEntries = oldData.changeCurrency(to: data.displayCurrency).entries
+            // Convert currency from oldData to data.displayCurrency
+            var oldEntries: [ACEntry] = []
+            if let oldData = oldData {
+                oldEntries = oldData.changeCurrency(to: data.displayCurrency).entries
+            }
+
+            // merge items
+            let oldDataFiltered = oldEntries.filter { oldEntry in
+                return !data.entries.contains(where: { $0.date == oldEntry.date })
+            }
+
+            var entries: [ACEntry] = data.entries + oldDataFiltered
+
+            // delete entries from all object that are to old
+            let latest: ACEntry? = entries.sorted { a, b in
+                a.date.compare(b.date) == .orderedDescending
+            }.first
+
+            let latestDate = latest?.date ?? Date()
+            let validDays = latestDate.getLastNDates(370).map({ $0.acApiFormat() })
+
+            entries = entries.filter({ entry in
+                validDays.contains(entry.date.acApiFormat())
+            })
+
+            if !entries.isEmpty {
+                let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency, apps: data.apps))
+                cacheObjects.append(newObj)
+            }
+
+            let collection = CacheObjectCollection(objects: cacheObjects)
+            saveCollection(collection)
         }
-
-        // merge items
-        let oldDataFiltered = oldEntries.filter { oldEntry in
-            return !data.entries.contains(where: { $0.date == oldEntry.date })
-        }
-
-        var entries: [ACEntry] = data.entries + oldDataFiltered
-
-        // delete entries from all object that are to old
-        let latest: ACEntry? = entries.sorted { a, b in
-            a.date.compare(b.date) == .orderedDescending
-        }.first
-
-        let latestDate = latest?.date ?? Date()
-        let validDays = latestDate.getLastNDates(370).map({ $0.acApiFormat() })
-
-        entries = entries.filter({ entry in
-            validDays.contains(entry.date.acApiFormat())
-        })
-
-        if !entries.isEmpty {
-            let newObj = CacheObject(apiKeyId: apiKey.id, data: ACData(entries: entries, currency: data.displayCurrency, apps: data.apps))
-            cacheObjects.append(newObj)
-        }
-
-        let collection = CacheObjectCollection(objects: cacheObjects)
-        saveCollection(collection)
     }
 
     private static func saveCollection(_ collection: CacheObjectCollection) {

@@ -307,7 +307,7 @@ extension Array where Element == ACEntry {
         let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1*n, to: latestDate) ?? Date.now
         var result: [ACEntry] = []
         for entry in self.reversed() {
-            if entry.date < earliestDate  && !Calendar.current.isDate(entry.date, inSameDayAs: earliestDate) {
+            if entry.date < earliestDate && !Calendar.current.isDate(entry.date, inSameDayAs: earliestDate) {
                 break
             }
             result.append(entry)
@@ -326,6 +326,19 @@ extension Array where Element == RawDataPoint {
         return lastNDays.map({ day -> RawDataPoint in
             return self.first(where: { $0.1 == day }) ?? (Float.zero, day)
         })
+    }
+
+    func getLastPoints(_ n: Int) -> [RawDataPoint] {
+        let latestDate: Date = self.first?.1 ?? Date.now
+        let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1*n, to: latestDate) ?? Date.now
+        var result: [RawDataPoint] = []
+        for entry in self {
+            if entry.1 < earliestDate {
+                break
+            }
+            result.append(entry)
+        }
+        return result
     }
 }
 

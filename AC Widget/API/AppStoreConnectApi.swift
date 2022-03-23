@@ -122,7 +122,7 @@ class AppStoreConnectApi {
 
         let apps = try? await self.getApps(entries: entries)
 
-        let acdata = ACData(entries: optimizeEntries(entries), currency: localCurrency, apps: apps ?? [])
+        let acdata = ACData(entries: entries, currency: localCurrency, apps: apps ?? [])
         ACDataCache.saveData(data: acdata, apiKey: self.apiKey)
         return acdata
     }
@@ -243,6 +243,7 @@ class AppStoreConnectApi {
             ]), completion: { result in
                 switch result {
                 case .success(let value):
+                    print("Got data for: \(date)")
                     continuation.resume(returning: value)
                 case .failure(let error):
                     if let apiError = error as? AppStoreConnect_Swift_SDK.APIProvider.Error {
