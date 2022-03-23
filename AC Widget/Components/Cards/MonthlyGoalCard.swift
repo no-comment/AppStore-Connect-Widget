@@ -81,7 +81,7 @@ struct MonthlyGoalCard: View {
                     Spacer()
                     Text(((estimate/goal)*100).toString(abbreviation: .none, maxFractionDigits: 0).appending("%"))
                 }
-                ProgressBar(value: estimate/goal, color: .gray)
+                ProgressBar(value: estimate/goal, color: .graphColor)
             }
         }
     }
