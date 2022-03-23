@@ -35,12 +35,12 @@ struct HeatMapCard: View {
             showNoData()
             return
         }
-        self.rawData = acData.getRawData(for: type, lastNDays: 90)
+        self.rawData = acData.getRawData(for: type, lastNDays: 100)
         noData = false
     }
 
     private func showNoData() {
-        self.rawData = ACData.createExampleData(90)
+        self.rawData = ACData.createExampleData(100)
         noData = true
     }
 }
