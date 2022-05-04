@@ -205,7 +205,7 @@ class AppStoreConnectApi {
         return entries
     }
 
-    private func getApps(entries: [ACEntry]) async throws -> [ACApp] {
+    public func getApps(entries: [ACEntry]) async throws -> [ACApp] {
         let apps: [ITunesLookupApp] = entries
             .map({ .init(appstoreId: $0.appIdentifier, name: $0.appTitle, sku: $0.appSKU) })
             .uniqued(on: \.appstoreId)

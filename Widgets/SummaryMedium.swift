@@ -10,6 +10,7 @@ struct SummaryMedium: View {
     @Environment(\.colorScheme) var colorScheme
 
     let data: ACData
+    let error: APIError?
     var color: Color = .accentColor
     let filteredApps: [ACApp]
 
@@ -17,8 +18,17 @@ struct SummaryMedium: View {
         ZStack(alignment: .topTrailing) {
             HStack(spacing: 0) {
                 dateSection
-                informationSection
-                    .padding([.vertical, .trailing], 12)
+                VStack(alignment: .leading, spacing: 0) {
+                    informationSection
+                    if let error = error {
+                        Label(error.userTitle, systemImage: "exclamationmark.circle")
+                            .font(.caption2)
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top, 5)
+                    }
+                }
+                .padding([.vertical, .trailing], 12)
             }
             AppIconStack(apps: filteredApps)
                 .padding(12)
@@ -65,11 +75,11 @@ struct SummaryMedium: View {
 
             VStack(spacing: 0) {
                 DescribedValueView(description: "LAST_SEVEN_DAYS", value: data
-                                    .getRawData(for: .proceeds, lastNDays: 7, filteredApps: filteredApps).toString(size: .compact)
-                                    .appending(data.displayCurrency.symbol))
+                    .getRawData(for: .proceeds, lastNDays: 7, filteredApps: filteredApps).toString(size: .compact)
+                    .appending(data.displayCurrency.symbol))
                 DescribedValueView(description: "LAST_THIRTY_DAYS", value: data
-                                    .getRawData(for: .proceeds, lastNDays: 30, filteredApps: filteredApps).toString(size: .compact)
-                                    .appending(data.displayCurrency.symbol))
+                    .getRawData(for: .proceeds, lastNDays: 30, filteredApps: filteredApps).toString(size: .compact)
+                    .appending(data.displayCurrency.symbol))
             }
         }
     }
@@ -78,14 +88,13 @@ struct SummaryMedium: View {
 struct SummaryMedium_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryMedium(data: ACData.example, filteredApps: [ACApp.mockApp, ACApp.mockApp, ACApp.mockApp])
+            SummaryMedium(data: ACData.example, error: .exceededLimit, filteredApps: [])
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
 
-            SummaryMedium(data: ACData.example, filteredApps: [])
+            SummaryMedium(data: ACData.example, error: nil, filteredApps: [])
                 .background(Color.widgetBackground)
                 .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
-
         }
     }
 }

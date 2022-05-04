@@ -10,6 +10,7 @@ struct SummaryExtraLarge: View {
     @Environment(\.colorScheme) var colorScheme
 
     let data: ACData
+    let error: APIError?
     var color: Color = .accentColor
     let filteredApps: [ACApp]
 
@@ -17,10 +18,25 @@ struct SummaryExtraLarge: View {
         ZStack(alignment: .topLeading) {
             HStack {
                 dateSection
-                VStack(spacing: 12) {
-                    generalReportSection
-                    appDetailSection
-                    otherInformationSection
+
+                VStack(spacing: 0) {
+                    VStack(spacing: 12) {
+                        generalReportSection
+                        appDetailSection
+                        otherInformationSection
+                    }
+
+                    if let error = error {
+                        HStack {
+                            Image(systemName: "exclamationmark.circle")
+                            Text(error.userTitle)
+                            Text(error.userDescription)
+                        }
+                        .font(.caption2)
+                        .foregroundColor(.red)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 10)
+                    }
                 }
                 .padding([.vertical, .trailing], 12)
                 .padding(.leading, 8)
@@ -259,10 +275,10 @@ struct SummaryExtraLarge: View {
 struct SummaryExtraLarge_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryExtraLarge(data: ACData.example, filteredApps: [ACApp.mockApp, ACApp.mockApp, ACApp.mockApp])
+            SummaryExtraLarge(data: ACData.example, error: nil, filteredApps: [ACApp.mockApp, ACApp.mockApp, ACApp.mockApp])
                 .previewContext(WidgetPreviewContext(family: .systemExtraLarge))
 
-            SummaryExtraLarge(data: ACData.example, filteredApps: [])
+            SummaryExtraLarge(data: ACData.example, error: nil, filteredApps: [])
                 .background(Color.widgetBackground)
                 .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemExtraLarge))

@@ -46,7 +46,7 @@ struct HomeView: View {
                 EmptyView()
             }
         )
-        .navigationTitle("HOME")
+        .navigationTitle("Home")
         .sheet(isPresented: $showsUpdateScreen, content: {
             UpdateView()
         })
@@ -77,7 +77,7 @@ struct HomeView: View {
 
     private var lastChangeSubtitle: some View {
         HStack {
-            Text("Last Change:\(dataProvider.data?.latestReportingDate() ?? "-")")
+            Text("Last Change: \(dataProvider.data?.latestReportingDate() ?? "-")")
                 .font(.subheadline)
             Spacer()
         }
@@ -87,17 +87,17 @@ struct HomeView: View {
     private var additionalInformation: some View {
         VStack(spacing: 20) {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 8) {
-                Text("Last Change:\(dataProvider.data?.latestReportingDate() ?? "-")")
+                Text("Last Change: \(dataProvider.data?.latestReportingDate() ?? "-")")
                     .font(.system(size: 12))
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                Text("Currency:\(dataProvider.data?.displayCurrency.rawValue ?? "-")")
+                Text("Currency: \(dataProvider.data?.displayCurrency.rawValue ?? "-")")
                     .font(.system(size: 12))
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                Text("API Key:\(dataProvider.selectedKey?.name ?? "-")")
+                Text("API Key: \(dataProvider.selectedKey?.name ?? "-")")
                     .font(.system(size: 12))
                     .italic()
                     .frame(maxWidth: .infinity, alignment: .leading)

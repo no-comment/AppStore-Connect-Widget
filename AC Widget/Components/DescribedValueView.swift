@@ -23,15 +23,15 @@ struct DescribedValueView: View {
     var body: some View {
         HStack(spacing: 0) {
             description
-                .font(.system(size: 17, weight: .regular, design: .default))
+                .font(.body)
                 .foregroundColor(.gray)
                 .minimumScaleFactor(0.6)
                 .unredacted()
 
-            Spacer()
+            Spacer(minLength: 5)
 
             Text(value)
-                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                .font(.system(.title3, design: .rounded).weight(.semibold))
                 .minimumScaleFactor(0.75)
         }
         .lineLimit(1)
@@ -42,6 +42,8 @@ struct DescribedValueView_Previews: PreviewProvider {
     static var previews: some View {
         DescribedValueView(description: "30 Days:", value: "2.8k$")
             .padding()
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
+        //            .previewContext(WidgetPreviewContext(family: .systemSmall))
+            .previewLayout(.fixed(width: 164, height: 164))
+
     }
 }

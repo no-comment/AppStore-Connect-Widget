@@ -25,6 +25,7 @@ struct HeatMapCard: View {
                     .unredacted()
             }
             .noDataOverlay(noData)
+            .frame(maxHeight: .infinity, alignment: .center)
         }
         .onLoad(perform: refresh)
         .onReceive(dataProvider.$data) { _ in refresh() }

@@ -11,6 +11,7 @@ struct SummaryLarge: View {
     @Environment(\.colorScheme) var colorScheme
 
     let data: ACData
+    let error: APIError?
     var color: Color = .accentColor
     let filteredApps: [ACApp]
 
@@ -18,8 +19,18 @@ struct SummaryLarge: View {
         ZStack(alignment: .topTrailing) {
             VStack {
                 dateSection
-                informationSection
-                    .padding([.horizontal, .bottom], 14)
+                VStack(spacing: 0) {
+                    informationSection
+
+                    if let error = error {
+                        Label(error.userTitle, systemImage: "exclamationmark.circle")
+                            .font(.caption2)
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top, 5)
+                    }
+                }
+                .padding([.horizontal, .bottom], 14)
             }
             AppIconStack(apps: filteredApps)
                 .padding(.top, 7.5)
@@ -170,10 +181,10 @@ struct SummaryLarge: View {
 struct SummaryLarge_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SummaryLarge(data: ACData.example, filteredApps: [ACApp.mockApp])
+            SummaryLarge(data: ACData.example, error: .exceededLimit, filteredApps: [ACApp.mockApp])
                 .previewContext(WidgetPreviewContext(family: .systemLarge))
 
-            SummaryLarge(data: ACData.example, filteredApps: [])
+            SummaryLarge(data: ACData.example, error: nil, filteredApps: [])
                 .background(Color.widgetBackground)
                 .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemLarge))

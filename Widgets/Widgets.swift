@@ -9,7 +9,7 @@ import Intents
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
-        ACStatEntry(date: Date(), data: .example, filteredApps: [], color: .accentColor, configuration: WidgetConfigurationIntent())
+        ACStatEntry(date: Date(), data: .example, filteredApps: [], error: nil, color: .accentColor, configuration: WidgetConfigurationIntent())
     }
 
     func getSnapshot(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (ACStatEntry) -> Void) {
@@ -18,7 +18,10 @@ struct Provider: IntentTimelineProvider {
         } else {
             Task.init {
                 do {
-                    let data = try await getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
+                    let (data, error) = try await getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
+
+                    guard let data = data else { throw error ?? .noDataAvailable }
+
                     let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
                         Calendar.current.isDateInYesterday(proceed.1)
@@ -28,6 +31,7 @@ struct Provider: IntentTimelineProvider {
                         date: Date(),
                         data: data,
                         filteredApps: configuration.filteredApps?.compactMap({ $0.toACApp(data: data) }) ?? [],
+                        error: error,
                         color: configuration.apiKey?.getColor() ?? .accentColor,
                         configuration: configuration,
                         relevance: isNewData ? .high : .medium
@@ -44,7 +48,10 @@ struct Provider: IntentTimelineProvider {
     func getTimeline(for configuration: WidgetConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         Task.init {
             do {
-                let data = try await getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
+                let (data, error) = try await getApiData(currencyParam: configuration.currency, apiKeyParam: configuration.apiKey)
+
+                guard let data = data else { throw error ?? .noDataAvailable }
+
                 let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
                     Calendar.current.isDateInYesterday(proceed.1)
@@ -53,6 +60,7 @@ struct Provider: IntentTimelineProvider {
                 let entry = ACStatEntry(date: Date(),
                                         data: data,
                                         filteredApps: configuration.filteredApps?.compactMap({ $0.toACApp(data: data) }) ?? [],
+                                        error: error,
                                         color: configuration.apiKey?.getColor() ?? .accentColor,
                                         configuration: configuration,
                                         relevance: isNewData ? .high : .medium)
@@ -93,13 +101,18 @@ struct Provider: IntentTimelineProvider {
         }
     }
 
-    func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) async throws -> ACData {
-        guard let apiKey = apiKeyParam?.toApiKey(),
-              APIKeyProvider().getApiKey(apiKeyId: apiKey.id) != nil else {
-                  throw APIError.invalidCredentials
-              }
+    func getApiData(currencyParam: CurrencyParam?, apiKeyParam: ApiKeyParam?) async throws -> (ACData?, APIError?) {
+        guard let apiKey = apiKeyParam?.toApiKey() else {
+            throw APIError.noKeySelected
+        }
         let api = await AppStoreConnectApi(apiKey: apiKey)
-        return try await api.getData(currency: currencyParam)
+        do {
+            let data = try await api.getData(currency: currencyParam)
+            return (data, nil)
+        } catch let err {
+            let cachedData = ACDataCache.getData(apiKey: apiKey)?.changeCurrency(to: currencyParam?.toCurrency() ?? .USD)
+            return (cachedData, err as? APIError ?? .unknown)
+        }
     }
 }
 
@@ -107,14 +120,14 @@ struct ACStatEntry: TimelineEntry {
     let date: Date
     let data: ACData?
     let filteredApps: [ACApp]
-    var error: APIError?
+    let error: APIError?
     let color: Color
     let configuration: WidgetConfigurationIntent
     var relevance: TimelineEntryRelevance?
 }
 
 extension ACStatEntry {
-    static let placeholder = ACStatEntry(date: Date(), data: .example, filteredApps: [], color: .accentColor, configuration: WidgetConfigurationIntent())
+    static let placeholder = ACStatEntry(date: Date(), data: .example, filteredApps: [], error: nil, color: .accentColor, configuration: WidgetConfigurationIntent())
 }
 
 extension TimelineEntryRelevance {
@@ -132,13 +145,13 @@ struct WidgetsEntryView: View {
         if let data = entry.data {
             switch size {
             case .systemSmall:
-                SummarySmall(data: data, color: entry.color, filteredApps: entry.filteredApps)
+                SummarySmall(data: data, error: entry.error, color: entry.color, filteredApps: entry.filteredApps)
             case .systemMedium:
-                SummaryMedium(data: data, color: entry.color, filteredApps: entry.filteredApps)
+                SummaryMedium(data: data, error: entry.error, color: entry.color, filteredApps: entry.filteredApps)
             case .systemLarge:
-                SummaryLarge(data: data, color: entry.color, filteredApps: entry.filteredApps)
+                SummaryLarge(data: data, error: entry.error, color: entry.color, filteredApps: entry.filteredApps)
             case .systemExtraLarge:
-                SummaryExtraLarge(data: data, color: entry.color, filteredApps: entry.filteredApps)
+                SummaryExtraLarge(data: data, error: entry.error, color: entry.color, filteredApps: entry.filteredApps)
             default:
                 ErrorWidget(error: .unknown)
             }
@@ -166,10 +179,13 @@ struct Widgets: Widget {
 
 struct Widgets_Previews: PreviewProvider {
     static var previews: some View {
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, filteredApps: [.mockApp], color: .accentColor, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, filteredApps: [.mockApp], error: nil, color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
 
-        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, filteredApps: [.mockApp], color: .accentColor, configuration: WidgetConfigurationIntent()))
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, filteredApps: [.mockApp], error: .exceededLimit, color: .accentColor, configuration: WidgetConfigurationIntent()))
+            .previewContext(WidgetPreviewContext(family: .systemSmall))
+
+        WidgetsEntryView(entry: ACStatEntry(date: Date(), data: .example, filteredApps: [.mockApp], error: nil, color: .accentColor, configuration: WidgetConfigurationIntent()))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

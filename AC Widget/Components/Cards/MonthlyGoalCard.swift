@@ -23,7 +23,7 @@ struct MonthlyGoalCard: View {
                         .foregroundColor(type.color)
                 }
                 Text("Monthly Goal")
-                    .font(.title.weight(.medium))
+                    .font(.title2.weight(.semibold))
 
                 if isEditing {
                     editView

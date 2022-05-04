@@ -391,7 +391,6 @@ private struct ViewDidLoadModifier: ViewModifier {
             }
         }
     }
-
 }
 
 extension View {

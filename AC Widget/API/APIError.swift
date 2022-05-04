@@ -6,6 +6,7 @@
 import Foundation
 
 enum APIError: Error {
+    case noKeySelected
     case invalidCredentials
     case wrongPermissions
     case exceededLimit
@@ -23,6 +24,8 @@ enum APIError: Error {
             return "Limit Reached"
         case .noDataAvailable:
             return "No Data Available"
+        case .noKeySelected:
+            return "No Key Selected"
         case .unknown:
             return "Unknown Error"
         case .unhandled:
@@ -40,6 +43,8 @@ enum APIError: Error {
             return "You have exceeded the hourly limit of API requests."
         case .noDataAvailable:
             return "Data is not yet available."
+        case .noKeySelected:
+            return "You have not selected a key."
         case .unknown:
             return "An unknown error occurred. Please file a bug report."
         case .unhandled(let description):

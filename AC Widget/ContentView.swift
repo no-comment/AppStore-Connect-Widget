@@ -61,7 +61,7 @@ struct ContentView: View {
                 DetailsOverview()
             }.tabItem {
                 Image(systemName: "chart.bar.xaxis")
-                Text("DETAILS")
+                Text("Details")
             }
             .navigationViewStyle(.stack)
 
@@ -69,7 +69,7 @@ struct ContentView: View {
                 AppListView()
             }.tabItem {
                 Image(systemName: "square.grid.2x2.fill")
-                Text("APPS")
+                Text("Apps")
             }
             .navigationViewStyle(.stack)
         }

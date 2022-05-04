@@ -91,13 +91,10 @@ struct WeeklyAverageComparisonCard: View {
         GeometryReader { geo in
             HStack(alignment: .bottom, spacing: 0) {
                 ForEach(data, id: \.1) { (value, _) in
-                    VStack {
-                        Capsule()
-                            .frame(width: 0.5 * geo.size.width / 31, height: max == 0 ? 0 : geo.size.height * CGFloat(value/max))
-                        //                        Text(date.toString(format: "EEEEE"))
-                    }
-                    .foregroundColor(.graphColor)
-                    .frame(maxWidth: .infinity)
+                    Capsule()
+                        .frame(width: 0.5 * geo.size.width / 31, height: max == 0 ? 0 : geo.size.height * CGFloat(value/max))
+                        .foregroundColor(.graphColor)
+                        .frame(maxWidth: .infinity)
                 }
             }
         }
@@ -150,7 +147,7 @@ struct WeeklyAverageComparisonCard: View {
             return
         }
 
-        let filteredData = Array(rawData.sorted(by: { $0.1 < $1.1 }))
+        let filteredData = rawData.sorted(by: { $0.1 < $1.1 })
         self.data = filteredData
 
         if filteredData.isEmpty {
