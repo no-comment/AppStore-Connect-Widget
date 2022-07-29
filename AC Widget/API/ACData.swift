@@ -3,9 +3,9 @@
 //  AC Widget by NO-COMMENT
 //
 
+import BetterToStrings
 import Foundation
 import SwiftUI
-import BetterToStrings
 
 typealias RawDataPoint = (Float, Date)
 
@@ -80,10 +80,8 @@ struct ACData: Codable {
             }
         }
 
-        for (key, value) in dic {
-            if value.allSatisfy({ $0.0 == 0 }) {
-                dic[key] = []
-            }
+        for (key, value) in dic where value.allSatisfy({ $0.0 == 0 }) {
+            dic[key] = []
         }
 
         return dic
@@ -113,6 +111,7 @@ extension ACData {
 
 extension ACData {
     // MARK: Get Raw Data
+
     private func getEntries(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [ACEntry] {
         var entries = entries.getLastDays(lastNDays).filterApps(filteredApps)
 
@@ -144,11 +143,11 @@ extension ACData {
         switch type {
         case .proceeds:
             result = dict.map { (key: Date, value: [ACEntry]) -> RawDataPoint in
-                return (value.reduce(0, { $0 + $1.proceeds * Float($1.units) }), key)
+                (value.reduce(0, { $0 + $1.proceeds * Float($1.units) }), key)
             }
         default:
             result = dict.map { (key: Date, value: [ACEntry]) -> RawDataPoint in
-                return (Float(value.reduce(0, { $0 + $1.units })), key)
+                (Float(value.reduce(0, { $0 + $1.units })), key)
             }
         }
 
@@ -160,6 +159,7 @@ extension ACData {
     }
 
     // MARK: Get CountryCode
+
     func getCountries(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
         let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.countryCode })
         var result: [(String, Float)]
@@ -167,11 +167,11 @@ extension ACData {
         switch type {
         case .proceeds:
             result = dict.map { (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, value.reduce(0, { $0 + $1.proceeds * Float($1.units) }))
+                (key, value.reduce(0, { $0 + $1.proceeds * Float($1.units) }))
             }
         default:
             result = dict.map { (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, Float(value.reduce(0, { $0 + $1.units })))
+                (key, Float(value.reduce(0, { $0 + $1.units })))
             }
         }
 
@@ -179,6 +179,7 @@ extension ACData {
     }
 
     // MARK: Get Device
+
     func getDevices(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
         let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.device })
         var result: [(String, Float)]
@@ -186,11 +187,11 @@ extension ACData {
         switch type {
         case .proceeds:
             result = dict.map { (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, value.reduce(0, { $0 + $1.proceeds * Float($1.units) }))
+                (key, value.reduce(0, { $0 + $1.proceeds * Float($1.units) }))
             }
         default:
             result = dict.map { (key: String, value: [ACEntry]) -> (String, Float) in
-                return (key, Float(value.reduce(0, { $0 + $1.units })))
+                (key, Float(value.reduce(0, { $0 + $1.units })))
             }
         }
 
@@ -198,10 +199,11 @@ extension ACData {
     }
 
     // MARK: Get Change
+
     func getChange(_ type: InfoType) -> String {
         let latestInterval = getRawData(for: type, lastNDays: 15).map({ $0.0 }).reduce(0, +)
         let previousInterval = getRawData(for: type, lastNDays: 30).map({ $0.0 }).reduce(0, +) - latestInterval
-        let change = NSNumber(value: ((latestInterval/previousInterval) - 1) * 100)
+        let change = NSNumber(value: ((latestInterval / previousInterval) - 1) * 100)
         let nf = NumberFormatter()
         nf.numberStyle = .decimal
         nf.maximumFractionDigits = 1
@@ -209,6 +211,7 @@ extension ACData {
     }
 
     // MARK: Getting Dates
+
     func latestReportingDate() -> Date {
         return entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
     }
@@ -225,6 +228,7 @@ extension Date {
 }
 
 // MARK: Mock Data
+
 extension ACData {
     static let example = createMockData(371)
     static let exampleLargeSums = createMockData(371, largeValues: true)
@@ -250,7 +254,7 @@ extension ACData {
     }
 
     public static func createExampleData(_ days: Int, largeValues: Bool = false) -> [RawDataPoint] {
-        return Date.now.dayBefore.getLastNDates(days).map({ return (Float(Int.random(in: 7...30) * (largeValues ? 5 : 1)), $0) })
+        return Date.now.dayBefore.getLastNDates(days).map({ (Float(Int.random(in: 7...30) * (largeValues ? 5 : 1)), $0) })
     }
 }
 

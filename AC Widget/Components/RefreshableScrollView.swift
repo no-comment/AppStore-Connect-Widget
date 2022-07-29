@@ -15,17 +15,26 @@ struct RefreshableScrollView<Content: View>: View {
     let onRefresh: () async -> Void
 
     var body: some View {
-        List {
+        if #available(iOS 16, *) {
             ScrollView {
                 content
             }
-            .listRowSeparatorTint(Color.clear)
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        }
-        .listStyle(.plain)
-        .refreshable {
-            await onRefresh()
+            .refreshable {
+                await onRefresh()
+            }
+        } else {
+            List {
+                ScrollView {
+                    content
+                }
+                .listRowSeparatorTint(Color.clear)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+            .listStyle(.plain)
+            .refreshable {
+                await onRefresh()
+            }
         }
     }
 }

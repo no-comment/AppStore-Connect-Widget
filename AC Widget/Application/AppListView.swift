@@ -42,7 +42,7 @@ struct AppListView: View {
                 .padding(.horizontal)
             }
         }
-        .navigationTitle("APPS")
+        .navigationTitle("Apps")
         .secondaryBackground()
     }
 }

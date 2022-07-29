@@ -115,6 +115,7 @@ struct SummaryCard: View {
     }
 
     // MARK: Top
+
     var topSection: some View {
         HStack(alignment: .top) {
             if let index = currentIndex {
@@ -142,17 +143,18 @@ struct SummaryCard: View {
     }
 
     // MARK: Graph
+
     var graphSection: some View {
         Group {
             GeometryReader { reading in
                 HStack(alignment: .bottom, spacing: 0) {
                     ForEach(graphData.indices, id: \.self) { i in
                         Capsule()
-                            .frame(width: (reading.size.width/CGFloat(graphData.count))*0.7, height: reading.size.height * getGraphHeight(i))
+                            .frame(width: (reading.size.width / CGFloat(graphData.count)) * 0.7, height: reading.size.height * getGraphHeight(i))
                             .foregroundColor(getGraphColor(i))
                             .opacity(currentIndex == i ? 0.7 : 1)
 
-                        if i != graphData.count-1 {
+                        if i != graphData.count - 1 {
                             Spacer()
                                 .frame(minWidth: 0)
                         }
@@ -161,44 +163,37 @@ struct SummaryCard: View {
                 .contentShape(Rectangle())
                 .highPriorityGesture(DragGesture(minimumDistance: 20)
                     .onChanged({ value in
-                        let newIndex = Int((value.location.x/reading.size.width) * CGFloat(graphData.count))
+                        let newIndex = Int((value.location.x / reading.size.width) * CGFloat(graphData.count))
                         if newIndex != currentIndex && newIndex < rawData.count && newIndex >= 0 {
                             currentIndex = newIndex
                             UISelectionFeedbackGenerator()
                                 .selectionChanged()
                         }
                     })
-                        .onEnded({ _ in
-                            withAnimation(Animation.easeOut(duration: 0.2)) {
-                                currentIndex = nil
-                            }
-                        })
+                    .onEnded({ _ in
+                        withAnimation(Animation.easeOut(duration: 0.2)) {
+                            currentIndex = nil
+                        }
+                    })
                 )
             }
         }
     }
 
     private func getGraphHeight(_ i: Int) -> CGFloat {
-        if i < graphData.count && graphData[i] > 0 {
-            return graphData[i]
-        }
-        if i < graphData.count && graphData[i] < 0 {
-            return abs(graphData[i])
-        }
-        return 0.01
+        guard graphData.indices.contains(i) else { return 0.01 }
+        return abs(graphData[i])
     }
 
     private func getGraphColor(_ i: Int) -> Color {
-        var result: Color = .gray
-        if i < graphData.count && graphData[i] > 0 {
-            result = type.color
-        } else if i < graphData.count && graphData[i] < 0 {
-            result = .red
-        }
-        return result
+        guard graphData.indices.contains(i) else { return .gray }
+        if graphData[i] == 0 { return .gray }
+        if graphData[i] > 0 { return type.color }
+        return .red
     }
 
     // MARK: Bottom
+
     var bottomSection: some View {
         VStack {
             HStack(alignment: .bottom) {

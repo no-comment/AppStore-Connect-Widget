@@ -3,11 +3,11 @@
 //  AC Widget by NO-COMMENT
 //
 
-import Foundation
+import Algorithms
 import AppStoreConnect_Swift_SDK
+import Foundation
 import Gzip
 import SwiftCSV
-import Algorithms
 
 @MainActor
 class AppStoreConnectApi {
@@ -24,7 +24,7 @@ class AppStoreConnectApi {
     private var privateKey: String { apiKey.privateKey }
     private var vendorNumber: String { apiKey.vendorNumber }
 
-    static private var lastData: [APIKey: LoaderStatus] = [:]
+    private static var lastData: [APIKey: LoaderStatus] = [:]
     private enum LoaderStatus {
         case inProgress(Task<ACData, Error>)
         case loaded((data: ACData, date: Date))
@@ -59,7 +59,7 @@ class AppStoreConnectApi {
         }
 
         let task: Task<ACData, Error> = Task {
-            return try await getDataFromAPI(localCurrency: currency ?? .USD, numOfDays: numOfDays, useCache: useCache)
+            try await getDataFromAPI(localCurrency: currency ?? .USD, numOfDays: numOfDays, useCache: useCache)
         }
 
         AppStoreConnectApi.lastData[apiKey] = .inProgress(task)
@@ -78,7 +78,7 @@ class AppStoreConnectApi {
 
         let configuration = APIConfiguration(issuerID: self.issuerID, privateKeyID: self.privateKeyID, privateKey: self.privateKey)
 
-        let provider: APIProvider = APIProvider(configuration: configuration)
+        let provider = APIProvider(configuration: configuration)
 
         var entries: [ACEntry] = []
 
@@ -103,6 +103,9 @@ class AppStoreConnectApi {
                         return try await self.apiSalesAndTrendsWrapped(provider: provider, vendorNumber: self.vendorNumber, date: date)
                     } catch APIError.noDataAvailable {
                         return nil
+                    } catch {
+                        print(error)
+                        throw error
                     }
                 }
             }
@@ -141,9 +144,9 @@ class AppStoreConnectApi {
 
         let groupedEntries = Dictionary(grouping: oldEntries, by: { Calendar.current.component(.month, from: $0.date) })
             .flatMap { (_: Int, entries: [ACEntry]) in
-                return Dictionary(grouping: entries, by: \.type)
+                Dictionary(grouping: entries, by: \.type)
                     .map { (type: ACEntryType, entriesSameType: [ACEntry]) in
-                        return ACEntry(
+                        ACEntry(
                             appTitle: "",
                             appSKU: "",
                             units: entriesSameType.map(\.units).reduce(.zero, +),
@@ -152,7 +155,8 @@ class AppStoreConnectApi {
                             countryCode: "",
                             device: "",
                             appIdentifier: "",
-                            type: type)
+                            type: type
+                        )
                     }
             }
 
@@ -163,21 +167,15 @@ class AppStoreConnectApi {
         var entries: [ACEntry] = []
 
         guard let decompressedData = try? result.gunzipped() else {
-            #if DEBUG
-            fatalError()
-            #else
+            assertionFailure("Could not unzip data")
             return []
-            #endif
         }
 
         let str = String(decoding: decompressedData, as: UTF8.self)
 
-        guard let tsv: CSV = try? CSV(string: str, delimiter: "\t") else {
-            #if DEBUG
-            fatalError()
-            #else
+        guard let tsv: CSV = try? CSV<Enumerated>(string: str, delimiter: "\t") else {
+            assertionFailure("Could not parse tsv")
             return []
-            #endif
         }
 
         try? tsv.enumerateAsDict { dict in
@@ -185,7 +183,7 @@ class AppStoreConnectApi {
             let sku: String = dict["SKU"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
             var proceeds = Double(dict["Developer Proceeds"] ?? "0.00") ?? 0
-            if let cur: Currency = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
+            if let cur = Currency(rawValue: dict["Currency of Proceeds"] ?? "") {
                 proceeds = CurrencyConverter.shared.convert(proceeds, valueCurrency: cur, outputCurrency: localCurrency) ?? 0
             } else {
                 proceeds = 0
@@ -216,7 +214,7 @@ class AppStoreConnectApi {
 
             for app in apps {
                 group.addTask {
-                    return try? await self.iTunesLookup(app: app)
+                    try? await self.iTunesLookup(app: app)
                 }
             }
 
@@ -230,60 +228,103 @@ class AppStoreConnectApi {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     private func apiSalesAndTrendsWrapped(provider: APIProvider, vendorNumber: String, date: String) async throws -> Data {
         print("Loading data for: \(date)")
-        return try await withCheckedThrowingContinuation { continuation in
-            provider.request(APIEndpoint.downloadSalesAndTrendsReports(filter: [
-                .frequency([.DAILY]),
-                .reportSubType([.SUMMARY]),
-                .reportType([.SALES]),
-                .vendorNumber([vendorNumber]),
-                .reportDate([date]),
-            ]), completion: { result in
-                switch result {
-                case .success(let value):
-                    print("Got data for: \(date)")
-                    continuation.resume(returning: value)
-                case .failure(let error):
-                    if let apiError = error as? AppStoreConnect_Swift_SDK.APIProvider.Error {
-                        switch apiError {
-                        case .requestFailure(let statusCode, let errData):
-                            switch statusCode {
-                            case 401:
-                                continuation.resume(throwing: APIError.invalidCredentials)
-                            case 429:
-                                continuation.resume(throwing: APIError.exceededLimit)
-                            case 403:
-                                continuation.resume(throwing: APIError.wrongPermissions)
-                            case 404:
-                                guard let errData = errData else {
-                                    continuation.resume(throwing: APIError.unknown)
-                                    break
-                                }
 
-                                let resp = String(decoding: errData, as: UTF8.self)
-                                if resp.contains("The request expected results but none were found") {
-                                    continuation.resume(throwing: APIError.noDataAvailable)
-                                } else {
-                                    continuation.resume(throwing: APIError.unknown)
-                                }
-                            default:
-                                print(statusCode)
-                                continuation.resume(throwing: APIError.unhandled("API status code: \(statusCode)"))
-                            }
-                        case .requestGeneration:
-                            continuation.resume(throwing: APIError.invalidCredentials)
-                        default:
-                            continuation.resume(throwing: APIError.unhandled(apiError.localizedDescription))
-                        }
-                    } else {
-                        continuation.resume(throwing: error)
-                    }
-                }
-            })
+        let request = APIEndpoint
+            .v1.salesReports
+            .get(parameters: .init(
+                filterFrequency: [.daily],
+                filterReportDate: [date],
+                filterReportSubType: [.summary],
+                filterReportType: [.sales],
+                filterVendorNumber: [vendorNumber]
+            ))
+
+//            .get(parameters: .init(
+//                sort: [.bundleID],
+//                fieldsApps: [.appInfos, .builds, .name],
+//                limit: 5,
+//                include: [.builds],
+//                fieldsBuilds: [.version, .processingState, .uploadedDate]
+//            ))
+        do {
+            let appsResponse = try await provider.request(request)
+            return appsResponse
+        } catch let error as AppStoreConnect_Swift_SDK.APIProvider.Error {
+            // TODO: implement some error catching and use APIError
+            throw error
+//            switch error {
+//            case .requestGeneration:
+//                <#code#>
+//            case .unknownResponseType:
+//                <#code#>
+//            case .requestFailure(_, _, _):
+//                <#code#>
+//            case .decodingError(_, _):
+//                <#code#>
+//            case .downloadError:
+//                <#code#>
+//            case .dateDecodingError(_):
+//                <#code#>
+//            case .requestExecutorError(_):
+//                <#code#>
+//            }
         }
     }
+
+//        return try await withCheckedThrowingContinuation { continuation in
+//            provider.request(APIEndpoint.v1.salesReports
+//                .downloadSalesAndTrendsReports(filter: [
+//                .frequency([.DAILY]),
+//                .reportSubType([.SUMMARY]),
+//                .reportType([.SALES]),
+//                .vendorNumber([vendorNumber]),
+//                .reportDate([date]),
+//            ]), completion: { result in
+//                switch result {
+//                case .success(let value):
+//                    print("Got data for: \(date)")
+//                    continuation.resume(returning: value)
+//                case .failure(let error):
+//                    if let apiError = error as? AppStoreConnect_Swift_SDK.APIProvider.Error {
+//                        switch apiError {
+//                        case .requestFailure(let statusCode, let errData):
+//                            switch statusCode {
+//                            case 401:
+//                                continuation.resume(throwing: APIError.invalidCredentials)
+//                            case 429:
+//                                continuation.resume(throwing: APIError.exceededLimit)
+//                            case 403:
+//                                continuation.resume(throwing: APIError.wrongPermissions)
+//                            case 404:
+//                                guard let errData = errData else {
+//                                    continuation.resume(throwing: APIError.unknown)
+//                                    break
+//                                }
+//
+//                                let resp = String(decoding: errData, as: UTF8.self)
+//                                if resp.contains("The request expected results but none were found") {
+//                                    continuation.resume(throwing: APIError.noDataAvailable)
+//                                } else {
+//                                    continuation.resume(throwing: APIError.unknown)
+//                                }
+//                            default:
+//                                print(statusCode)
+//                                continuation.resume(throwing: APIError.unhandled("API status code: \(statusCode)"))
+//                            }
+//                        case .requestGeneration:
+//                            continuation.resume(throwing: APIError.invalidCredentials)
+//                        default:
+//                            continuation.resume(throwing: APIError.unhandled(apiError.localizedDescription))
+//                        }
+//                    } else {
+//                        continuation.resume(throwing: error)
+//                    }
+//                }
+//            })
+//        }
+//    }
 
     private struct ITunesResponse: Codable {
         let resultCount: Int
@@ -308,16 +349,16 @@ class AppStoreConnectApi {
             throw APIError.unknown
         }
 
-        if let data = try? Data(contentsOf: url) {
+        if let data = try? await URLSession.shared.data(from: url) {
             let decoder = JSONDecoder()
-            let result = try? decoder.decode(ITunesResponse.self, from: data)
+            let result = try? decoder.decode(ITunesResponse.self, from: data.0)
             guard let appData = result?.results.first else {
                 throw APIError.unhandled("App ID \(app.appstoreId) not found in AppStore")
             }
 
             var imageData: Data?
             if let imgUrl = URL(string: appData.artworkUrl60) {
-                imageData = try? Data(contentsOf: imgUrl)
+                imageData = try? await URLSession.shared.data(from: imgUrl).0
             }
 
             return ACApp(appstoreId: app.appstoreId,
@@ -333,12 +374,19 @@ class AppStoreConnectApi {
         }
     }
 
-    private func apiAppsWrapped(provider: APIProvider) async throws -> AppsResponse {
-        return try await withCheckedThrowingContinuation { continuation in
-            provider.request(APIEndpoint.apps(select: [.apps([.name, .sku])]), completion: { result in
-                continuation.resume(with: result)
-            })
-        }
+    private func apiAppsWrapped(provider: APIProvider) async throws -> [AppStoreConnect_Swift_SDK.App] {
+        let request = APIEndpoint
+            .v1.apps
+            .get(parameters: .init(
+                sort: [.bundleID],
+                fieldsApps: [.name, .sku]
+            ))
+        return try await provider.request(request).data
+//        return try await withCheckedThrowingContinuation { continuation in
+//            provider.request(APIEndpoint.apps(select: [.apps([.name, .sku])]), completion: { result in
+//                continuation.resume(with: result)
+//            })
+//        }
     }
 }
 

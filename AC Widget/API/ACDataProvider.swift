@@ -3,8 +3,8 @@
 //  AC Widget by NO-COMMENT
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 class ACDataProvider: ObservableObject {
     private var anyCancellable: AnyCancellable?
@@ -16,6 +16,7 @@ class ACDataProvider: ObservableObject {
     @AppStorage(UserDefaultsKey.homeSelectedKey, store: UserDefaults.shared) public var keyID: String = "" {
         didSet { refresh() }
     }
+
     @AppStorage(UserDefaultsKey.homeCurrency, store: UserDefaults.shared) public var currency: String = Currency.USD.rawValue {
         didSet { refresh() }
     }
@@ -59,6 +60,7 @@ class ACDataProvider: ObservableObject {
         }
     }
 
+    @MainActor
     public func refreshData(useMemoization: Bool = true) async {
         guard let apiKey = selectedKey else {
             data = nil
@@ -77,7 +79,7 @@ class ACDataProvider: ObservableObject {
     }
 }
 
-fileprivate extension UserDefaultsKey {
+private extension UserDefaultsKey {
     static let homeSelectedKey = "homeSelectedKey"
     static let homeCurrency = "homeCurrency"
 }
