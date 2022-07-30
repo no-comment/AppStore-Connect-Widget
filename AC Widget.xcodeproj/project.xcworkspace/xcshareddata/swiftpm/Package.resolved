@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AvdLee/appstoreconnect-swift-sdk.git",
       "state" : {
-        "branch" : "master",
-        "revision" : "c8d92cdf18a1b33090307569034dbd0904bbfb4c"
+        "revision" : "d8fd0a9d51b4c2e9c82c8a27061e2ba0c653045d",
+        "version" : "2.2.0"
       }
     },
     {

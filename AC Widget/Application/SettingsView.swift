@@ -25,6 +25,22 @@ struct SettingsView: View {
             contactSection
             versionSection
             notes
+            #if DEBUG
+            NavigationLink("Debug: Widget Preview") {
+                ScrollView {
+                    LazyVStack(spacing: 15) {
+                        Text("results may vary").italic().font(.caption).foregroundColor(.secondary).frame(maxWidth: .infinity, alignment: .leading)
+                        SummarySmall(data: dataProvider.data ?? .exampleLargeSums, error: dataProvider.error, filteredApps: []).modifier(WidgetPreview(size: .small))
+                        SummaryMedium(data: dataProvider.data ?? .exampleLargeSums, error: dataProvider.error, filteredApps: []).modifier(WidgetPreview(size: .medium))
+                        SummaryLarge(data: dataProvider.data ?? .exampleLargeSums, error: dataProvider.error, filteredApps: []).modifier(WidgetPreview(size: .large))
+                        SummaryExtraLarge(data: dataProvider.data ?? .exampleLargeSums, error: dataProvider.error, filteredApps: []).modifier(WidgetPreview(size: .extraLarge))
+                        ErrorWidget(error: .unknown).modifier(WidgetPreview(size: .small))
+                    }.padding(.horizontal)
+                }
+                .background(Color(uiColor: .secondarySystemBackground).ignoresSafeArea())
+                .navigationTitle("Widget Preview")
+            }
+            #endif
         }
         .navigationTitle("SETTINGS")
         .sheet(isPresented: $addKeySheet, content: sheet)
@@ -35,14 +51,14 @@ struct SettingsView: View {
             ForEach(dataProvider.apiKeysProvider.apiKeys) { key in
                 NavigationLink(destination: APIKeyDetailView(key),
                                label: {
-                    HStack {
-                        Text("\(Image(systemName: "circle.fill"))")
-                            .foregroundColor(key.color)
-                        Text(key.name)
-                        Spacer()
-                        ApiKeyCheckIndicator(key: key)
-                    }
-                })
+                                   HStack {
+                                       Text("\(Image(systemName: "circle.fill"))")
+                                           .foregroundColor(key.color)
+                                       Text(key.name)
+                                       Spacer()
+                                       ApiKeyCheckIndicator(key: key)
+                                   }
+                               })
             }
             .onDelete(perform: deleteKey)
 
@@ -52,16 +68,16 @@ struct SettingsView: View {
 
     var keySectionFooter: some View {
         Text("\(Image(systemName: "checkmark.circle")): ")
-        +
-        Text("VALID_KEY")
-        +
-        Text(" \(Image(systemName: "xmark.circle")): ")
-        +
-        Text("INVALID_KEY")
-        +
-        Text(" \(Image(systemName: "exclamationmark.circle")): ")
-        +
-        Text("PROBLEM_KEY")
+            +
+            Text("VALID_KEY")
+            +
+            Text(" \(Image(systemName: "xmark.circle")): ")
+            +
+            Text("INVALID_KEY")
+            +
+            Text(" \(Image(systemName: "exclamationmark.circle")): ")
+            +
+            Text("PROBLEM_KEY")
     }
 
     var generalSection: some View {
@@ -161,7 +177,7 @@ struct SettingsView: View {
 
     private func sheet() -> some View {
         NavigationView {
-        OnboardingView(showsWelcome: false)
+            OnboardingView(showsWelcome: false)
                 .closeSheetButton()
         }
     }

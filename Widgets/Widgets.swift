@@ -3,9 +3,9 @@
 //  AC Widget by NO-COMMENT
 //
 
-import WidgetKit
-import SwiftUI
 import Intents
+import SwiftUI
+import WidgetKit
 
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> ACStatEntry {
@@ -24,7 +24,7 @@ struct Provider: IntentTimelineProvider {
 
                     let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                         Calendar.current.isDateInToday(proceed.1) ||
-                        Calendar.current.isDateInYesterday(proceed.1)
+                            Calendar.current.isDateInYesterday(proceed.1)
                     }
 
                     let entry = ACStatEntry(
@@ -54,7 +54,7 @@ struct Provider: IntentTimelineProvider {
 
                 let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
                     Calendar.current.isDateInToday(proceed.1) ||
-                    Calendar.current.isDateInYesterday(proceed.1)
+                        Calendar.current.isDateInYesterday(proceed.1)
                 }
 
                 let entry = ACStatEntry(date: Date(),

@@ -134,9 +134,10 @@ extension ACData {
     }
 
     func getRawData(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [RawDataPoint] {
-        if filteredApps.isEmpty {
-            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? []
-        }
+//        if filteredApps.isEmpty {
+        // TODO: fehlerhaft im widget
+//            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? []
+//        }
         let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.date })
         var result: [RawDataPoint]
 

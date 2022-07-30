@@ -57,11 +57,12 @@
 		45E8C4972612531D007F9B0E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E8C4962612531D007F9B0E /* WidgetKit.framework */; };
 		45E8C4992612531D007F9B0E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E8C4982612531D007F9B0E /* SwiftUI.framework */; };
 		45E8C49C2612531D007F9B0E /* Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E8C49B2612531D007F9B0E /* Widgets.swift */; };
-		45E8C4A52612531E007F9B0E /* WidgetsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 45E8C4942612531D007F9B0E /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		45E8C4A52612531E007F9B0E /* WidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 45E8C4942612531D007F9B0E /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		45E8C4BD261267FB007F9B0E /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 45E8C4BC261267FB007F9B0E /* Gzip */; };
 		45E8C4C0261268D4007F9B0E /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 45E8C4BF261268D4007F9B0E /* SwiftCSV */; };
+		45F9E75D28958CD80064F30E /* SummaryExtraLarge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB4A60C26F674880064EE9E /* SummaryExtraLarge.swift */; };
 		45FD5196261915F200603D8A /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FD5195261915F200603D8A /* IntentHandler.swift */; };
-		45FD519A261915F200603D8A /* WidgetIntentExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 45FD5191261915F200603D8A /* WidgetIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		45FD519A261915F200603D8A /* WidgetIntentExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 45FD5191261915F200603D8A /* WidgetIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CB28AEE02615D24400B48215 /* UnitText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEDF2615D24400B48215 /* UnitText.swift */; };
 		CB28AEE12615D24400B48215 /* UnitText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEDF2615D24400B48215 /* UnitText.swift */; };
 		CB28AEE52615D28F00B48215 /* SummarySmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEE42615D28F00B48215 /* SummarySmall.swift */; };
@@ -155,16 +156,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		45E8C4AA2612531E007F9B0E /* Embed App Extensions */ = {
+		45E8C4AA2612531E007F9B0E /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				45FD519A261915F200603D8A /* WidgetIntentExtension.appex in Embed App Extensions */,
-				45E8C4A52612531E007F9B0E /* WidgetsExtension.appex in Embed App Extensions */,
+				45FD519A261915F200603D8A /* WidgetIntentExtension.appex in Embed Foundation Extensions */,
+				45E8C4A52612531E007F9B0E /* WidgetsExtension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -500,11 +501,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 45E8C48C2612512F007F9B0E /* Build configuration list for PBXNativeTarget "AC Widget" */;
 			buildPhases = (
+				45440454261A4D4D0032D256 /* Linting */,
 				45E8C4792612512E007F9B0E /* Sources */,
 				45E8C47A2612512E007F9B0E /* Frameworks */,
 				45E8C47B2612512E007F9B0E /* Resources */,
-				45E8C4AA2612531E007F9B0E /* Embed App Extensions */,
-				45440454261A4D4D0032D256 /* Linting */,
+				45E8C4AA2612531E007F9B0E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -585,7 +586,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					45E8C47C2612512E007F9B0E = {
 						CreatedOnToolsVersion = 12.5;
@@ -713,6 +714,7 @@
 				CB94792A27BC414A00CF4BAD /* ProgressBar.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
 				459CBA2D278631E900FF568E /* ACDataProvider.swift in Sources */,
+				45F9E75D28958CD80064F30E /* SummaryExtraLarge.swift in Sources */,
 				CB2D236926433AB9003DA727 /* SummaryLarge.swift in Sources */,
 				45D2041D262CBEB000D0E889 /* ACApp.swift in Sources */,
 				CB9C4CB3262A2391007E38F1 /* InfoTileFront.swift in Sources */,
@@ -1184,8 +1186,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AvdLee/appstoreconnect-swift-sdk.git";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
 			};
 		};
 		45E8C4BB261267FB007F9B0E /* XCRemoteSwiftPackageReference "GzipSwift" */ = {

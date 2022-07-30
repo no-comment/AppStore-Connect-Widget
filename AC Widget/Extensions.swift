@@ -3,11 +3,11 @@
 //  AC Widget by NO-COMMENT
 //
 
+import DynamicColor
 import Foundation
+import KeychainAccess
 import SwiftUI
 import WidgetKit
-import DynamicColor
-import KeychainAccess
 
 extension Date {
     var dayBefore: Date {
@@ -77,16 +77,19 @@ extension Calendar {
 }
 
 // MARK: UIApplication
+
 extension UIApplication {
     static var appVersion: String? {
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
     }
+
     static var buildVersion: String? {
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
     }
 }
 
 // MARK: User Defaults
+
 extension UserDefaults {
     static var shared: UserDefaults? {
         UserDefaults(suiteName: "group.dev.kruschel.ACWidget")
@@ -106,6 +109,7 @@ enum UserDefaultsKey {
 }
 
 // MARK: Editing Strings
+
 extension String {
     func removeCharacters(from set: CharacterSet) -> String {
         var newString = self
@@ -126,6 +130,7 @@ extension String {
 }
 
 // MARK: View Modifier
+
 // hide view if redacted as placeholder (for loading widget)
 private struct HideViewPlaceholderRedacted: ViewModifier {
     @Environment(\.redactionReasons) private var reasons
@@ -170,6 +175,7 @@ struct ShowAsWidget: ViewModifier {
             height = 141
         }
     }
+
     func body(content: Content) -> some View {
         content
             .aspectRatio(CGSize(width: width, height: height), contentMode: .fill)
@@ -213,14 +219,61 @@ extension View {
     }
 }
 
+public enum WidgetSize: String, Identifiable {
+    case small
+    case medium
+    case large
+    case extraLarge
+
+    public var id: String {
+        self.rawValue
+    }
+
+    var size: CGSize {
+        switch self {
+        case .small:
+            return CGSize(width: 159, height: 159)
+        case .medium:
+            return CGSize(width: 348, height: 159)
+        case .large:
+            return CGSize(width: 348, height: 357)
+        case .extraLarge:
+            return CGSize(width: 748, height: 356)
+        }
+    }
+}
+
+struct WidgetPreview: ViewModifier {
+    let size: WidgetSize
+
+    func body(content: Content) -> some View {
+        if size == .extraLarge {
+            content
+                .frame(width: size.size.width, height: size.size.height)
+                .fixedSize()
+                .background(Color(uiColor: .systemBackground))
+                .cornerRadius(15)
+                .rotationEffect(.radians(.pi / 2))
+                .frame(width: size.size.height, height: size.size.width)
+        } else {
+            content
+                .frame(width: size.size.width, height: size.size.height)
+                .fixedSize()
+                .background(Color(uiColor: .systemBackground))
+                .cornerRadius(15)
+        }
+    }
+}
+
 // MARK: Color
+
 extension Color {
-    static let widgetBackground: Color = Color("WidgetBackground")
-    static let widgetSecondary: Color = Color("WidgetSecondary")
-    static let systemWhite: Color = Color("systemWhite")
-    static let cardColor: Color = Color("CardColor")
-    static let secondaryCardColor: Color = Color("SecondaryCardColor")
-    static let graphColor: Color = Color(uiColor: .systemGray4)
+    static let widgetBackground: Color = .init("WidgetBackground")
+    static let widgetSecondary: Color = .init("WidgetSecondary")
+    static let systemWhite: Color = .init("systemWhite")
+    static let cardColor: Color = .init("CardColor")
+    static let secondaryCardColor: Color = .init("SecondaryCardColor")
+    static let graphColor: Color = .init(uiColor: .systemGray4)
 }
 
 // From: http://brunowernimont.me/howtos/make-swiftui-color-codable
@@ -301,10 +354,11 @@ extension Color {
 }
 
 // MARK: ACEntry Array
+
 extension Array where Element == ACEntry {
     func getLastDays(_ n: Int) -> [ACEntry] {
         let latestDate: Date = self.last?.date ?? Date.now
-        let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1*n, to: latestDate) ?? Date.now
+        let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1 * n, to: latestDate) ?? Date.now
         var result: [ACEntry] = []
         for entry in self.reversed() {
             if entry.date < earliestDate && !Calendar.current.isDate(entry.date, inSameDayAs: earliestDate) {
@@ -324,13 +378,13 @@ extension Array where Element == RawDataPoint {
     func fillZeroLastDays(_ n: Int, latestDate: Date) -> [RawDataPoint] {
         let lastNDays: [Date] = latestDate.getLastNDates(n)
         return lastNDays.map({ day -> RawDataPoint in
-            return self.first(where: { $0.1 == day }) ?? (Float.zero, day)
+            self.first(where: { $0.1 == day }) ?? (Float.zero, day)
         })
     }
 
     func getLastPoints(_ n: Int) -> [RawDataPoint] {
         let latestDate: Date = self.first?.1 ?? Date.now
-        let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1*n, to: latestDate) ?? Date.now
+        let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1 * n, to: latestDate) ?? Date.now
         var result: [RawDataPoint] = []
         for entry in self {
             if entry.1 < earliestDate {
@@ -345,7 +399,7 @@ extension Array where Element == RawDataPoint {
 extension Sequence {
     func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>) -> [Element] {
         return sorted { a, b in
-            return a[keyPath: keyPath] < b[keyPath: keyPath]
+            a[keyPath: keyPath] < b[keyPath: keyPath]
         }
     }
 }
@@ -358,6 +412,7 @@ extension Collection where Element: BinaryFloatingPoint {
 }
 
 // MARK: Other
+
 extension Collection {
     func count(where test: (Element) throws -> Bool) rethrows -> Int {
         return try self.filter(test).count
