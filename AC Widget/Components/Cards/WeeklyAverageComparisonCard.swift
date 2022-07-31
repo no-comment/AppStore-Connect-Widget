@@ -47,7 +47,6 @@ struct WeeklyAverageComparisonCard: View {
 
                     dateRanges.unredacted()
                 }
-
             }
             .noDataOverlay(noData)
         }
@@ -90,9 +89,9 @@ struct WeeklyAverageComparisonCard: View {
     private var graph: some View {
         GeometryReader { geo in
             HStack(alignment: .bottom, spacing: 0) {
-                ForEach(data, id: \.1) { (value, _) in
+                ForEach(data, id: \.date) { i in
                     Capsule()
-                        .frame(width: 0.5 * geo.size.width / 31, height: max == 0 ? 0 : geo.size.height * CGFloat(value/max))
+                        .frame(width: 0.5 * geo.size.width / 31, height: max == 0 ? 0 : geo.size.height * CGFloat(i.value / max))
                         .foregroundColor(.graphColor)
                         .frame(maxWidth: .infinity)
                 }
@@ -105,22 +104,23 @@ struct WeeklyAverageComparisonCard: View {
             HStack(spacing: 3) {
                 Capsule()
                     .frame(width: abs(-1.5 + (31 - 7) * geo.size.width / 31), height: 6)
-                    .offset(x: 0, y: max == 0 ? 0 : geo.size.height - (geo.size.height * CGFloat(average1/max)) - 3)
+                    .offset(x: 0, y: max == 0 ? 0 : geo.size.height - (geo.size.height * CGFloat(average1 / max)) - 3)
 
                 Capsule()
                     .frame(width: abs(-1.5 + 7 * geo.size.width / 31), height: 6)
-                    .offset(x: 0, y: max == 0 ? 0 : geo.size.height - (geo.size.height * CGFloat(average2/max)) - 3)
+                    .offset(x: 0, y: max == 0 ? 0 : geo.size.height - (geo.size.height * CGFloat(average2 / max)) - 3)
             }
             .foregroundColor(type.color)
         }
     }
 
     private var firstDateIntervall: String {
-        let days = self.data.dropLast(7).map(\.1)
+        let days = self.data.dropLast(7).map(\.date)
         return formatDateRange(days)
     }
+
     private var secondDateIntervall: String {
-        let days = self.data.suffix(7).map(\.1)
+        let days = self.data.suffix(7).map(\.date)
         return formatDateRange(days)
     }
 
@@ -147,18 +147,18 @@ struct WeeklyAverageComparisonCard: View {
             return
         }
 
-        let filteredData = rawData.sorted(by: { $0.1 < $1.1 })
+        let filteredData = rawData.sorted(by: { $0.date < $1.date })
         self.data = filteredData
 
         if filteredData.isEmpty {
             self.average1 = .zero
             self.average2 = .zero
         } else {
-            self.average1 = filteredData.dropLast(7).map(\.0).average()
-            self.average2 = filteredData.suffix(7).map(\.0).average()
+            self.average1 = filteredData.dropLast(7).map(\.value).average()
+            self.average2 = filteredData.suffix(7).map(\.value).average()
         }
 
-        self.max = filteredData.map(\.0).max() ?? 0
+        self.max = filteredData.map(\.value).max() ?? 0
 
         let avgChange = average2 - average1
         let avgChangeAbs: String = abs(avgChange).toString(abbreviation: .intelligent, maxFractionDigits: 1)
@@ -185,13 +185,13 @@ struct WeeklyAverageComparisonCard: View {
     }
 
     private func showNoData() {
-        let filteredData = Array(ACData.createExampleData(31).sorted(by: { $0.1 < $1.1 }))
+        let filteredData = Array(ACData.createExampleData(31).sorted(by: { $0.date < $1.date }))
         self.data = filteredData
 
-        self.average1 = filteredData.dropLast(7).map(\.0).average()
-        self.average2 = filteredData.suffix(7).map(\.0).average()
+        self.average1 = filteredData.dropLast(7).map(\.value).average()
+        self.average2 = filteredData.suffix(7).map(\.value).average()
 
-        self.max = filteredData.map(\.0).max() ?? 0
+        self.max = filteredData.map(\.value).max() ?? 0
 
         self.title = .placeholder(length: 40)
 

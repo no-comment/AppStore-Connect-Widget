@@ -47,7 +47,7 @@ struct YearlyOverviewCard: View {
                     VStack {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(month == maxData.month ? type.color : .graphColor)
-                            .frame(width: geo.size.width/20, height: maxData.val == 0 ? 0 : max(0, geo.size.height * CGFloat(val/maxData.val) - 25))
+                            .frame(width: geo.size.width/20, height: maxData.val == 0 ? 0 : max(0, geo.size.height * CGFloat(val/maxData.val)-25))
 
                         Text(Calendar.current.veryShortMonthSymbols[month-1]).unredacted()
                     }
@@ -74,11 +74,11 @@ struct YearlyOverviewCard: View {
         let monthOrder = Array(currentMonth...(currentMonth + 11)).map({ 1 + $0 % 12 })
 
         monthData = Dictionary(grouping: rawData) { (data) -> Int in
-            return Calendar.current.component(.month, from: data.1)
+            Calendar.current.component(.month, from: data.date)
         }.map { (key: Int, value: [RawDataPoint]) in
-            (month: key, val: value.map(\.0).sum())
+            (month: key, val: value.map(\.value).sum())
         }.sorted(by: {
-            return (monthOrder.firstIndex(of: $0.month) ?? 13) < (monthOrder.firstIndex(of: $1.month) ?? 13)
+            (monthOrder.firstIndex(of: $0.month) ?? 13) < (monthOrder.firstIndex(of: $1.month) ?? 13)
         })
 
         if let max = monthData.max(by: { $0.val < $1.val }) {

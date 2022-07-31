@@ -3,8 +3,8 @@
 //  AC Widget by NO-COMMENT
 //
 
-import SwiftUI
 import BetterToStrings
+import SwiftUI
 
 struct PercentageComparisonCard: View {
     @EnvironmentObject private var dataProvider: ACDataProvider
@@ -62,11 +62,11 @@ struct PercentageComparisonCard: View {
                         HStack(spacing: 5) {
                             Rectangle()
                                 .foregroundColor(comparisonType.color)
-                                .frame(width: abs(val.size.width-5)*CGFloat(comparisonValue/(mainValue + comparisonValue)))
+                                .frame(width: abs(val.size.width-5)*CGFloat(comparisonValue / (mainValue + comparisonValue)))
 
                             Rectangle()
                                 .foregroundColor(type.color)
-                                .frame(width: abs(val.size.width-5)*CGFloat(mainValue/(mainValue + comparisonValue)))
+                                .frame(width: abs(val.size.width-5)*CGFloat(mainValue / (mainValue + comparisonValue)))
                         }
                         .clipShape(Capsule())
                     }
@@ -85,8 +85,8 @@ struct PercentageComparisonCard: View {
             return
         }
 
-        self.mainValue = acData.getRawData(for: type, lastNDays: 30).reduce(0, { $0 + $1.0 })
-        self.comparisonValue = acData.getRawData(for: comparisonType, lastNDays: 30).reduce(0, { $0 + $1.0 })
+        self.mainValue = acData.getRawData(for: type, lastNDays: 30).reduce(0, { $0 + $1.value })
+        self.comparisonValue = acData.getRawData(for: comparisonType, lastNDays: 30).reduce(0, { $0 + $1.value })
 
         guard mainValue != 0 || comparisonValue != 0 else {
             showNoData()

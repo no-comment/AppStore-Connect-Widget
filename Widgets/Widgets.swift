@@ -22,9 +22,9 @@ struct Provider: IntentTimelineProvider {
 
                     guard let data = data else { throw error ?? .noDataAvailable }
 
-                    let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
-                        Calendar.current.isDateInToday(proceed.1) ||
-                            Calendar.current.isDateInYesterday(proceed.1)
+                    let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed: RawDataPoint) -> Bool in
+                        Calendar.current.isDateInToday(proceed.date) ||
+                            Calendar.current.isDateInYesterday(proceed.date)
                     }
 
                     let entry = ACStatEntry(
@@ -52,9 +52,9 @@ struct Provider: IntentTimelineProvider {
 
                 guard let data = data else { throw error ?? .noDataAvailable }
 
-                let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed) -> Bool in
-                    Calendar.current.isDateInToday(proceed.1) ||
-                        Calendar.current.isDateInYesterday(proceed.1)
+                let isNewData = data.getRawData(for: .proceeds, lastNDays: 3).contains { (proceed: RawDataPoint) -> Bool in
+                    Calendar.current.isDateInToday(proceed.date) ||
+                        Calendar.current.isDateInYesterday(proceed.date)
                 }
 
                 let entry = ACStatEntry(date: Date(),

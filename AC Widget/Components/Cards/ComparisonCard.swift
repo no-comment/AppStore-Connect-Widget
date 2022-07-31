@@ -3,8 +3,8 @@
 //  AC Widget by NO-COMMENT
 //
 
-import SwiftUI
 import BetterToStrings
+import SwiftUI
 
 struct ComparisonCard: View {
     @EnvironmentObject private var dataProvider: ACDataProvider
@@ -41,7 +41,7 @@ struct ComparisonCard: View {
 
                     VStack(alignment: .leading, spacing: 1) {
                         UnitText(primaryValue.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: dataProvider.displayCurrencySymbol)
-                        DynamicWidthChartRow(color: type.color, contrastColor: type.contrastColor, width: maxValue == 0 ? 0 : geo.size.width * CGFloat(primaryValue/maxValue)) {
+                        DynamicWidthChartRow(color: type.color, contrastColor: type.contrastColor, width: maxValue == 0 ? 0 : geo.size.width * CGFloat(primaryValue / maxValue)) {
                             Text(primaryLabel)
                                 .font(.system(size: 15, weight: .medium))
                                 .unredacted()
@@ -81,8 +81,8 @@ struct ComparisonCard: View {
             return
         }
 
-        self.primaryValue = acData.getRawData(for: type, lastNDays: interval.lastNDays).reduce(0, { $0 + $1.0 })
-        self.secondaryValue = acData.getRawData(for: type, lastNDays: 2*interval.lastNDays).reduce(0, { $0 + $1.0 }) - primaryValue
+        self.primaryValue = acData.getRawData(for: type, lastNDays: interval.lastNDays).reduce(0, { $0 + $1.value })
+        self.secondaryValue = acData.getRawData(for: type, lastNDays: 2 * interval.lastNDays).reduce(0, { $0 + $1.value }) - primaryValue
 
         guard primaryValue != 0 || secondaryValue != 0 else {
             showNoData()

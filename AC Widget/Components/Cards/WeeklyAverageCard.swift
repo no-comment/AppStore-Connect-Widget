@@ -3,8 +3,8 @@
 //  AC Widget by NO-COMMENT
 //
 
-import SwiftUI
 import BetterToStrings
+import SwiftUI
 
 struct WeeklyAverageCard: View {
     @EnvironmentObject private var dataProvider: ACDataProvider
@@ -54,8 +54,8 @@ struct WeeklyAverageCard: View {
         }
 
         self.data = rawData
-        self.average = rawData.isEmpty ? .infinity : rawData.map(\.0).reduce(0, +) / Float(rawData.count)
-        self.max = rawData.map(\.0).max() ?? 1
+        self.average = rawData.isEmpty ? .infinity : rawData.map(\.value).reduce(0, +)/Float(rawData.count)
+        self.max = rawData.map(\.value).max() ?? 1
 
         switch type {
         case .downloads:
@@ -78,8 +78,8 @@ struct WeeklyAverageCard: View {
     private func showNoData() {
         let rawData = ACData.createExampleData(7)
         self.data = rawData
-        self.average = rawData.isEmpty ? .infinity : rawData.map(\.0).reduce(0, +) / Float(rawData.count)
-        self.max = rawData.map(\.0).max() ?? 1
+        self.average = rawData.isEmpty ? .infinity : rawData.map(\.value).reduce(0, +)/Float(rawData.count)
+        self.max = rawData.map(\.value).max() ?? 1
 
         self.title = .placeholder(length: 55)
 
@@ -90,11 +90,11 @@ struct WeeklyAverageCard: View {
         GeometryReader { val in
             HStack(alignment: .bottom) {
                 Spacer()
-                ForEach(data.reversed(), id: \.1) { (value, date) in
+                ForEach(data.reversed(), id: \.date) { point in
                     VStack {
                         RoundedRectangle(cornerRadius: 4)
-                            .frame(width: val.size.width/20, height: max == 0 ? 0 : CGFloat.maximum(0, val.size.height * CGFloat(value/max) - 25))
-                        Text(date.toString(format: "EEEEE")).unredacted()
+                            .frame(width: val.size.width/20, height: max == 0 ? 0 : CGFloat.maximum(0, val.size.height * CGFloat(point.value/max) - 25))
+                        Text(point.date.toString(format: "EEEEE")).unredacted()
                     }
                     .foregroundColor(.graphColor)
                 }

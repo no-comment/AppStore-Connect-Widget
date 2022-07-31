@@ -66,7 +66,7 @@ struct MonthlyGoalCard: View {
                 HStack {
                     UnitText(current.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: dataProvider.displayCurrencySymbol)
                     Spacer()
-                    Text(((current/goal)*100).toString(abbreviation: .none, maxFractionDigits: 0).appending("%"))
+                    Text(((current/goal) * 100).toString(abbreviation: .none, maxFractionDigits: 0).appending("%"))
                 }
                 ProgressBar(value: current/goal, type: type)
             }
@@ -79,7 +79,7 @@ struct MonthlyGoalCard: View {
                 HStack {
                     UnitText(estimate.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: dataProvider.displayCurrencySymbol)
                     Spacer()
-                    Text(((estimate/goal)*100).toString(abbreviation: .none, maxFractionDigits: 0).appending("%"))
+                    Text(((estimate/goal) * 100).toString(abbreviation: .none, maxFractionDigits: 0).appending("%"))
                 }
                 ProgressBar(value: estimate/goal, color: .graphColor)
             }
@@ -147,15 +147,15 @@ struct MonthlyGoalCard: View {
     private func refresh() {
         if let acData = dataProvider.data {
             self.goal = UserDefaults.shared?.float(forKey: type.goalDefaultsKey) ?? 0
-            self.current = acData.getRawData(for: type, lastNDays: acData.latestReportingDate().dateToDayNumber()).reduce(0, { $0 + $1.0 })
+            self.current = acData.getRawData(for: type, lastNDays: acData.latestReportingDate().dateToDayNumber()).reduce(0, { $0 + $1.value })
 
-            let avg = acData.getRawData(for: type, lastNDays: 7).reduce(0, { $0 + $1.0 }) / 7
+            let avg = acData.getRawData(for: type, lastNDays: 7).reduce(0, { $0 + $1.value })/7
             let calendar = Calendar.current
             let date = Date.now
             if let interval = calendar.dateInterval(of: .month, for: date) {
                 let daysInMonth = calendar.dateComponents([.day], from: interval.start, to: interval.end).day ?? 30
                 let currentDate = calendar.dateComponents([.day], from: date).day ?? 0
-                self.estimate = current + Float(daysInMonth-currentDate) * avg
+                self.estimate = current + Float(daysInMonth - currentDate) * avg
             }
         }
     }

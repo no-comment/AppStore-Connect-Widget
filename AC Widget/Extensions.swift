@@ -374,20 +374,20 @@ extension SortedArray where Element == ACEntry {
     }
 }
 
-extension Array where Element == RawDataPoint {
+extension SortedArray where Element == RawDataPoint {
     func fillZeroLastDays(_ n: Int, latestDate: Date) -> [RawDataPoint] {
         let lastNDays: [Date] = latestDate.getLastNDates(n)
         return lastNDays.map({ day -> RawDataPoint in
-            self.first(where: { $0.1 == day }) ?? (Float.zero, day)
+            self.first(where: { $0.date == day }) ?? .init(value: Float.zero, date: day)
         })
     }
 
     func getLastPoints(_ n: Int) -> [RawDataPoint] {
-        let latestDate: Date = self.first?.1 ?? Date.now
+        let latestDate: Date = self.last?.date ?? Date.now
         let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1 * n, to: latestDate) ?? Date.now
         var result: [RawDataPoint] = []
-        for entry in self {
-            if entry.1 < earliestDate {
+        for entry in self.elements {
+            if entry.date < earliestDate {
                 break
             }
             result.append(entry)

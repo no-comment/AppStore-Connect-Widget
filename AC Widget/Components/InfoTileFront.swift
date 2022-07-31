@@ -3,8 +3,8 @@
 //  AC Widget by NO-COMMENT
 //
 
-import SwiftUI
 import BetterToStrings
+import SwiftUI
 
 struct InfoTileFront: View {
     private var description: LocalizedStringKey
@@ -15,7 +15,7 @@ struct InfoTileFront: View {
 
     @State private var currentIndex: Int?
     private var graphData: [CGFloat] {
-        let copy = rawData.map { $0.0 }
+        let copy = rawData.map { $0.value }
         let max: Float = copy.max() ?? 1
         return copy.map { CGFloat($0 / max) }
     }
@@ -60,13 +60,14 @@ struct InfoTileFront: View {
     }
 
     // MARK: Top
+
     var topSection: some View {
         HStack(alignment: .top) {
             if let index = currentIndex {
-                Text(getGraphDataPoint(index).1.toString(format: "dd. MMM.", smartConversion: true))
+                Text(getGraphDataPoint(index).date.toString(format: "dd. MMM.", smartConversion: true))
                     .font(.system(size: 20))
                 Spacer()
-                UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: currencySymbol)
+                UnitText(getGraphDataPoint(index).value.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: currencySymbol)
             } else {
                 Text(description)
                     .font(.system(size: 20))
@@ -78,15 +79,16 @@ struct InfoTileFront: View {
 
     private func getGraphDataPoint(_ index: Int) -> RawDataPoint {
         if index >= rawData.count {
-            return rawData.last ?? (0, Date(timeIntervalSince1970: 0))
+            return rawData.last ?? .init(value: 0, date: Date(timeIntervalSince1970: 0))
         }
         if index < 0 {
-            return rawData.first ?? (0, Date(timeIntervalSince1970: 0))
+            return rawData.first ?? .init(value: 0, date: Date(timeIntervalSince1970: 0))
         }
         return rawData[index]
     }
 
     // MARK: Graph
+
     var graphSection: some View {
         Group {
             if !graphData.isEmpty {
@@ -94,11 +96,11 @@ struct InfoTileFront: View {
                     HStack(alignment: .bottom, spacing: 0) {
                         ForEach(graphData.indices, id: \.self) { i in
                             Capsule()
-                                .frame(width: (reading.size.width/CGFloat(graphData.count))*0.7, height: reading.size.height * getGraphHeight(i))
+                                .frame(width: (reading.size.width / CGFloat(graphData.count)) * 0.7, height: reading.size.height * getGraphHeight(i))
                                 .foregroundColor(getGraphColor(i))
                                 .opacity(currentIndex == i ? 0.7 : 1)
 
-                            if i != graphData.count-1 {
+                            if i != graphData.count - 1 {
                                 Spacer()
                                     .frame(minWidth: 0)
                             }
@@ -106,19 +108,19 @@ struct InfoTileFront: View {
                     }
                     .contentShape(Rectangle())
                     .highPriorityGesture(DragGesture(minimumDistance: 20)
-                                .onChanged({ value in
-                                    let newIndex = Int((value.location.x/reading.size.width) * CGFloat(graphData.count))
-                                    if newIndex != currentIndex && newIndex < rawData.count && newIndex >= 0 {
-                                        currentIndex = newIndex
-                                        UISelectionFeedbackGenerator()
-                                            .selectionChanged()
-                                    }
-                                })
-                                .onEnded({ _ in
-                                    withAnimation(Animation.easeOut(duration: 0.2)) {
-                                            currentIndex = nil
-                                        }
-                                })
+                        .onChanged({ value in
+                            let newIndex = Int((value.location.x / reading.size.width) * CGFloat(graphData.count))
+                            if newIndex != currentIndex && newIndex < rawData.count && newIndex >= 0 {
+                                currentIndex = newIndex
+                                UISelectionFeedbackGenerator()
+                                    .selectionChanged()
+                            }
+                        })
+                        .onEnded({ _ in
+                            withAnimation(Animation.easeOut(duration: 0.2)) {
+                                currentIndex = nil
+                            }
+                        })
                     )
                 }
             } else {
@@ -150,6 +152,7 @@ struct InfoTileFront: View {
     }
 
     // MARK: Bottom
+
     var bottomSection: some View {
         VStack {
             HStack(alignment: .bottom) {

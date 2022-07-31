@@ -13,7 +13,7 @@ struct SummaryCard: View {
     @State private var currentIndex: Int?
     @State private var graphData: [CGFloat] = []
 
-    @State private var latestData: RawDataPoint = (0, .now)
+    @State private var latestData: RawDataPoint = .init(value: 0, date: .now)
     @State private var rawData: [RawDataPoint] = []
 
     @State private var sevenDays: String = ""
@@ -80,11 +80,11 @@ struct SummaryCard: View {
             return
         }
 
-        let copy = rawData.map { $0.0 }
+        let copy = rawData.map { $0.value }
         let max: Float = copy.max() ?? 1
         graphData = copy.map { CGFloat($0 / max) }
 
-        latestData = rawData.last ?? (0, .now)
+        latestData = rawData.last ?? .init(value: 0, date: .now)
 
         var suffix = ""
         if type == .proceeds {
@@ -94,18 +94,18 @@ struct SummaryCard: View {
         sevenDays = Array(rawData.prefix(7)).toString(size: .compact).appending(suffix)
         thirtyDays = rawData.toString(size: .compact).appending(suffix)
         change = dataProvider.data?.getChange(type).appending("%") ?? "-"
-        month = acData.getRawData(for: type, lastNDays: latestData.1.dateToDayNumber()).toString(size: .compact).appending(suffix)
+        month = acData.getRawData(for: type, lastNDays: latestData.date.dateToDayNumber()).toString(size: .compact).appending(suffix)
 
         noData = false
     }
 
     private func showNoData() {
         rawData = ACData.createExampleData(30)
-        let copy = rawData.map { $0.0 }
+        let copy = rawData.map { $0.value }
         let max: Float = copy.max() ?? 1
         graphData = copy.map { CGFloat($0 / max) }
 
-        latestData = rawData.last ?? (0, .now)
+        latestData = rawData.last ?? .init(value: 0, date: .now)
 
         noData = true
     }
@@ -119,12 +119,12 @@ struct SummaryCard: View {
     var topSection: some View {
         HStack(alignment: .top) {
             if let index = currentIndex {
-                Text(getGraphDataPoint(index).1.reportingDate())
+                Text(getGraphDataPoint(index).date.reportingDate())
                     .font(.system(size: 20))
                 Spacer()
-                UnitText(getGraphDataPoint(index).0.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: currencySymbol)
+                UnitText(getGraphDataPoint(index).value.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: type, currencySymbol: currencySymbol)
             } else {
-                Text(latestData.1.reportingDate())
+                Text(latestData.date.reportingDate())
                     .font(.system(size: 20))
                 Spacer()
                 UnitText([latestData].toString(), infoType: type, currencySymbol: currencySymbol)
@@ -134,10 +134,10 @@ struct SummaryCard: View {
 
     private func getGraphDataPoint(_ index: Int) -> RawDataPoint {
         if index >= rawData.count {
-            return rawData.last ?? (0, Date(timeIntervalSince1970: 0))
+            return rawData.last ?? .init(value: 0, date: Date(timeIntervalSince1970: 0))
         }
         if index < 0 {
-            return rawData.first ?? (0, Date(timeIntervalSince1970: 0))
+            return rawData.first ?? .init(value: 0, date: Date(timeIntervalSince1970: 0))
         }
         return rawData[index]
     }
@@ -207,7 +207,7 @@ struct SummaryCard: View {
                 DescribedValueView(description: "Change:", value: change)
                 Spacer()
                     .frame(width: 40)
-                DescribedValueView(descriptionString: latestData.1.toString(format: "MMMM").appending(":"), value: month)
+                DescribedValueView(descriptionString: latestData.date.toString(format: "MMMM").appending(":"), value: month)
             }
         }
     }

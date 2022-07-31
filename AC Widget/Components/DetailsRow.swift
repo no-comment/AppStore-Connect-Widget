@@ -10,7 +10,7 @@ struct DetailsRow: View {
     public let infoType: InfoType
 
     @State private var currentMonthData: [RawDataPoint] = []
-    @State private var currentDay: RawDataPoint = (0, .now)
+    @State private var currentDay: RawDataPoint = .init(value: 0, date: .now)
     //    {
     //        return
     //    }
@@ -28,7 +28,7 @@ struct DetailsRow: View {
                 Spacer()
 
                 HStack(alignment: .firstTextBaseline, spacing: 5) {
-                    Text(currentDay.1.reportingDate())
+                    Text(currentDay.date.reportingDate())
                     Image(systemName: "chevron.right").unredacted()
                 }
                 .font(.caption)
@@ -36,7 +36,7 @@ struct DetailsRow: View {
             }
 
             HStack(alignment: .bottom) {
-                UnitText(currentDay.0.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: infoType, currencySymbol: dataProvider.displayCurrencySymbol)
+                UnitText(currentDay.value.toString(abbreviation: .intelligent, maxFractionDigits: 2), infoType: infoType, currencySymbol: dataProvider.displayCurrencySymbol)
                 Spacer(minLength: 70)
                 GraphView(currentMonthData, color: infoType.color)
                     .frame(maxWidth: 230)
@@ -69,7 +69,7 @@ struct DetailsRow: View {
 
     private func showNoData() {
         currentMonthData = ACData.createExampleData(30)
-        currentDay = (Float(Int.random(in: 7...30)), .now)
+        currentDay = .init(value: Float(Int.random(in: 7 ... 30)), date: .now)
 
         noData = true
     }

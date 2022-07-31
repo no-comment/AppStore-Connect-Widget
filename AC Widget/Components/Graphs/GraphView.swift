@@ -10,8 +10,9 @@ struct GraphView: View {
     let data: [CGFloat]
     let color: Color
 
+    // TODO: use sortedarray for data
     init(_ data: [RawDataPoint], color: Color = .accentColor) {
-        let copy = data.map { $0.0 }
+        let copy = data.map { $0.value }
         let max: Float = copy.max() ?? 1
         self.data = copy.map { CGFloat($0 / max) }.reversed()
         self.color = color
@@ -23,10 +24,10 @@ struct GraphView: View {
                 HStack(alignment: .bottom, spacing: 0) {
                     ForEach(data.indices, id: \.self) { i in
                         Capsule()
-                            .frame(width: (reading.size.width/CGFloat(data.count))*0.7, height: reading.size.height * getHeight(i))
+                            .frame(width: (reading.size.width / CGFloat(data.count)) * 0.7, height: reading.size.height * getHeight(i))
                             .foregroundColor(getColor(i))
 
-                        if i != data.count-1 {
+                        if i != data.count - 1 {
                             Spacer()
                                 .frame(minWidth: 0)
                         }

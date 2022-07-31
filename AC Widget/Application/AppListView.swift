@@ -117,9 +117,9 @@ struct AppRow: View {
             noData = true
             return
         }
-        downloads = downloadsData.0.toString(abbreviation: .intelligent, maxFractionDigits: 0)
-        proceeds = proceedsData.0.toString(abbreviation: .intelligent, maxFractionDigits: 2)
-        updates = updatesData.0.toString(abbreviation: .intelligent, maxFractionDigits: 0)
+        downloads = downloadsData.value.toString(abbreviation: .intelligent, maxFractionDigits: 0)
+        proceeds = proceedsData.value.toString(abbreviation: .intelligent, maxFractionDigits: 2)
+        updates = updatesData.value.toString(abbreviation: .intelligent, maxFractionDigits: 0)
         noData = false
     }
 

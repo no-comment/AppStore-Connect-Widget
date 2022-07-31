@@ -75,9 +75,19 @@ public extension SortedArray {
         return SortedArray(sorted: newElements)
     }
 
+    /// Returns a Boolean value indicating whether every element of a sequence satisfies a given predicate.
+    @inlinable func allSatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
+        return try elements.allSatisfy(predicate)
+    }
+
     /// Returns a Boolean value indicating whether the sequence contains an element that satisfies the given predicate.
     func contains(where predicate: (Element) throws -> Bool) rethrows -> Bool {
         return try self.elements.contains(where: predicate)
+    }
+
+    /// Returns the first element of the sequence that satisfies the given predicate.
+    func first(where predicate: (Element) throws -> Bool) rethrows -> Element? {
+        return try self.elements.first(where: predicate)
     }
 }
 

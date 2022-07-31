@@ -7,14 +7,21 @@ import BetterToStrings
 import Foundation
 import SwiftUI
 
-typealias RawDataPoint = (Float, Date)
+struct RawDataPoint: Comparable, Codable {
+    let value: Float
+    let date: Date
+
+    static func < (lhs: RawDataPoint, rhs: RawDataPoint) -> Bool {
+        return lhs.date < rhs.date
+    }
+}
 
 struct ACData: Codable {
     let apps: [ACApp]
     let entries: SortedArray<ACEntry>
     let displayCurrency: Currency
 
-    let summarisedEntries: [InfoType: [RawDataPoint]]
+    let summarisedEntries: [InfoType: SortedArray<RawDataPoint>]
 
     init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
         let sorted = SortedArray(entries)
@@ -43,8 +50,8 @@ struct ACData: Codable {
         self.summarisedEntries = ACData.summariseEntries(entries)
     }
 
-    static func summariseEntries(_ entries: SortedArray<ACEntry>) -> [InfoType: [RawDataPoint]] {
-        var dic: [InfoType: [RawDataPoint]] = [:]
+    static func summariseEntries(_ entries: SortedArray<ACEntry>) -> [InfoType: SortedArray<RawDataPoint>] {
+        var dic: [InfoType: SortedArray<RawDataPoint>] = [:]
 
         let lastNDays: [Date] = (entries.last?.date ?? Date.now).getLastNDates(370)
 
@@ -56,35 +63,35 @@ struct ACData: Codable {
             for type in InfoType.allCases {
                 switch type {
                 case .proceeds:
-                    var arr: [RawDataPoint] = dic[type] ?? []
-                    arr.append((entriesForDay.reduce(0, { $0 + $1.proceeds * Float($1.units) }), day))
+                    var arr = dic[type] ?? .init()
+                    arr.insert(.init(value: entriesForDay.reduce(0, { $0 + $1.proceeds * Float($1.units) }), date: day))
                     dic[type] = arr
                 case .downloads:
-                    var arr: [RawDataPoint] = dic[type] ?? []
-                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .download ? $1.units : 0) })), day))
+                    var arr = dic[type] ?? .init()
+                    arr.insert(.init(value: Float(entriesForDay.reduce(0, { $0 + ($1.type == .download ? $1.units : 0) })), date: day))
                     dic[type] = arr
                 case .updates:
-                    var arr: [RawDataPoint] = dic[type] ?? []
-                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .update ? $1.units : 0) })), day))
+                    var arr = dic[type] ?? .init()
+                    arr.insert(.init(value: Float(entriesForDay.reduce(0, { $0 + ($1.type == .update ? $1.units : 0) })), date: day))
                     dic[type] = arr
                 case .iap:
-                    var arr: [RawDataPoint] = dic[type] ?? []
-                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .iap ? $1.units : 0) })), day))
+                    var arr = dic[type] ?? .init()
+                    arr.insert(.init(value: Float(entriesForDay.reduce(0, { $0 + ($1.type == .iap ? $1.units : 0) })), date: day))
                     dic[type] = arr
                 case .reDownloads:
-                    var arr: [RawDataPoint] = dic[type] ?? []
-                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .redownload ? $1.units : 0) })), day))
+                    var arr = dic[type] ?? .init()
+                    arr.insert(.init(value: Float(entriesForDay.reduce(0, { $0 + ($1.type == .redownload ? $1.units : 0) })), date: day))
                     dic[type] = arr
                 case .restoredIap:
-                    var arr: [RawDataPoint] = dic[type] ?? []
-                    arr.append((Float(entriesForDay.reduce(0, { $0 + ($1.type == .restoredIap ? $1.units : 0) })), day))
+                    var arr = dic[type] ?? .init()
+                    arr.insert(.init(value: Float(entriesForDay.reduce(0, { $0 + ($1.type == .restoredIap ? $1.units : 0) })), date: day))
                     dic[type] = arr
                 }
             }
         }
 
-        for (key, value) in dic where value.allSatisfy({ $0.0 == 0 }) {
-            dic[key] = []
+        for (key, value) in dic where value.allSatisfy({ $0.value == 0 }) {
+            dic[key] = .init()
         }
 
         return dic
@@ -143,27 +150,27 @@ extension ACData {
     func getRawData(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [RawDataPoint] {
         if filteredApps.isEmpty {
             // FIXME: fehlerhaft im widget
-            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? []
+            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? .init()
         }
         let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps).elements, by: { $0.date })
-        var result: [RawDataPoint]
+        var result: SortedArray<RawDataPoint>
 
         switch type {
         case .proceeds:
-            result = dict.map { (key: Date, value: [ACEntry]) -> RawDataPoint in
-                (value.reduce(0, { $0 + $1.proceeds * Float($1.units) }), key)
-            }
+            result = .init(dict.map({ (key: Date, value: [ACEntry]) -> RawDataPoint in
+                .init(value: value.reduce(0, { $0 + $1.proceeds * Float($1.units) }), date: key)
+            }))
         default:
-            result = dict.map { (key: Date, value: [ACEntry]) -> RawDataPoint in
-                (Float(value.reduce(0, { $0 + $1.units })), key)
-            }
+            result = .init(dict.map({ (key: Date, value: [ACEntry]) -> RawDataPoint in
+                .init(value: Float(value.reduce(0, { $0 + $1.units })), date: key)
+            }))
         }
 
         return result.fillZeroLastDays(lastNDays, latestDate: self.latestReportingDate())
     }
 
     func getLastRawData(for type: InfoType, filteredApps: [ACApp] = []) -> RawDataPoint {
-        return self.getRawData(for: type, lastNDays: 1, filteredApps: filteredApps).first ?? (0, .now)
+        return self.getRawData(for: type, lastNDays: 1, filteredApps: filteredApps).first ?? .init(value: 0, date: .now)
     }
 
     // MARK: Get CountryCode
@@ -209,8 +216,8 @@ extension ACData {
     // MARK: Get Change
 
     func getChange(_ type: InfoType) -> String {
-        let latestInterval = getRawData(for: type, lastNDays: 15).map({ $0.0 }).reduce(0, +)
-        let previousInterval = getRawData(for: type, lastNDays: 30).map({ $0.0 }).reduce(0, +) - latestInterval
+        let latestInterval = getRawData(for: type, lastNDays: 15).map({ $0.value }).reduce(0, +)
+        let previousInterval = getRawData(for: type, lastNDays: 30).map({ $0.value }).reduce(0, +) - latestInterval
         let change = NSNumber(value: ((latestInterval / previousInterval) - 1) * 100)
         let nf = NumberFormatter()
         nf.numberStyle = .decimal
@@ -262,14 +269,14 @@ extension ACData {
     }
 
     public static func createExampleData(_ days: Int, largeValues: Bool = false) -> [RawDataPoint] {
-        return Date.now.dayBefore.getLastNDates(days).map({ (Float(Int.random(in: 7...30) * (largeValues ? 5 : 1)), $0) })
+        return Date.now.dayBefore.getLastNDates(days).map({ .init(value: Float(Int.random(in: 7...30) * (largeValues ? 5 : 1)), date: $0) })
     }
 }
 
 extension Array where Element == RawDataPoint {
     enum NumberLength { case standard, compact }
     func toString(size: NumberLength = .standard) -> String {
-        self.map({ $0.0 })
+        self.map({ $0.value })
             .reduce(0, +)
             .toString(abbreviation: .intelligent, maxSize: size == .compact ? 4 : nil, maxFractionDigits: 2)
     }
