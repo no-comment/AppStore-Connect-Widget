@@ -86,7 +86,7 @@ class AppStoreConnectApi {
 
         if useCache {
             let cachedData = ACDataCache.getData(apiKey: self.apiKey)?.changeCurrency(to: localCurrency)
-            let cachedEntries: [ACEntry] = cachedData?.entries ?? []
+            let cachedEntries: [ACEntry] = cachedData?.entries.elements ?? []
 
             entries.append(contentsOf: cachedEntries)
         }

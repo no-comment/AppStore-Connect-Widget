@@ -61,6 +61,9 @@
 		45E8C4BD261267FB007F9B0E /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 45E8C4BC261267FB007F9B0E /* Gzip */; };
 		45E8C4C0261268D4007F9B0E /* SwiftCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 45E8C4BF261268D4007F9B0E /* SwiftCSV */; };
 		45F9E75D28958CD80064F30E /* SummaryExtraLarge.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB4A60C26F674880064EE9E /* SummaryExtraLarge.swift */; };
+		45F9E76228966B370064F30E /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F9E76128966B370064F30E /* SortedArray.swift */; };
+		45F9E76328966D8E0064F30E /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F9E76128966B370064F30E /* SortedArray.swift */; };
+		45F9E76428966D8F0064F30E /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F9E76128966B370064F30E /* SortedArray.swift */; };
 		45FD5196261915F200603D8A /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45FD5195261915F200603D8A /* IntentHandler.swift */; };
 		45FD519A261915F200603D8A /* WidgetIntentExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 45FD5191261915F200603D8A /* WidgetIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CB28AEE02615D24400B48215 /* UnitText.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28AEDF2615D24400B48215 /* UnitText.swift */; };
@@ -209,6 +212,7 @@
 		45E8C4A02612531E007F9B0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45E8C4A62612531E007F9B0E /* WidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetsExtension.entitlements; sourceTree = "<group>"; };
 		45E8C4C126126B34007F9B0E /* CurrencyConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverter.swift; sourceTree = "<group>"; };
+		45F9E76128966B370064F30E /* SortedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
 		45FD5191261915F200603D8A /* WidgetIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		45FD5192261915F200603D8A /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		45FD5195261915F200603D8A /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
@@ -463,6 +467,7 @@
 				4570D399261EE1FC006F50AA /* ACDataCache.swift */,
 				45D2041C262CBEB000D0E889 /* ACApp.swift */,
 				459CBA2C278631E900FF568E /* ACDataProvider.swift */,
+				45F9E76128966B370064F30E /* SortedArray.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -713,6 +718,7 @@
 				CBC6F8E8279A0E2D00D08A3F /* CardSection.swift in Sources */,
 				CB94792A27BC414A00CF4BAD /* ProgressBar.swift in Sources */,
 				45E8C4812612512E007F9B0E /* AC_WidgetApp.swift in Sources */,
+				45F9E76228966B370064F30E /* SortedArray.swift in Sources */,
 				459CBA2D278631E900FF568E /* ACDataProvider.swift in Sources */,
 				45F9E75D28958CD80064F30E /* SummaryExtraLarge.swift in Sources */,
 				CB2D236926433AB9003DA727 /* SummaryLarge.swift in Sources */,
@@ -759,6 +765,7 @@
 				4570D39B261EE1FC006F50AA /* ACDataCache.swift in Sources */,
 				CB28AEFD2615F5E700B48215 /* GraphView.swift in Sources */,
 				CB28AEEB2615D2BB00B48215 /* SummaryMedium.swift in Sources */,
+				45F9E76328966D8E0064F30E /* SortedArray.swift in Sources */,
 				CB28AEE12615D24400B48215 /* UnitText.swift in Sources */,
 				45D2041E262CBEB000D0E889 /* ACApp.swift in Sources */,
 				CB28AEE62615D28F00B48215 /* SummarySmall.swift in Sources */,
@@ -793,6 +800,7 @@
 				CBB4A60926F3E9A10064EE9E /* AppIconStack.swift in Sources */,
 				CBAB72A5261B338700ED0F94 /* CurrencyConverter.swift in Sources */,
 				4542D60226276F8100B79E10 /* ACDataCache.swift in Sources */,
+				45F9E76428966D8F0064F30E /* SortedArray.swift in Sources */,
 				45C1A3FF2619B402006C1650 /* Extensions.swift in Sources */,
 				4552EEA0261CFB99006C30B9 /* ACEntry.swift in Sources */,
 				45D2041F262CBEB000D0E889 /* ACApp.swift in Sources */,

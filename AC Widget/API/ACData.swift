@@ -11,18 +11,21 @@ typealias RawDataPoint = (Float, Date)
 
 struct ACData: Codable {
     let apps: [ACApp]
-    let entries: [ACEntry]
+    let entries: SortedArray<ACEntry>
     let displayCurrency: Currency
 
     let summarisedEntries: [InfoType: [RawDataPoint]]
 
     init(entries: [ACEntry], currency: Currency, apps: [ACApp]) {
-        let sortedEntries = entries.sorted(by: \.date)
-        self.entries = sortedEntries
-        self.displayCurrency = currency
-        self.apps = apps.sorted { entries.filterApps([$0]).count > entries.filterApps([$1]).count }
+        let sorted = SortedArray(entries)
+        self.init(entries: sorted, currency: currency, apps: apps)
+    }
 
-        self.summarisedEntries = ACData.summariseEntries(sortedEntries)
+    init(entries: SortedArray<ACEntry>, currency: Currency, apps: [ACApp]) {
+        self.entries = entries
+        self.displayCurrency = currency
+        self.apps = apps.sorted(by: { entries.filterApps([$0]).count > entries.filterApps([$1]).count })
+        self.summarisedEntries = ACData.summariseEntries(self.entries)
     }
 
     enum CodingKeys: String, CodingKey {
@@ -34,18 +37,18 @@ struct ACData: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         apps = try container.decode([ACApp].self, forKey: .apps)
-        entries = try container.decode([ACEntry].self, forKey: .entries)
+        entries = try container.decode(SortedArray<ACEntry>.self, forKey: .entries)
         displayCurrency = try container.decode(Currency.self, forKey: .displayCurrency)
 
         self.summarisedEntries = ACData.summariseEntries(entries)
     }
 
-    static func summariseEntries(_ entries: [ACEntry]) -> [InfoType: [RawDataPoint]] {
+    static func summariseEntries(_ entries: SortedArray<ACEntry>) -> [InfoType: [RawDataPoint]] {
         var dic: [InfoType: [RawDataPoint]] = [:]
 
         let lastNDays: [Date] = (entries.last?.date ?? Date.now).getLastNDates(370)
 
-        let grouped = Dictionary(grouping: entries, by: { $0.date })
+        let grouped = Dictionary(grouping: entries.elements, by: { $0.date })
 
         for day in lastNDays {
             let entriesForDay = grouped[day] ?? []
@@ -90,19 +93,23 @@ struct ACData: Codable {
 
 extension ACData {
     func changeCurrency(to outputCurrency: Currency) -> ACData {
-        let newEntries: [ACEntry] = self.entries.map({ entry -> ACEntry in
-            let proceeds = CurrencyConverter.shared.convert(Double(entry.proceeds),
-                                                            valueCurrency: self.displayCurrency,
-                                                            outputCurrency: outputCurrency) ?? 0
-            return ACEntry(appTitle: entry.appTitle,
-                           appSKU: entry.appSKU,
-                           units: entry.units,
-                           proceeds: Float(proceeds),
-                           date: entry.date,
-                           countryCode: entry.countryCode,
-                           device: entry.device,
-                           appIdentifier: entry.appIdentifier,
-                           type: entry.type)
+        let newEntries: [ACEntry] = self.entries.elements.map({ entry -> ACEntry in
+            let proceeds = CurrencyConverter.shared.convert(
+                Double(entry.proceeds),
+                valueCurrency: self.displayCurrency,
+                outputCurrency: outputCurrency
+            ) ?? 0
+            return ACEntry(
+                appTitle: entry.appTitle,
+                appSKU: entry.appSKU,
+                units: entry.units,
+                proceeds: Float(proceeds),
+                date: entry.date,
+                countryCode: entry.countryCode,
+                device: entry.device,
+                appIdentifier: entry.appIdentifier,
+                type: entry.type
+            )
         })
 
         return ACData(entries: newEntries, currency: outputCurrency, apps: self.apps)
@@ -112,7 +119,7 @@ extension ACData {
 extension ACData {
     // MARK: Get Raw Data
 
-    private func getEntries(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [ACEntry] {
+    private func getEntries(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> SortedArray<ACEntry> {
         var entries = entries.getLastDays(lastNDays).filterApps(filteredApps)
 
         switch type {
@@ -134,11 +141,11 @@ extension ACData {
     }
 
     func getRawData(for type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [RawDataPoint] {
-//        if filteredApps.isEmpty {
-        // TODO: fehlerhaft im widget
-//            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? []
-//        }
-        let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.date })
+        if filteredApps.isEmpty {
+            // FIXME: fehlerhaft im widget
+            return summarisedEntries[type]?.getLastPoints(lastNDays) ?? []
+        }
+        let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps).elements, by: { $0.date })
         var result: [RawDataPoint]
 
         switch type {
@@ -162,7 +169,7 @@ extension ACData {
     // MARK: Get CountryCode
 
     func getCountries(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
-        let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.countryCode })
+        let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps).elements, by: { $0.countryCode })
         var result: [(String, Float)]
 
         switch type {
@@ -182,7 +189,7 @@ extension ACData {
     // MARK: Get Device
 
     func getDevices(_ type: InfoType, lastNDays: Int, filteredApps: [ACApp] = []) -> [(String, Float)] {
-        let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps), by: { $0.device })
+        let dict = Dictionary(grouping: getEntries(for: type, lastNDays: lastNDays, filteredApps: filteredApps).elements, by: { $0.device })
         var result: [(String, Float)]
 
         switch type {
@@ -214,7 +221,7 @@ extension ACData {
     // MARK: Getting Dates
 
     func latestReportingDate() -> Date {
-        return entries.map({ $0.date }).reduce(Date.distantPast, { $0 > $1 ? $0 : $1 })
+        return entries.last?.date ?? .distantPast
     }
 
     func latestReportingDate() -> String {

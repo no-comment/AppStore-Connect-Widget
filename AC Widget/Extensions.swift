@@ -353,23 +353,23 @@ extension Color {
     }
 }
 
-// MARK: ACEntry Array
+// MARK: SortedArray ACEntry
 
-extension Array where Element == ACEntry {
-    func getLastDays(_ n: Int) -> [ACEntry] {
+extension SortedArray where Element == ACEntry {
+    func getLastDays(_ n: Int) -> SortedArray<ACEntry> {
         let latestDate: Date = self.last?.date ?? Date.now
         let earliestDate: Date = Calendar.current.date(byAdding: .day, value: -1 * n, to: latestDate) ?? Date.now
-        var result: [ACEntry] = []
-        for entry in self.reversed() {
+        var result: SortedArray<ACEntry> = .init()
+        for entry in self.elements.reversed() {
             if entry.date < earliestDate && !Calendar.current.isDate(entry.date, inSameDayAs: earliestDate) {
                 break
             }
-            result.append(entry)
+            result.insert(entry)
         }
         return result
     }
 
-    func filterApps(_ isIncluded: [ACApp]) -> [ACEntry] {
+    func filterApps(_ isIncluded: [ACApp]) -> SortedArray<ACEntry> {
         return self.filter({ $0.belongsToApp(apps: isIncluded) })
     }
 }

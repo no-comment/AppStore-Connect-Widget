@@ -26,6 +26,12 @@ extension ACEntry {
     }
 }
 
+extension ACEntry: Comparable {
+    static func < (lhs: ACEntry, rhs: ACEntry) -> Bool {
+        return lhs.date < rhs.date
+    }
+}
+
 enum ACEntryType: String, CaseIterable, Codable {
     case download
     case redownload

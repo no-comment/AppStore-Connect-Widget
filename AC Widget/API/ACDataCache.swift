@@ -41,20 +41,18 @@ class ACDataCache {
             // Convert currency from oldData to data.displayCurrency
             var oldEntries: [ACEntry] = []
             if let oldData = oldData {
-                oldEntries = oldData.changeCurrency(to: data.displayCurrency).entries
+                oldEntries = oldData.changeCurrency(to: data.displayCurrency).entries.elements
             }
 
             // merge items
             let oldDataFiltered = oldEntries.filter { oldEntry in
-                return !data.entries.contains(where: { $0.date == oldEntry.date })
+                !data.entries.contains(where: { $0.date == oldEntry.date })
             }
 
-            var entries: [ACEntry] = data.entries + oldDataFiltered
+            var entries: SortedArray<ACEntry> = .init(data.entries.elements + oldDataFiltered)
 
             // delete entries from all object that are to old
-            let latest: ACEntry? = entries.sorted { a, b in
-                a.date.compare(b.date) == .orderedDescending
-            }.first
+            let latest: ACEntry? = entries.last
 
             let latestDate = latest?.date ?? Date()
             let validDays = latestDate.getLastNDates(370).map({ $0.acApiFormat() })
@@ -98,11 +96,13 @@ class ACDataCache {
 
     public static func numberOfEntriesCached(apiKey: APIKey? = nil) -> Int {
         let cacheObjects: [CacheObject] = getCollection()?.objects ?? []
-        let data: [ACEntry] = cacheObjects.filter({
+        let count = cacheObjects.filter({
             guard let keyId = apiKey?.id else { return true }
             return $0.apiKeyId == keyId
-        }).flatMap({ $0.data.entries })
-        return data.count
+        }).reduce(0) { partialResult, obj in
+            partialResult + obj.data.entries.count
+        }
+        return count
     }
 
     public static func clearCache(apiKey: APIKey) {
