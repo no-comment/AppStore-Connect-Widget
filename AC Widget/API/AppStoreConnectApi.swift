@@ -241,90 +241,51 @@ class AppStoreConnectApi {
                 filterVendorNumber: [vendorNumber]
             ))
 
-//            .get(parameters: .init(
-//                sort: [.bundleID],
-//                fieldsApps: [.appInfos, .builds, .name],
-//                limit: 5,
-//                include: [.builds],
-//                fieldsBuilds: [.version, .processingState, .uploadedDate]
-//            ))
         do {
             let appsResponse = try await provider.request(request)
             return appsResponse
         } catch let error as AppStoreConnect_Swift_SDK.APIProvider.Error {
-            // TODO: implement some error catching and use APIError
-            throw error
-//            switch error {
-//            case .requestGeneration:
-//                <#code#>
-//            case .unknownResponseType:
-//                <#code#>
-//            case .requestFailure(_, _, _):
-//                <#code#>
-//            case .decodingError(_, _):
-//                <#code#>
-//            case .downloadError:
-//                <#code#>
-//            case .dateDecodingError(_):
-//                <#code#>
-//            case .requestExecutorError(_):
-//                <#code#>
-//            }
+            print(error.debugDescription)
+            switch error {
+            case .requestGeneration:
+                throw APIError.invalidCredentials
+            case .unknownResponseType:
+                throw APIError.unknown
+            case .requestFailure(let statusCode, let errorResponse, _):
+                print(statusCode, errorResponse.debugDescription)
+                switch statusCode {
+                case 401:
+                    throw APIError.invalidCredentials
+                case 429:
+                    throw APIError.exceededLimit
+                case 403:
+                    throw APIError.wrongPermissions
+                case 404:
+                    guard let errorRep = errorResponse?.errors?.first, errorResponse?.errors?.count == 1 else {
+                        throw APIError.unknown
+                    }
+
+                    if errorRep.title == "The request expected results but none were found" {
+                        throw APIError.noDataAvailable
+                    } else {
+                        print(errorRep)
+                        throw APIError.unhandled(errorRep.title)
+                    }
+                default:
+                    print(statusCode)
+                    throw APIError.unhandled("API status code: \(statusCode)")
+                }
+            case .decodingError(let err, _):
+                throw APIError.unhandled(err.localizedDescription)
+            case .downloadError:
+                throw APIError.unhandled("Could not download")
+            case .dateDecodingError:
+                throw APIError.unhandled("Could decode date")
+            case .requestExecutorError:
+                throw APIError.unhandled("Request could not be executed")
+            }
         }
     }
-
-//        return try await withCheckedThrowingContinuation { continuation in
-//            provider.request(APIEndpoint.v1.salesReports
-//                .downloadSalesAndTrendsReports(filter: [
-//                .frequency([.DAILY]),
-//                .reportSubType([.SUMMARY]),
-//                .reportType([.SALES]),
-//                .vendorNumber([vendorNumber]),
-//                .reportDate([date]),
-//            ]), completion: { result in
-//                switch result {
-//                case .success(let value):
-//                    print("Got data for: \(date)")
-//                    continuation.resume(returning: value)
-//                case .failure(let error):
-//                    if let apiError = error as? AppStoreConnect_Swift_SDK.APIProvider.Error {
-//                        switch apiError {
-//                        case .requestFailure(let statusCode, let errData):
-//                            switch statusCode {
-//                            case 401:
-//                                continuation.resume(throwing: APIError.invalidCredentials)
-//                            case 429:
-//                                continuation.resume(throwing: APIError.exceededLimit)
-//                            case 403:
-//                                continuation.resume(throwing: APIError.wrongPermissions)
-//                            case 404:
-//                                guard let errData = errData else {
-//                                    continuation.resume(throwing: APIError.unknown)
-//                                    break
-//                                }
-//
-//                                let resp = String(decoding: errData, as: UTF8.self)
-//                                if resp.contains("The request expected results but none were found") {
-//                                    continuation.resume(throwing: APIError.noDataAvailable)
-//                                } else {
-//                                    continuation.resume(throwing: APIError.unknown)
-//                                }
-//                            default:
-//                                print(statusCode)
-//                                continuation.resume(throwing: APIError.unhandled("API status code: \(statusCode)"))
-//                            }
-//                        case .requestGeneration:
-//                            continuation.resume(throwing: APIError.invalidCredentials)
-//                        default:
-//                            continuation.resume(throwing: APIError.unhandled(apiError.localizedDescription))
-//                        }
-//                    } else {
-//                        continuation.resume(throwing: error)
-//                    }
-//                }
-//            })
-//        }
-//    }
 
     private struct ITunesResponse: Codable {
         let resultCount: Int
@@ -382,11 +343,6 @@ class AppStoreConnectApi {
                 fieldsApps: [.name, .sku]
             ))
         return try await provider.request(request).data
-//        return try await withCheckedThrowingContinuation { continuation in
-//            provider.request(APIEndpoint.apps(select: [.apps([.name, .sku])]), completion: { result in
-//                continuation.resume(with: result)
-//            })
-//        }
     }
 }
 
