@@ -245,45 +245,49 @@ class AppStoreConnectApi {
             let appsResponse = try await provider.request(request)
             return appsResponse
         } catch let error as AppStoreConnect_Swift_SDK.APIProvider.Error {
-            print(error.debugDescription)
-            switch error {
-            case .requestGeneration:
-                throw APIError.invalidCredentials
-            case .unknownResponseType:
-                throw APIError.unknown
-            case .requestFailure(let statusCode, let errorResponse, _):
-                print(statusCode, errorResponse.debugDescription)
-                switch statusCode {
-                case 401:
-                    throw APIError.invalidCredentials
-                case 429:
-                    throw APIError.exceededLimit
-                case 403:
-                    throw APIError.wrongPermissions
-                case 404:
-                    guard let errorRep = errorResponse?.errors?.first, errorResponse?.errors?.count == 1 else {
-                        throw APIError.unknown
-                    }
+            throw handleApiError(error: error)
+        }
+    }
 
-                    if errorRep.title == "The request expected results but none were found" {
-                        throw APIError.noDataAvailable
-                    } else {
-                        print(errorRep)
-                        throw APIError.unhandled(errorRep.title)
-                    }
-                default:
-                    print(statusCode)
-                    throw APIError.unhandled("API status code: \(statusCode)")
+    private func handleApiError(error: AppStoreConnect_Swift_SDK.APIProvider.Error) -> APIError {
+        print(error.debugDescription)
+        switch error {
+        case .requestGeneration:
+            return APIError.invalidCredentials
+        case .unknownResponseType:
+            return APIError.unknown
+        case .requestFailure(let statusCode, let errorResponse, _):
+            print(statusCode, errorResponse.debugDescription)
+            switch statusCode {
+            case 401:
+                return APIError.invalidCredentials
+            case 429:
+                return APIError.exceededLimit
+            case 403:
+                return APIError.wrongPermissions
+            case 404:
+                guard let errorRep = errorResponse?.errors?.first, errorResponse?.errors?.count == 1 else {
+                    return APIError.unknown
                 }
-            case .decodingError(let err, _):
-                throw APIError.unhandled(err.localizedDescription)
-            case .downloadError:
-                throw APIError.unhandled("Could not download")
-            case .dateDecodingError:
-                throw APIError.unhandled("Could decode date")
-            case .requestExecutorError:
-                throw APIError.unhandled("Request could not be executed")
+
+                if errorRep.title == "The request expected results but none were found" {
+                    return APIError.noDataAvailable
+                } else {
+                    print(errorRep)
+                    return APIError.unhandled(errorRep.title)
+                }
+            default:
+                print(statusCode)
+                return APIError.unhandled("API status code: \(statusCode)")
             }
+        case .decodingError(let err, _):
+            return APIError.unhandled(err.localizedDescription)
+        case .downloadError:
+            return APIError.unhandled("Could not download")
+        case .dateDecodingError:
+            return APIError.unhandled("Could decode date")
+        case .requestExecutorError:
+            return APIError.unhandled("Request could not be executed")
         }
     }
 

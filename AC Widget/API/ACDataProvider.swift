@@ -68,7 +68,7 @@ class ACDataProvider: ObservableObject {
             error = .unknown
             return
         }
-        let api = await AppStoreConnectApi(apiKey: apiKey)
+        let api = AppStoreConnectApi(apiKey: apiKey)
         do {
             data = try await api.getData(currency: Currency(rawValue: currency), useMemoization: useMemoization)
             WidgetCenter.shared.reloadAllTimelines()
