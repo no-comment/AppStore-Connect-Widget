@@ -278,7 +278,7 @@ class AppStoreConnectApi {
             throw APIError.unknown
         }
 
-        if let data = try? Data(contentsOf: url) {
+        if let data = try? await URLSession.shared.data(from: url).0 {
             let decoder = JSONDecoder()
             let result = try? decoder.decode(ITunesResponse.self, from: data)
             guard let appData = result?.results.first else {
@@ -287,7 +287,7 @@ class AppStoreConnectApi {
 
             var imageData: Data?
             if let imgUrl = URL(string: appData.artworkUrl60) {
-                imageData = try? Data(contentsOf: imgUrl)
+                imageData = try? await URLSession.shared.data(from: imgUrl).0
             }
 
             return ACApp(appstoreId: app.appstoreId,

@@ -165,7 +165,7 @@ private class CurrencyXMLParser: NSObject, XMLParserDelegate {
         return exchangeRates
     }
 
-    public func parse(completion : @escaping () -> Void, errorCompletion : @escaping () -> Void) {
+    public func parse(completion: @escaping () -> Void, errorCompletion: @escaping () -> Void) {
         guard let url = URL(string: xmlURL) else { return }
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else {
